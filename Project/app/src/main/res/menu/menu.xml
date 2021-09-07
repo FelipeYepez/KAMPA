@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/iconoDescubre"
+        android:icon="@drawable/icono_descubre"
+        android:title="Descubre"/>
+    <item
+        android:id="@+id/iconoMapa"
+        android:icon="@drawable/icono_mapa"
+        android:title="Mapa"/>
+    <item
+        android:id="@+id/iconoFavoritos"
+        android:icon="@drawable/icono_favoritos"
+        android:title="Favoritos"/>
+
+</menu>
