@@ -5,7 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import com.example.kampa.Place
+import com.example.kampa.PlacesReader
 import com.example.kampa.R
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.MarkerOptions
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +27,8 @@ class MapaFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var map : SupportMapFragment? = null
+    private  var gMap : GoogleMap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,8 +43,38 @@ class MapaFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mapa, container, false)
+    }
+    private val places: List<Place> by lazy {
+        PlacesReader(requireContext()).read()
+    }
+
+    override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        map =childFragmentManager.findFragmentById(
+            R.id.map_fragment
+        ) as? SupportMapFragment
+
+        map?.getMapAsync { googleMap ->
+            gMap = googleMap
+            addMarkers()
+        }
+        gMap!!.isMyLocationEnabled = true
+        gMap!!.setOnMyLocationButtonClickListener(this)
+        gMap!!.setOnMyLocationClickListener(this)
+    }
+
+    private fun addMarkers() {
+        places.forEach { place ->
+            val marker = gMap!!.addMarker(
+                MarkerOptions()
+                    .title(place.name)
+                    .position(place.latLng)
+            )
+        }
     }
 
     companion object {

@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment
 import com.example.kampa.fragments.DescubreFragment
 import com.example.kampa.fragments.FavoritosFragment
 import com.example.kampa.fragments.MapaFragment
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -19,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
 
         // Abrir Actividad con fragmento Descubre
         replaceFragment(descubreFragment)
