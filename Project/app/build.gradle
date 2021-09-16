@@ -48,4 +48,6 @@ dependencies {
     // Dependency to include Maps SDK for Android
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.karumi:dexter:6.2.2'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
 }
