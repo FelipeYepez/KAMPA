@@ -1,17 +1,39 @@
 package com.example.kampa.fragments
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.location.Location
 import android.os.Bundle
+import android.service.autofill.OnClickAction
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kampa.MainActivity
 import com.example.kampa.Place
 import com.example.kampa.PlacesReader
 import com.example.kampa.R
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.Task
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
+import java.util.jar.Manifest
+import kotlin.concurrent.timerTask
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,12 +45,15 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MapaFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MapaFragment : Fragment() {
+class MapaFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var map : SupportMapFragment? = null
     private  var gMap : GoogleMap? = null
+    private var isPermissionGranted : Boolean? = false
+    private var fab : FloatingActionButton? = null
+    private var mLocationClient : FusedLocationProviderClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,17 +79,72 @@ class MapaFragment : Fragment() {
 
     override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        map =childFragmentManager.findFragmentById(
-            R.id.map_fragment
-        ) as? SupportMapFragment
 
-        map?.getMapAsync { googleMap ->
-            gMap = googleMap
-            addMarkers()
+        fab = view.findViewById(R.id.fab)
+
+        checkMyPermission()
+
+        initMap()
+
+        mLocationClient = FusedLocationProviderClient(requireContext())
+
+        fab?.setOnClickListener(View.OnClickListener {
+            getCurrLoc()
+        })
+
+
+    }
+
+    private fun initMap() {
+        if (isPermissionGranted!!) {
+            map =childFragmentManager.findFragmentById(
+                R.id.map_fragment
+            ) as? SupportMapFragment
+
+            map?.getMapAsync(this)
+
+            //map?.onCreate(savedInstanceState)
         }
-        gMap!!.isMyLocationEnabled = true
-        gMap!!.setOnMyLocationButtonClickListener(this)
-        gMap!!.setOnMyLocationClickListener(this)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getCurrLoc() {
+        mLocationClient?.lastLocation?.addOnCompleteListener { task ->
+            if (task.isSuccessful){
+                var location : Location? = task.result
+                gotoLocation(location?.latitude, location?.longitude)
+            }
+        }
+    }
+
+    private fun gotoLocation(latitude: Double?, longitude: Double?) {
+        var LatLng : LatLng? = LatLng(latitude!!, longitude!!)
+        var cameraUpdate : CameraUpdate = CameraUpdateFactory.newLatLngZoom(LatLng, 18F)
+        gMap?.moveCamera(cameraUpdate)
+        gMap?.mapType = GoogleMap.MAP_TYPE_NORMAL
+
+    }
+
+    private fun checkMyPermission() {
+        Dexter.withContext(context).withPermission(android.Manifest.permission.ACCESS_FINE_LOCATION).withListener(object : PermissionListener{
+            override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+                Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+                isPermissionGranted = true
+            }
+
+            override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+                Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+                isPermissionGranted = false
+            }
+
+            override fun onPermissionRationaleShouldBeShown(
+                p0: PermissionRequest?,
+                p1: PermissionToken?
+            ) {
+                p1?.continuePermissionRequest()
+            }
+        }).check()
+
     }
 
     private fun addMarkers() {
@@ -95,5 +175,60 @@ class MapaFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onMapReady(p0: GoogleMap?) {
+        Toast.makeText(context, "onMapReady", Toast.LENGTH_SHORT).show()
+        gMap = p0
+        //gMap?.setMyLocationEnabled(true)
+        addMarkers()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        map?.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        map?.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        map?.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        map?.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        map?.onDestroy()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        map?.onSaveInstanceState(outState)
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        map?.onLowMemory()
+    }
+
+    override fun onConnected(p0: Bundle?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        TODO("Not yet implemented")
     }
 }
