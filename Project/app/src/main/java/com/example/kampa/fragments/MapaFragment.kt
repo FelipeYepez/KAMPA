@@ -1,51 +1,44 @@
 package com.example.kampa.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.location.Location
 import android.os.Bundle
-import android.service.autofill.OnClickAction
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.example.kampa.MainActivity
+import androidx.fragment.app.Fragment
+import com.example.kampa.Models.Sitios
 import com.example.kampa.Place
 import com.example.kampa.PlacesReader
 import com.example.kampa.R
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import java.util.jar.Manifest
-import kotlin.concurrent.timerTask
+import com.parse.ParseObject
+import com.parse.ParseQuery
+import com.parse.ParseUser
+import com.karumi.dexter.listener.PermissionRequest as PR
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val TAG = "MapaFragment"
 
 /**
  * A simple [Fragment] subclass.
  * Use the [MapaFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MapaFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+class MapaFragment : Fragment(), OnMapReadyCallback {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -80,17 +73,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionC
     override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fab = view.findViewById(R.id.fab)
-
         checkMyPermission()
-
         initMap()
-
-        mLocationClient = FusedLocationProviderClient(requireContext())
-
-        fab?.setOnClickListener(View.OnClickListener {
-            getCurrLoc()
-        })
 
 
     }
@@ -101,28 +85,30 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionC
                 R.id.map_fragment
             ) as? SupportMapFragment
 
+            //map?.onCreate(savedInstanceState)
+
             map?.getMapAsync(this)
 
-            //map?.onCreate(savedInstanceState)
+            query()
+
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private fun getCurrLoc() {
-        mLocationClient?.lastLocation?.addOnCompleteListener { task ->
-            if (task.isSuccessful){
-                var location : Location? = task.result
-                gotoLocation(location?.latitude, location?.longitude)
+    private fun query(){
+        val query: ParseQuery<Sitios> = ParseQuery.getQuery(Sitios::class.java)
+
+        // Execute the find asynchronously
+        // Execute the find asynchronously
+        query.findInBackground { itemList, e ->
+            if (e == null) {
+                // Access the array of results here
+                val firstItemId: String? = itemList[0].nombre
+                Toast.makeText(context, firstItemId, Toast.LENGTH_SHORT).show()
+                Log.d(TAG,firstItemId!!)
+            } else {
+                Log.d("item", "Error: " + e.message)
             }
         }
-    }
-
-    private fun gotoLocation(latitude: Double?, longitude: Double?) {
-        var LatLng : LatLng? = LatLng(latitude!!, longitude!!)
-        var cameraUpdate : CameraUpdate = CameraUpdateFactory.newLatLngZoom(LatLng, 18F)
-        gMap?.moveCamera(cameraUpdate)
-        gMap?.mapType = GoogleMap.MAP_TYPE_NORMAL
-
     }
 
     private fun checkMyPermission() {
@@ -138,7 +124,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionC
             }
 
             override fun onPermissionRationaleShouldBeShown(
-                p0: PermissionRequest?,
+                p0: PR?,
                 p1: PermissionToken?
             ) {
                 p1?.continuePermissionRequest()
@@ -172,7 +158,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionC
             MapaFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                     putString(ARG_PARAM2, param2)
                 }
             }
     }
@@ -181,7 +167,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionC
     override fun onMapReady(p0: GoogleMap?) {
         Toast.makeText(context, "onMapReady", Toast.LENGTH_SHORT).show()
         gMap = p0
-        //gMap?.setMyLocationEnabled(true)
+        gMap?.setMyLocationEnabled(true)
         addMarkers()
     }
 
@@ -218,17 +204,5 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleApiClient.ConnectionC
     override fun onLowMemory() {
         super.onLowMemory()
         map?.onLowMemory()
-    }
-
-    override fun onConnected(p0: Bundle?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onConnectionSuspended(p0: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onConnectionFailed(p0: ConnectionResult) {
-        TODO("Not yet implemented")
     }
 }
