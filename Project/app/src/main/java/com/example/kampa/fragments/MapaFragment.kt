@@ -9,11 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.kampa.Models.Sitios
-import com.example.kampa.Place
-import com.example.kampa.PlacesReader
 import com.example.kampa.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.karumi.dexter.Dexter
@@ -21,9 +20,7 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.single.PermissionListener
-import com.parse.ParseObject
 import com.parse.ParseQuery
-import com.parse.ParseUser
 import com.karumi.dexter.listener.PermissionRequest as PR
 
 
@@ -66,9 +63,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mapa, container, false)
     }
-    private val places: List<Place> by lazy {
-        PlacesReader(requireContext()).read()
-    }
 
     override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -102,9 +96,10 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         query.findInBackground { itemList, e ->
             if (e == null) {
                 // Access the array of results here
-                val firstItemId: String? = itemList[0].nombre
-                Toast.makeText(context, firstItemId, Toast.LENGTH_SHORT).show()
-                Log.d(TAG,firstItemId!!)
+                for (el in itemList ) {
+                    add_Marker(el)
+                    Log.d(TAG,el.nombre!!)
+                }
             } else {
                 Log.d("item", "Error: " + e.message)
             }
@@ -133,14 +128,12 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
 
     }
 
-    private fun addMarkers() {
-        places.forEach { place ->
+    private fun add_Marker(sitio: Sitios) {
             val marker = gMap!!.addMarker(
                 MarkerOptions()
-                    .title(place.name)
-                    .position(place.latLng)
+                    .title(sitio.nombre)
+                    .position(LatLng(sitio.ubicacion!!.latitude, sitio.ubicacion!!.longitude))
             )
-        }
     }
 
     companion object {
@@ -168,7 +161,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         Toast.makeText(context, "onMapReady", Toast.LENGTH_SHORT).show()
         gMap = p0
         gMap?.setMyLocationEnabled(true)
-        addMarkers()
     }
 
     override fun onStart() {
