@@ -3,6 +3,7 @@ package com.example.kampa
 import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import com.example.kampa.models.*
 import com.parse.Parse
 import com.parse.ParseObject
 import okhttp3.OkHttpClient
@@ -23,6 +24,13 @@ class ParseApplication : Application() {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         builder.networkInterceptors().add(httpLoggingInterceptor)
+
+        // Define subclasses
+        ParseObject.registerSubclass(Rol::class.java)
+        ParseObject.registerSubclass(Sitio::class.java)
+        ParseObject.registerSubclass(Tag::class.java)
+        ParseObject.registerSubclass(TipoSitio::class.java)
+        ParseObject.registerSubclass(UsuarioTag::class.java)
 
         // Get secret keys
         val ai: ApplicationInfo = applicationContext.packageManager
