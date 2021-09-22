@@ -1,5 +1,6 @@
 package com.example.kampa.models
 
+import com.example.kampa.Constantes
 import com.parse.ParseClassName
 import com.parse.ParseFile
 import com.parse.ParseObject
@@ -8,19 +9,14 @@ import com.parse.ParseObject
 class PublicacionTags : ParseObject() {
 
     var idPublicacion: Publicacion?
-        get() = getParseObject(ID_PUBLICACION) as Publicacion?
+        get() = getParseObject(Constantes.ID_PUBLICACION) as Publicacion?
         set(_idPublicacion) {
-            put(ID_PUBLICACION, _idPublicacion!!)
+            put(Constantes.ID_PUBLICACION, _idPublicacion!!)
         }
 
     var idTag: Tag?
-        get() = getParseObject(ID_TAG) as Tag?
+        get() = getParseObject(Constantes.ID_TAG) as Tag?
         set(_idTag) {
-            put(ID_TAG, _idTag!!)
+            put(Constantes.ID_TAG, _idTag!!)
         }
-
-    companion object {
-        const val ID_PUBLICACION = "idPublicacion"
-        const val ID_TAG = "idTag"
-    }
 }

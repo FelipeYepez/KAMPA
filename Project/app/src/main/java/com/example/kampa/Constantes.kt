@@ -1,7 +1,6 @@
 package com.example.kampa
 
-class Constantes {
-
+object Constantes {
     val DESCRIPCION = "descripcion"
     val DIRECCION = "direccion"
     val ESTADO = "estado"
@@ -22,5 +21,4 @@ class Constantes {
     val NUM_LIKES = "numLikes"
     val NUM_PUBLICACIONES = "numPublicaciones"
     val UBICACION = "ubicacion"
-
 }

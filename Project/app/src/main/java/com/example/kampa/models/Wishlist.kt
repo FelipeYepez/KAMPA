@@ -1,5 +1,6 @@
 package com.example.kampa.models
 
+import com.example.kampa.Constantes
 import com.parse.ParseClassName
 import com.parse.ParseObject
 import com.parse.ParseUser
@@ -8,19 +9,14 @@ import com.parse.ParseUser
 class Wishlist : ParseObject() {
 
     var idUsuario: ParseUser?
-        get() = getParseUser(ID_USUARIO)
+        get() = getParseUser(Constantes.ID_USUARIO)
         set(_idUsuario) {
-            put(ID_USUARIO, _idUsuario!!)
+            put(Constantes.ID_USUARIO, _idUsuario!!)
             }
 
     var nombre: String?
-        get() = getString(NOMBRE)
+        get() = getString(Constantes.NOMBRE)
         set(_nombre) {
-            put(NOMBRE, _nombre!!)
+            put(Constantes.NOMBRE, _nombre!!)
         }
-
-    companion object {
-        const val ID_USUARIO = "idUsuario"
-        const val NOMBRE = "nombre"
-    }
 }
