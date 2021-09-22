@@ -13,6 +13,7 @@ import com.example.kampa.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.karumi.dexter.Dexter
@@ -22,6 +23,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.single.PermissionListener
 import com.parse.ParseQuery
 import com.karumi.dexter.listener.PermissionRequest as PR
+import android.content.Intent
+import com.example.kampa.SitioActivity
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,7 +38,7 @@ private const val TAG = "MapaFragment"
  * Use the [MapaFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MapaFragment : Fragment(), OnMapReadyCallback {
+class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -149,7 +152,24 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
                 MarkerOptions()
                     .title(sitio.nombre)
                     .position(LatLng(sitio.ubicacion!!.latitude, sitio.ubicacion!!.longitude))
+
             )
+        marker.tag = sitio
+    }
+    /** Called when the user clicks a marker.  */
+    override fun onMarkerClick(marker: Marker): Boolean {
+
+        Log.d(TAG,"entered onclick ")
+
+        val sitio : Sitios = marker.tag as Sitios
+
+        val i = Intent(activity, SitioActivity::class.java)
+
+        i.putExtra("sitio", sitio)
+
+        startActivity(i)
+
+        return false
     }
 
     companion object {
@@ -177,6 +197,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
         Toast.makeText(context, "onMapReady", Toast.LENGTH_SHORT).show()
         gMap = p0
         gMap?.setMyLocationEnabled(true)
+        gMap?.setOnMarkerClickListener(this)
     }
 
     override fun onStart() {
