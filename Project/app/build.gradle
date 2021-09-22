@@ -21,6 +21,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
         }
     }
     compileOptions {
@@ -53,4 +54,6 @@ dependencies {
     // Añadir Parse
     implementation 'com.github.parse-community.Parse-SDK-Android:parse:1.25.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    //Añadir Carousel
+    //implementation 'com.github.denzcoskun:ImageSlideShow:0.0.6'
 }
