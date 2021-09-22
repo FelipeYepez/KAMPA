@@ -26,11 +26,18 @@ class ParseApplication : Application() {
         builder.networkInterceptors().add(httpLoggingInterceptor)
 
         // Define subclasses
+        ParseObject.registerSubclass(Denuncia::class.java)
+        ParseObject.registerSubclass(Publicacion::class.java)
+        ParseObject.registerSubclass(PublicacionTags::class.java)
         ParseObject.registerSubclass(Rol::class.java)
         ParseObject.registerSubclass(Sitio::class.java)
+        ParseObject.registerSubclass(SitioTag::class.java)
         ParseObject.registerSubclass(Tag::class.java)
         ParseObject.registerSubclass(TipoSitio::class.java)
+        ParseObject.registerSubclass(UsuarioSitio::class.java)
         ParseObject.registerSubclass(UsuarioTag::class.java)
+        ParseObject.registerSubclass(Wishlist::class.java)
+        ParseObject.registerSubclass(WishlistSitio::class.java)
 
         // Get secret keys
         val ai: ApplicationInfo = applicationContext.packageManager
