@@ -4,6 +4,8 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 30
 
@@ -30,6 +32,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    // Enable data binding for swipes
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -53,4 +60,9 @@ dependencies {
     // Añadir Parse
     implementation 'com.github.parse-community.Parse-SDK-Android:parse:1.25.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+
+    // Dependencies for swipes
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
+    implementation "com.yuyakaido.android:card-stack-view:2.3.4"
+    implementation 'com.facebook.fresco:fresco:2.1.0'
 }
