@@ -52,13 +52,29 @@ class MapaFragment : Fragment(), OnMapReadyCallback {
             param2 = it.getString(ARG_PARAM2)
         }
 
+        checkMyPermission()
+
+        if (isPermissionGranted!!) {
+
+            map =childFragmentManager.findFragmentById(
+                R.id.map_fragment
+            ) as? SupportMapFragment
+
+            map?.getMapAsync(this)
+
+            map?.onCreate(savedInstanceState)
+
+            mLocationClient = FusedLocationProviderClient(requireContext())
+
+
+        }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mapa, container, false)
