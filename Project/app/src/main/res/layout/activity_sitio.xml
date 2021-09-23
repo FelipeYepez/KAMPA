@@ -7,30 +7,181 @@
     android:layout_height="match_parent"
     tools:context=".SitioActivity">
 
-
-
-    <!--<com.denzcoskun.imageslider.ImageSlider
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:auto_cycle="true"
-        app:delay="0"
-        app:period="3000"
-        app:placeholder="@color/black"
-        app:error_image="@color/purple_700"
-        android:id="@+id/slider"
-        app:corner_radius="20"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="100dp"/>-->
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!--<com.denzcoskun.imageslider.ImageSlider
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:auto_cycle="true"
+                app:delay="0"
+                app:period="3000"
+                app:placeholder="@color/black"
+                app:error_image="@color/purple_700"
+                android:id="@+id/slider"
+                app:corner_radius="20"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="100dp"/>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:background="#14B2B2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:autoSizeMaxTextSize="25sp"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <ImageButton
+                    android:id="@+id/addWishListBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    app:srcCompat="@drawable/icono_favoritos"
+                    android:background="@color/white"/>
+
+                <TextView
+                    android:id="@+id/addWishListText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Guardar"
+                    android:textSize="14dp" />
+
+                <ImageButton
+                    android:id="@+id/VisitedBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    app:srcCompat="@drawable/marker"
+                    android:background="@color/white"/>
+
+                <TextView
+                    android:id="@+id/VisitedText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Guardar"
+                    android:textSize="14dp" />
+
+            </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/title"
+
+            <TextView
+                android:id="@+id/titleDescripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="0dp"
+                android:text="Descripción"
+                android:textSize="24dp"/>
+
+            <TextView
+                android:id="@+id/descripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/titleDescripcion"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="0dp"
+                android:text="TextView"
+                android:textSize="16dp"/>
+
+            <TextView
+                android:id="@+id/titleHistoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/descripcion"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="75dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="0dp"
+                android:text="Historia"
+                android:textSize="24dp"/>
+
+            <TextView
+                android:id="@+id/historia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/titleHistoria"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="0dp"
+                android:text="TextView"
+                android:textSize="16dp"/>
+
+
+            <TextView
+                android:id="@+id/paginaOficial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/titleHistoria"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="50dp"
+                android:text="Pagina Oficial"
+                android:textSize="16dp"
+                android:linksClickable="true"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="181dp"
-        android:layout_marginEnd="173dp"
-        android:text="TextView" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="320dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
+        app:srcCompat="@drawable/plus"
+        android:background="@color/white"
+        app:borderWidth="0dp" />
+
 </RelativeLayout>
