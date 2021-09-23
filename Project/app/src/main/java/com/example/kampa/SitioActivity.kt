@@ -24,6 +24,12 @@ class SitioActivity : AppCompatActivity() {
         val title:TextView = findViewById(R.id.title)
         title.text = sitio.nombre
 
+        val descripcion : TextView = findViewById(R.id.descripcion)
+        descripcion.text = sitio.descripcion
+
+        val historia : TextView = findViewById(R.id.historia)
+        historia.text = sitio.historia
+
 //        val imageSlider : ImageSlider = findViewById(R.id.slider)
 //        val slideModels : List<SlideModel> = listOf(SlideModel(R.drawable.arcos1), SlideModel(R.drawable.arcos2), SlideModel(R.drawable.arcos3), SlideModel(R.drawable.arcos2))
 //
