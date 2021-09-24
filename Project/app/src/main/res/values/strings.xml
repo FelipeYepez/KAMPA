@@ -2,4 +2,9 @@
     <string name="app_name">KAMPA</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mis_listas_de_deseos">Mis Listas de Deseos</string>
+    <string name="titulo_de_la_lista">Titulo de la Lista</string>
+    <string name="nombre_del_sitio">Nombre del Sitio</string>
+    <string name="descripcion_sitio">Descripcion del Sitio</string>
+    <string name="nombre_de_la_lista">Nombre de la Lista</string>
 </resources>
