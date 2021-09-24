@@ -2,7 +2,7 @@ package com.example.kampa
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
-import com.example.kampa.Models.Sitios
+import com.example.kampa.models.Sitio
 
 //import com.denzcoskun.imageslider.ImageSlider
 //import com.denzcoskun.imageslider.models.SlideModel
@@ -13,12 +13,12 @@ class SitioActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sitio)
-        val sitio: Sitios?
+        val sitio: Sitio?
         sitio = if (savedInstanceState == null) {
             val extras = intent.extras
-            extras?.get("sitio") as Sitios
+            extras?.get("sitio") as Sitio
         } else {
-            savedInstanceState.getSerializable("sitio") as Sitios
+            savedInstanceState.getSerializable("sitio") as Sitio
         }
 
         val title:TextView = findViewById(R.id.title)

@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.kampa.Models.Sitios
+import com.example.kampa.models.Sitio
 import com.example.kampa.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.*
@@ -108,7 +108,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     }
 
     private fun query(){
-        val query: ParseQuery<Sitios> = ParseQuery.getQuery(Sitios::class.java)
+        val query: ParseQuery<Sitio> = ParseQuery.getQuery(Sitio::class.java)
 
         // Execute the find asynchronously
         // Execute the find asynchronously
@@ -147,7 +147,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
 
     }
 
-    private fun add_Marker(sitio: Sitios) {
+    private fun add_Marker(sitio: Sitio) {
             val marker = gMap!!.addMarker(
                 MarkerOptions()
                     .title(sitio.nombre)
@@ -161,7 +161,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
 
         Log.d(TAG,"entered onclick ")
 
-        val sitio : Sitios = marker.tag as Sitios
+        val sitio : Sitio = marker.tag as Sitio
 
         val i = Intent(activity, SitioActivity::class.java)
 
