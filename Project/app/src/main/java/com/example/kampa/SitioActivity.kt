@@ -29,6 +29,8 @@ class SitioActivity : AppCompatActivity() {
 
         val historia : TextView = findViewById(R.id.historia)
         historia.text = sitio.historia
+        val paginaOficial :TextView = findViewById(R.id.paginaOficial)
+        paginaOficial.text= sitio.paginaOficial
 
 //        val imageSlider : ImageSlider = findViewById(R.id.slider)
 //        val slideModels : List<SlideModel> = listOf(SlideModel(R.drawable.arcos1), SlideModel(R.drawable.arcos2), SlideModel(R.drawable.arcos3), SlideModel(R.drawable.arcos2))
