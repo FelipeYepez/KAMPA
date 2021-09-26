@@ -12,7 +12,7 @@
         android:layout_width="380dp"
         android:layout_height="400dp"
         android:layout_marginTop="30dp"
-        >
+        android:background="@color/blue_color">
 
     </com.yuyakaido.android.cardstackview.CardStackView>
 
