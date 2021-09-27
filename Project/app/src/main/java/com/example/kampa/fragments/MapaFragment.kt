@@ -24,6 +24,7 @@ import com.karumi.dexter.listener.single.PermissionListener
 import com.parse.ParseQuery
 import com.karumi.dexter.listener.PermissionRequest as PR
 import android.content.Intent
+import com.example.kampa.MainActivity
 import com.example.kampa.SitioActivity
 
 
@@ -44,7 +45,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     private var param2: String? = null
     private var map : SupportMapFragment? = null
     private  var gMap : GoogleMap? = null
-    private var isPermissionGranted : Boolean? = false
+    private  lateinit var mainActivity : MainActivity
     private var fab : FloatingActionButton? = null
     private var mLocationClient : FusedLocationProviderClient? = null
 
@@ -54,23 +55,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
-        checkMyPermission()
-
-        if (isPermissionGranted!!) {
-
-            map =childFragmentManager.findFragmentById(
-                R.id.map_fragment
-            ) as? SupportMapFragment
-
-            map?.getMapAsync(this)
-
-            map?.onCreate(savedInstanceState)
-
-            mLocationClient = FusedLocationProviderClient(requireContext())
-
-
-        }
+        mainActivity = requireActivity() as MainActivity
 
     }
 
@@ -86,32 +71,24 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        checkMyPermission()
         initMap()
 
 
     }
 
     private fun initMap() {
-        if (isPermissionGranted!!) {
-            map =childFragmentManager.findFragmentById(
-                R.id.map_fragment
-            ) as? SupportMapFragment
+        map =childFragmentManager.findFragmentById(
+            R.id.map_fragment
+        ) as? SupportMapFragment
 
-            //map?.onCreate(savedInstanceState)
-
-            map?.getMapAsync(this)
-
-            query()
-
-        }
+        map?.getMapAsync(this)
+        query()
     }
 
     private fun query(){
         val query: ParseQuery<Sitio> = ParseQuery.getQuery(Sitio::class.java)
 
-        // Execute the find asynchronously
-        // Execute the find asynchronously
+
         query.findInBackground { itemList, e ->
             if (e == null) {
                 // Access the array of results here
@@ -125,27 +102,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         }
     }
 
-    private fun checkMyPermission() {
-        Dexter.withContext(context).withPermission(android.Manifest.permission.ACCESS_FINE_LOCATION).withListener(object : PermissionListener{
-            override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-                Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-                isPermissionGranted = true
-            }
 
-            override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
-                Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
-                isPermissionGranted = false
-            }
-
-            override fun onPermissionRationaleShouldBeShown(
-                p0: PR?,
-                p1: PermissionToken?
-            ) {
-                p1?.continuePermissionRequest()
-            }
-        }).check()
-
-    }
 
     private fun add_Marker(sitio: Sitio) {
             val marker = gMap!!.addMarker(
@@ -196,7 +153,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     override fun onMapReady(p0: GoogleMap?) {
         Toast.makeText(context, "onMapReady", Toast.LENGTH_SHORT).show()
         gMap = p0
-        gMap?.setMyLocationEnabled(true)
+        gMap?.setMyLocationEnabled(mainActivity.isPermissionGranted!!)
         gMap?.setOnMarkerClickListener(this)
     }
 
