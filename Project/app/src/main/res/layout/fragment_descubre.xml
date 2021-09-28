@@ -5,22 +5,25 @@
     android:layout_height="match_parent"
     tools:context=".fragments.DescubreFragment"
     android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:weightSum="6">
 
     <com.yuyakaido.android.cardstackview.CardStackView
         android:id="@+id/swipeCard"
-        android:layout_width="380dp"
-        android:layout_height="400dp"
-        android:layout_marginTop="30dp"
-        android:background="@color/blue_color">
-
-    </com.yuyakaido.android.cardstackview.CardStackView>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_weight="5"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="30sp">
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="20sp"
+        android:layout_weight="1">
 
         <ImageButton
             android:id="@+id/btnDescubreDislike"
@@ -28,8 +31,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_dislike"
             android:background="@null"
-            style="?android:attr/borderlessButtonStyle"
-            />
+            style="?android:attr/borderlessButtonStyle" />
 
         <ImageButton
             android:id="@+id/btnDescubreWishlist"

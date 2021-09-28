@@ -37,8 +37,7 @@ class DescubreFragment : Fragment(), CardStackListener {
     private lateinit var cardStackLayoutManager: CardStackLayoutManager
     private lateinit var adapter:DescubreAdapter
     private lateinit var swipeCard: CardStackView
-    private lateinit var data: List<Publicacion>
-    private lateinit var publcaci: Publicacion
+    private lateinit var data: ArrayList<Publicacion>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +58,6 @@ class DescubreFragment : Fragment(), CardStackListener {
     override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         swipeCard = view.findViewById(R.id.swipeCard)
-        //cardStackLayoutManager = CardStackLayoutManager(requireContext(), this).apply {
         cardStackLayoutManager = CardStackLayoutManager(requireContext(), this).apply {
             setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
             setOverlayInterpolator(LinearInterpolator())
@@ -70,13 +68,12 @@ class DescubreFragment : Fragment(), CardStackListener {
 
     private fun initializeData(){
         val query: ParseQuery<Publicacion> = ParseQuery.getQuery(Publicacion::class.java)
-        // Execute the find asynchronously
+        data = ArrayList()
         query.findInBackground { itemList, e ->
             if (e == null) {
-                for(element in itemList){
-                    publcaci = element
+                for(element in itemList) {
+                    data.add(element)
                 }
-                //data = itemList
                 initializeList()
             } else {
                 Log.d("item", "Error: " + e.message)
@@ -86,10 +83,11 @@ class DescubreFragment : Fragment(), CardStackListener {
     }
 
     private fun initializeList(){
+        cardStackLayoutManager.setStackFrom(StackFrom.Top)
+        cardStackLayoutManager.setTranslationInterval(4.0f)
         swipeCard.layoutManager = cardStackLayoutManager
-        //adapter = DescubreAdapter(requireContext(), data)
-        adapter = DescubreAdapter(requireActivity(), publcaci)
-        //swipeCard.adapter = adapter
+        adapter = DescubreAdapter(requireContext(), data)
+        swipeCard.adapter = adapter
 
         swipeCard.itemAnimator.apply {
             if (this is DefaultItemAnimator) {
@@ -118,26 +116,26 @@ class DescubreFragment : Fragment(), CardStackListener {
     }
 
     override fun onCardDragging(direction: Direction?, ratio: Float) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun onCardSwiped(direction: Direction?) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun onCardRewound() {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun onCardCanceled() {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun onCardAppeared(view: View?, position: Int) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun onCardDisappeared(view: View?, position: Int) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 }
