@@ -1,5 +1,6 @@
 package com.example.kampa.models
 
+import com.example.kampa.Constantes.FOTO
 import com.parse.*
 
 
@@ -13,9 +14,9 @@ class Sitio : ParseObject(){
     var descripcion: String?
         get() = getString(DESCRIPCION)
         set(descripcion) = put(DESCRIPCION,descripcion!!)
-    var fotos: List<ParseFile>?
-        get() = getList<ParseFile>(FOTOS)!!
-        set(fotos) = put(FOTOS,fotos!!)
+    var foto: ParseFile?
+        get() = getParseFile(FOTO)
+        set(foto) = put(FOTO,foto!!)
     var direccion: String?
         get() = getString(DIRECCION)
         set(direccion) = put(DIRECCION,direccion!!)

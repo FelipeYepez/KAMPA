@@ -1,14 +1,21 @@
 package com.example.kampa
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import com.example.kampa.models.Sitio
+import com.parse.GetDataCallback
+import com.parse.ParseFile
 
 //import com.denzcoskun.imageslider.ImageSlider
 //import com.denzcoskun.imageslider.models.SlideModel
 
 
 class SitioActivity : AppCompatActivity() {
+
+    val TAG = "SitioActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,16 +36,30 @@ class SitioActivity : AppCompatActivity() {
 
         val historia : TextView = findViewById(R.id.historia)
         historia.text = sitio.historia
+
         val paginaOficial :TextView = findViewById(R.id.paginaOficial)
         paginaOficial.text= sitio.paginaOficial
 
-//        val imageSlider : ImageSlider = findViewById(R.id.slider)
-//        val slideModels : List<SlideModel> = listOf(SlideModel(R.drawable.arcos1), SlideModel(R.drawable.arcos2), SlideModel(R.drawable.arcos3), SlideModel(R.drawable.arcos2))
-//
-//        imageSlider.setImageList(slideModels, true)
-
+        val foto : ImageView = findViewById(R.id.foto)
+        loadImages(sitio.foto, foto)
     }
 
+    private fun loadImages(foto: ParseFile?, imgView: ImageView){
+        if (foto != null) {
+            foto.getDataInBackground(GetDataCallback { data, e ->
+                if (e == null) {
+                    val bmp = BitmapFactory.decodeByteArray(data, 0, data.size)
+                    imgView.setImageBitmap(bmp)
+                }
+                else{
+                    Log.d(TAG, e.toString())
 
+                }
+            })
+        }
+        else{
+            Log.d(TAG, "Foto = NULL")
+        }
+    }
 
 }
