@@ -188,9 +188,11 @@
         android:layout_marginEnd="34dp"
         android:layout_marginBottom="30dp"
         android:clickable="true"
-        app:tint="#FFFFFF"
+        app:backgroundTint="#D93671"
         app:borderWidth="0dp"
         app:srcCompat="@drawable/ic_baseline_add_24"
-        app:backgroundTint="#D93671"/>
+        app:tint="#FFFFFF"
+        />
+
 
 </RelativeLayout>
