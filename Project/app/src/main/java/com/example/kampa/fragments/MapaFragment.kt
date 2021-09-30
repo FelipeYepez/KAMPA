@@ -88,7 +88,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     private fun query(){
         val query: ParseQuery<Sitio> = ParseQuery.getQuery(Sitio::class.java)
 
-
         query.findInBackground { itemList, e ->
             if (e == null) {
                 // Access the array of results here
