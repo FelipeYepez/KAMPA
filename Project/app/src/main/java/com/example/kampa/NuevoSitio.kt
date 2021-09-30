@@ -11,26 +11,25 @@ import com.parse.ParseGeoPoint
 import com.example.kampa.Constantes
 import com.example.kampa.models.TipoSitio
 import com.parse.ParseQuery
+import com.parse.PointerEncoder
 
 class NuevoSitio : AppCompatActivity() {
     val TAG = "NuevoSitio"
+    var listTipoSitio = mutableListOf<TipoSitio>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nuevo_sitio)
 
-        var listTipoSitio = mutableListOf<TipoSitio>()
-        desplegarTipoSitio(listTipoSitio)
+        desplegarTipoSitio()
 
         var sitio = Sitio()
 
         val submitButtonSitio:Button = findViewById(R.id.submitButtonSitio)
         submitButtonSitio.setOnClickListener{
 
-            Toast.makeText(this, "Button Clicked", Toast.LENGTH_SHORT).show()
-
             val inputNombre:EditText = findViewById(R.id.inputNombre)
             sitio.nombre = inputNombre.text.toString()
-            Log.d(TAG, sitio.nombre.toString())
 
             val inputDescripcion:EditText = findViewById(R.id.inputDescripcion)
             sitio.descripcion = inputDescripcion.text.toString()
@@ -46,10 +45,7 @@ class NuevoSitio : AppCompatActivity() {
 
             val tipoSitio:RadioGroup = findViewById(R.id.radioGroupTipo)
             val idCheckedButton = tipoSitio.checkedRadioButtonId
-            val checkedBtn:RadioButton = findViewById(idCheckedButton)
-
-
-            //sitio.idTipoSitio = getIdTipoSitio(checkedBtn.text.toString())
+            sitio.idTipoSitio = listTipoSitio[idCheckedButton]
 
             sitio.saveInBackground { e ->
                 if (e == null) {
@@ -58,14 +54,10 @@ class NuevoSitio : AppCompatActivity() {
                     Log.d(TAG, e.toString())
                 }
             }
-
-
         }
-
     }
 
-    fun desplegarTipoSitio(listTipoSitio:MutableList<TipoSitio>){
-
+    fun desplegarTipoSitio(){
         var radioGroup:RadioGroup = findViewById(R.id.radioGroupTipo)
         val query: ParseQuery<TipoSitio> = ParseQuery.getQuery(TipoSitio::class.java)
         query.findInBackground { itemList, e ->
@@ -83,25 +75,5 @@ class NuevoSitio : AppCompatActivity() {
                 Log.d("item", "Error: " + e.message)
             }
         }
-
     }
-
-//    fun getIdTipoSitio(nameSitio:String, query: ParseQuery<TipoSitio>){
-//        query.findInBackground { itemList, e ->
-//            if (e == null) {
-//                var id = 0
-//                for (el in itemList ) {
-//                    if(el.)
-//                }
-//            } else {
-//                Log.d("item", "Error: " + e.message)
-//            }
-//        }
-//    }
-
-
-
-
-
-
 }
