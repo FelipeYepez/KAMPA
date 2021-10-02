@@ -1,5 +1,6 @@
 package com.example.kampa
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +25,14 @@ class NuevoSitio : AppCompatActivity() {
         desplegarTipoSitio()
 
         var sitio = Sitio()
+
+        val agregarImagenButton: ImageButton = findViewById(R.id.agregarImagenButton)
+        agregarImagenButton.setOnClickListener{
+            val i = Intent(this, uploadImageActivity::class.java)
+
+            startActivity(i)
+
+        }
 
         val submitButtonSitio:Button = findViewById(R.id.submitButtonSitio)
         submitButtonSitio.setOnClickListener{

@@ -23,9 +23,9 @@
             android:name=".SitioActivity"
             android:exported="true" />
         <activity
-            android:name=".NuevoSitio"
+            android:name=".MainActivity"
             android:exported="true" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".NuevoSitio">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
