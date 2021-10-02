@@ -17,15 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KAMPA">
         <activity
-            android:name=".MainActivity"
-            android:exported="true" />
-        <activity
-            android:name=".NuevoSitio"
+            android:name=".uploadImageActivity"
             android:exported="true" />
         <activity
             android:name=".SitioActivity"
             android:exported="true" />
-        <activity android:name=".uploadImageActivity">
+        <activity
+            android:name=".NuevoSitio"
+            android:exported="true" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
