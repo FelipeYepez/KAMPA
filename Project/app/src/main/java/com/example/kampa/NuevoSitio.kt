@@ -28,12 +28,8 @@ import android.os.Build
 
 import android.graphics.Bitmap
 import androidx.core.app.ActivityCompat.startActivityForResult
-
-
-
-
-
-
+import java.io.File
+import java.net.URI
 
 
 class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
@@ -42,6 +38,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     var map :MapView? = null
     var gMap : GoogleMap? = null
     var imagenSitio:ImageView? = null
+    var selectedImage: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,8 +55,8 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
                 result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
-                var bitmap = loadFromUri(intent?.data)
-                imagenSitio!!.setImageBitmap(bitmap)
+                selectedImage = intent?.data
+                imagenSitio!!.setImageURI(selectedImage)
             }
         }
 
@@ -76,8 +73,6 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
             i.type = "image/*"
             i.action = Intent.ACTION_GET_CONTENT
 
-            // pass the constant to compare it
-            // with the returned requestCode
             startForResult.launch(Intent.createChooser(i, "Select Picture"))
 
         }
@@ -87,6 +82,10 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
 
             val inputNombre:EditText = findViewById(R.id.inputNombre)
             sitio.nombre = inputNombre.text.toString()
+
+            if(selectedImage != null){
+                sitio.foto = ParseFile(File(selectedImage?.path))
+            }
 
             val inputDescripcion:EditText = findViewById(R.id.inputDescripcion)
             sitio.descripcion = inputDescripcion.text.toString()
@@ -159,24 +158,6 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
 //            intent.putExtra("currentLocation", currentLocation)
 //            startActivityForResult(intent, NEW_LOCATION_ACTIVITY_REQUEST_CODE)
 //        })
-    }
-
-    private fun loadImages(foto: ParseFile?, imgView: ImageView){
-        if (foto != null) {
-            foto.getDataInBackground(GetDataCallback { data, e ->
-                if (e == null) {
-                    val bmp = BitmapFactory.decodeByteArray(data, 0, data.size)
-                    imgView.setImageBitmap(bmp)
-                }
-                else{
-                    Log.d(TAG, e.toString())
-
-                }
-            })
-        }
-        else{
-            Log.d(TAG, "Foto = NULL")
-        }
     }
 
     fun loadFromUri(photoUri: Uri?): Bitmap? {

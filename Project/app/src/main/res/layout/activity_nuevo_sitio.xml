@@ -111,7 +111,8 @@
             <ImageView
                 android:id="@+id/imagenSitio"
                 android:layout_width="match_parent"
-                android:layout_height="275dp">
+                android:layout_height="275dp"
+                android:src="@drawable/default_sitio">
 
             </ImageView>
 
