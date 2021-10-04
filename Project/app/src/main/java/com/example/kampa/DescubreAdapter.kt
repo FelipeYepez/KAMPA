@@ -17,6 +17,8 @@ import com.example.kampa.models.Sitio
 import android.graphics.BitmapFactory
 import android.graphics.Bitmap
 import android.widget.Toast
+import com.parse.Parse
+import com.parse.ParseQuery
 import java.util.*
 
 
@@ -37,23 +39,6 @@ class DescubreAdapter(private val context: Context, private val data: ArrayList<
         var item: Publicacion = data[position]
         holder.bind(item, context)
     }
-    /*
-    private fun loadImages(foto: ParseFile?, imgView: ImageView){
-        if (foto != null) {
-            foto.getDataInBackground(GetDataCallback { data, e ->
-                if (e == null) {
-                    val bmp = BitmapFactory.decodeByteArray(data, 0, data.size)
-                    imgView.setImageBitmap(bmp)
-                }
-                else{
-
-                }
-            })
-        }
-        else{
-
-        }
-    }*/
 
     class CardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private var swipeCardImage: ImageView = view.findViewById(R.id.swipeCardImage)
@@ -78,9 +63,12 @@ class DescubreAdapter(private val context: Context, private val data: ArrayList<
         }
 
         fun bind(item: Publicacion, context: Context) {
-            swipeCardImage.setImageResource(R.drawable.esencia_patrimonio)
             loadImages(item.foto, swipeCardImage)
-            swipeCardName.setText(item.descripcion.toString())
+
+            //var sitio = item.get("Sitio")
+            //swipeCardName.setText(sitio.get("nombre").toString())
+
+            swipeCardName.setText(item.idSitio?.nombre)
             swipeCardDescription.setText(item.descripcion.toString())
         }
     }

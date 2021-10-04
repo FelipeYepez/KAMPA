@@ -9,7 +9,7 @@ object Constantes {
     val FOTO_PERFIL = "fotoPerfil"
     val ID_PUBLICACION = "idPublicacion"
     val ID_ROL = "idRol"
-    val ID_SITIO = "idSitio"
+    val ID_SITIO = "idsitio"
     val ID_TAG = "idTag"
     val ID_TIPO_SITIO = "idTipoSitio"
     val ID_USUARIO = "idUsuario"

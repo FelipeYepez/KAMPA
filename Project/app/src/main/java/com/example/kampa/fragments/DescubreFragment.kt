@@ -11,11 +11,13 @@ import android.view.animation.LinearInterpolator
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kampa.Constantes
 import com.example.kampa.DescubreAdapter
 import com.example.kampa.MainActivity
 import com.example.kampa.R
 import com.example.kampa.models.Publicacion
 import com.example.kampa.models.Sitio
+import com.parse.ParseObject
 import com.parse.ParseQuery
 import com.yuyakaido.android.cardstackview.*
 
@@ -69,6 +71,7 @@ class DescubreFragment : Fragment(), CardStackListener {
     private fun initializeData(){
         val query: ParseQuery<Publicacion> = ParseQuery.getQuery(Publicacion::class.java)
         data = ArrayList()
+        query.include("idsitio")
         query.findInBackground { itemList, e ->
             if (e == null) {
                 for(element in itemList) {
