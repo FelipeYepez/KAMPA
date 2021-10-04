@@ -1,5 +1,7 @@
 package com.example.kampa
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -39,14 +41,25 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     var gMap : GoogleMap? = null
     var imagenSitio:ImageView? = null
     var selectedImage: Uri? = null
+    var permission: Boolean? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nuevo_sitio)
 
+
         initMap()
 
         desplegarTipoSitio()
+
+        permission = if (savedInstanceState == null) {
+            val extras = intent.extras
+            extras?.get("permission") as Boolean
+        } else {
+            savedInstanceState.getSerializable("permission") as Boolean
+        }
 
         var sitio = Sitio()
         imagenSitio = findViewById(R.id.imagenSitio)
@@ -142,9 +155,12 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
 
     }
 
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d(TAG, "onMapReady: entered onMapReady")
         gMap = googleMap
+        gMap?.setMyLocationEnabled(permission!!)
+
 //        val latLng = LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())
 //        mMap.moveCamera(
 //            CameraUpdateFactory.newLatLngZoom(
@@ -160,26 +176,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
 //        })
     }
 
-    fun loadFromUri(photoUri: Uri?): Bitmap? {
-        var image: Bitmap? = null
-        try {
-            // check version of Android on device
-            image = if (Build.VERSION.SDK_INT > 27) {
-                // on newer versions of Android, use the new decodeBitmap method
-                val source = ImageDecoder.createSource(
-                    this.contentResolver,
-                    photoUri!!
-                )
-                ImageDecoder.decodeBitmap(source)
-            } else {
-                // support older versions of Android by using getBitmap
-                MediaStore.Images.Media.getBitmap(this.contentResolver, photoUri)
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return image
-    }
+
 
 
 }
