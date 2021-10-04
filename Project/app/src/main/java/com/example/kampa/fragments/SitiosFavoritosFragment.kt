@@ -17,6 +17,14 @@ private const val ARG_PARAM2 = "param2"
  * Use the [SitiosFavoritosFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+/*
+    1. Crear el viewModel? para tener el binding y todo
+    2. obtener por llamada a la bd los datos de todos los sitios
+    3. pasar ese arreglo al viewholder para que aparezcan todos
+    4. poner on click listeners para mandar al sitio
+
+ */
 class SitiosFavoritosFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null

@@ -7,6 +7,7 @@ object Constantes {
     val FOTO = "foto"
     val FOTOS = "fotos"
     val FOTO_PERFIL = "fotoPerfil"
+    val FOTO_WISHLIST = "fotoWishlist"
     val ID_PUBLICACION = "idPublicacion"
     val ID_ROL = "idRol"
     val ID_SITIO = "idSitio"
