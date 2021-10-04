@@ -1,25 +1,17 @@
-package com.example.kampa
+package com.example.kampa.Activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.*
 import com.example.kampa.models.Sitio
-import com.google.android.gms.maps.model.LatLng
 import com.parse.ParseGeoPoint
-import com.example.kampa.Constantes
 import com.example.kampa.models.TipoSitio
 import com.parse.ParseQuery
-import com.parse.PointerEncoder
-import androidx.core.app.ActivityCompat.startActivityForResult
 
-import androidx.annotation.NonNull
+import com.example.kampa.R
 import com.google.android.gms.maps.*
-
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener
-import org.jetbrains.annotations.NotNull
 
 
 class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
@@ -41,7 +33,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
 
         val agregarImagenButton: ImageButton = findViewById(R.id.agregarImagenButton)
         agregarImagenButton.setOnClickListener{
-            val i = Intent(this, uploadImageActivity::class.java)
+            val i = Intent(this, UploadImageActivity::class.java)
 
             startActivity(i)
 

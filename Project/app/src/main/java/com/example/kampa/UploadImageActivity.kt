@@ -1,4 +1,4 @@
-package com.example.kampa
+package com.example.kampa.Activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,7 +21,7 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 typealias LumaListener = (luma: Double) -> Unit
 
-class uploadImageActivity : AppCompatActivity() {
+class UploadImageActivity : AppCompatActivity() {
 
     private var imageCapture: ImageCapture? = null
 
