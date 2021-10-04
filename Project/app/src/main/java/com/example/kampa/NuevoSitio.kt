@@ -1,17 +1,39 @@
-package com.example.kampa.Activities
+package com.example.kampa
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kampa.models.Sitio
 import com.parse.ParseGeoPoint
 import com.example.kampa.models.TipoSitio
 import com.parse.ParseQuery
 
-import com.example.kampa.R
 import com.google.android.gms.maps.*
+import com.parse.GetDataCallback
+import com.parse.ParseFile
+import java.io.IOException
+
+import android.provider.MediaStore
+
+import android.graphics.ImageDecoder
+
+import android.os.Build
+
+import android.graphics.Bitmap
+import androidx.core.app.ActivityCompat.startActivityForResult
+
+
+
+
+
+
 
 
 class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
@@ -19,6 +41,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     var listTipoSitio = mutableListOf<TipoSitio>()
     var map :MapView? = null
     var gMap : GoogleMap? = null
+    var imagenSitio:ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,14 +51,34 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
 
         desplegarTipoSitio()
 
-
         var sitio = Sitio()
+        imagenSitio = findViewById(R.id.imagenSitio)
 
-        val agregarImagenButton: ImageButton = findViewById(R.id.agregarImagenButton)
-        agregarImagenButton.setOnClickListener{
-            val i = Intent(this, UploadImageActivity::class.java)
+        var startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                var bitmap = loadFromUri(intent?.data)
+                imagenSitio!!.setImageBitmap(bitmap)
+            }
+        }
 
-            startActivity(i)
+        val capturarImagenButton: ImageButton = findViewById(R.id.capturarImagenButton)
+        capturarImagenButton.setOnClickListener{
+
+            startForResult.launch(Intent(this, UploadImageActivity::class.java))
+
+        }
+
+        val galeriaImagenButton: ImageButton = findViewById(R.id.galeriaImagenButton)
+        galeriaImagenButton.setOnClickListener{
+            val i = Intent()
+            i.type = "image/*"
+            i.action = Intent.ACTION_GET_CONTENT
+
+            // pass the constant to compare it
+            // with the returned requestCode
+            startForResult.launch(Intent.createChooser(i, "Select Picture"))
 
         }
 
@@ -117,4 +160,45 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
 //            startActivityForResult(intent, NEW_LOCATION_ACTIVITY_REQUEST_CODE)
 //        })
     }
+
+    private fun loadImages(foto: ParseFile?, imgView: ImageView){
+        if (foto != null) {
+            foto.getDataInBackground(GetDataCallback { data, e ->
+                if (e == null) {
+                    val bmp = BitmapFactory.decodeByteArray(data, 0, data.size)
+                    imgView.setImageBitmap(bmp)
+                }
+                else{
+                    Log.d(TAG, e.toString())
+
+                }
+            })
+        }
+        else{
+            Log.d(TAG, "Foto = NULL")
+        }
+    }
+
+    fun loadFromUri(photoUri: Uri?): Bitmap? {
+        var image: Bitmap? = null
+        try {
+            // check version of Android on device
+            image = if (Build.VERSION.SDK_INT > 27) {
+                // on newer versions of Android, use the new decodeBitmap method
+                val source = ImageDecoder.createSource(
+                    this.contentResolver,
+                    photoUri!!
+                )
+                ImageDecoder.decodeBitmap(source)
+            } else {
+                // support older versions of Android by using getBitmap
+                MediaStore.Images.Media.getBitmap(this.contentResolver, photoUri)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return image
+    }
+
+
 }

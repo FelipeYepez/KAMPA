@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KAMPA">
         <activity
-            android:name=".uploadImageActivity"
+            android:name=".UploadImageActivity"
             android:exported="true" />
         <activity
             android:name=".SitioActivity"

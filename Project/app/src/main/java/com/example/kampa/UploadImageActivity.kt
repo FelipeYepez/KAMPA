@@ -1,29 +1,35 @@
-package com.example.kampa.Activities
+package com.example.kampa
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.util.concurrent.Executors
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import kotlinx.android.synthetic.main.activity_main.*
+import com.parse.GetDataCallback
+import com.parse.ParseFile
 import kotlinx.android.synthetic.main.activity_upload_image.*
 import java.io.File
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
+
 typealias LumaListener = (luma: Double) -> Unit
 
 class UploadImageActivity : AppCompatActivity() {
 
-    private var imageCapture: ImageCapture? = null
+    var imageCapture: ImageCapture? = null
 
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
@@ -73,8 +79,14 @@ class UploadImageActivity : AppCompatActivity() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
                     val msg = "Photo capture succeeded: $savedUri"
+
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
+                    //Log.d(TAG, msg)
+                    val intent = Intent()
+                    intent.data = savedUri
+                    setResult(RESULT_OK, intent)
+                    finish()
+
                 }
             })
     }
@@ -93,6 +105,9 @@ class UploadImageActivity : AppCompatActivity() {
                     it.setSurfaceProvider(viewFinder.surfaceProvider)
                 }
 
+            imageCapture = ImageCapture.Builder()
+                .build()
+
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
@@ -102,7 +117,7 @@ class UploadImageActivity : AppCompatActivity() {
 
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview)
+                    this, cameraSelector, preview, imageCapture)
 
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
@@ -129,6 +144,7 @@ class UploadImageActivity : AppCompatActivity() {
     }
 
     companion object {
+        val RESULT_OK: Int = -1
         private const val TAG = "CameraXBasic"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10

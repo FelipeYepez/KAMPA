@@ -1,4 +1,4 @@
-package com.example.kampa.Activities
+package com.example.kampa
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
