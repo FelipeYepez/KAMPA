@@ -77,30 +77,44 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="45dp"
-                android:layout_marginEnd="45dp"
-                android:layout_marginTop="35dp">
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="45dp">
 
 
                 <TextView
                     android:id="@+id/titleImagen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="20dp"
                     android:layout_above="@+id/descripcion"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="20dp"
                     android:text="Imagen"
                     android:textSize="24dp"
                     android:textStyle="bold" />
 
                 <ImageButton
-                    android:id="@+id/imageButton"
+                    android:id="@+id/capturarImagenButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
+
+                <ImageButton
+                    android:id="@+id/galeriaImagenButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
 
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imagenSitio"
+                android:layout_width="match_parent"
+                android:layout_height="275dp"
+                android:src="@drawable/default_sitio">
+
+            </ImageView>
 
 
             <TextView
@@ -117,6 +131,32 @@
                 android:text="Localización"
                 android:textSize="24dp"
                 android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="275dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:orientation="horizontal">
+
+                <com.google.android.gms.maps.MapView xmlns:map="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/mapCreate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    map:liteMode="true" />
+
+                <ImageView
+                    android:id="@+id/pinPoint"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_google_pin" />
+
+
+            </LinearLayout>
 
 
             <TextView
@@ -232,11 +272,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:layout_marginTop="32dp"
+                android:backgroundTint="#14B2B2"
                 android:text="AÑADIR SITIO"
                 android:textColor="@android:color/white"
-                android:backgroundTint="#14B2B2"
                 android:textSize="18sp" />
-
 
 
         </LinearLayout>

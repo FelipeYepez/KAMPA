@@ -1,35 +1,91 @@
 package com.example.kampa
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.*
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kampa.models.Sitio
-import com.google.android.gms.maps.model.LatLng
 import com.parse.ParseGeoPoint
-import com.example.kampa.Constantes
 import com.example.kampa.models.TipoSitio
 import com.parse.ParseQuery
-import com.parse.PointerEncoder
 
-class NuevoSitio : AppCompatActivity() {
+import com.google.android.gms.maps.*
+import com.parse.GetDataCallback
+import com.parse.ParseFile
+import java.io.IOException
+
+import android.provider.MediaStore
+
+import android.graphics.ImageDecoder
+
+import android.os.Build
+
+import android.graphics.Bitmap
+import androidx.core.app.ActivityCompat.startActivityForResult
+import java.io.File
+import java.net.URI
+
+
+class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     val TAG = "NuevoSitio"
     var listTipoSitio = mutableListOf<TipoSitio>()
+    var map :MapView? = null
+    var gMap : GoogleMap? = null
+    var imagenSitio:ImageView? = null
+    var selectedImage: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nuevo_sitio)
 
+        initMap()
+
         desplegarTipoSitio()
 
         var sitio = Sitio()
+        imagenSitio = findViewById(R.id.imagenSitio)
+
+        var startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                selectedImage = intent?.data
+                imagenSitio!!.setImageURI(selectedImage)
+            }
+        }
+
+        val capturarImagenButton: ImageButton = findViewById(R.id.capturarImagenButton)
+        capturarImagenButton.setOnClickListener{
+
+            startForResult.launch(Intent(this, UploadImageActivity::class.java))
+
+        }
+
+        val galeriaImagenButton: ImageButton = findViewById(R.id.galeriaImagenButton)
+        galeriaImagenButton.setOnClickListener{
+            val i = Intent()
+            i.type = "image/*"
+            i.action = Intent.ACTION_GET_CONTENT
+
+            startForResult.launch(Intent.createChooser(i, "Select Picture"))
+
+        }
 
         val submitButtonSitio:Button = findViewById(R.id.submitButtonSitio)
         submitButtonSitio.setOnClickListener{
 
             val inputNombre:EditText = findViewById(R.id.inputNombre)
             sitio.nombre = inputNombre.text.toString()
+
+            if(selectedImage != null){
+                sitio.foto = ParseFile(File(selectedImage?.path))
+            }
 
             val inputDescripcion:EditText = findViewById(R.id.inputDescripcion)
             sitio.descripcion = inputDescripcion.text.toString()
@@ -76,4 +132,54 @@ class NuevoSitio : AppCompatActivity() {
             }
         }
     }
+
+    private fun initMap() {
+        Log.d(TAG, "initMap: initializing map")
+
+        map = findViewById(R.id.mapCreate) as MapView
+        map?.onCreate(null)
+        map?.getMapAsync(this)
+
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        Log.d(TAG, "onMapReady: entered onMapReady")
+        gMap = googleMap
+//        val latLng = LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())
+//        mMap.moveCamera(
+//            CameraUpdateFactory.newLatLngZoom(
+//                latLng,
+//                18f
+//            )
+//        )
+//        mMap.setOnMapClickListener(OnMapClickListener {
+//            Log.d(TAG, "onMapClick: clicked on map!")
+//            val intent = Intent(this@CreateActivity, NewLocationActivity::class.java)
+//            intent.putExtra("currentLocation", currentLocation)
+//            startActivityForResult(intent, NEW_LOCATION_ACTIVITY_REQUEST_CODE)
+//        })
+    }
+
+    fun loadFromUri(photoUri: Uri?): Bitmap? {
+        var image: Bitmap? = null
+        try {
+            // check version of Android on device
+            image = if (Build.VERSION.SDK_INT > 27) {
+                // on newer versions of Android, use the new decodeBitmap method
+                val source = ImageDecoder.createSource(
+                    this.contentResolver,
+                    photoUri!!
+                )
+                ImageDecoder.decodeBitmap(source)
+            } else {
+                // support older versions of Android by using getBitmap
+                MediaStore.Images.Media.getBitmap(this.contentResolver, photoUri)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return image
+    }
+
+
 }
