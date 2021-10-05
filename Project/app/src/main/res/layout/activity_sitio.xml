@@ -16,20 +16,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!--<com.denzcoskun.imageslider.ImageSlider
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:auto_cycle="true"
-                app:delay="0"
-                app:period="3000"
-                app:placeholder="@color/black"
-                app:error_image="@color/purple_700"
-                android:id="@+id/slider"
-                app:corner_radius="20"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="100dp"/>-->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="57dp"
@@ -50,6 +36,24 @@
                     android:textColor="@color/white" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/foto"
+                    android:layout_width="wrap_content"
+                    android:maxHeight="60dp"
+                    android:maxWidth="60dp"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/default_sitio" />
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -200,9 +204,11 @@
         android:layout_marginEnd="34dp"
         android:layout_marginBottom="30dp"
         android:clickable="true"
-        app:tint="#FFFFFF"
+        app:backgroundTint="#D93671"
         app:borderWidth="0dp"
         app:srcCompat="@drawable/ic_baseline_add_24"
-        app:backgroundTint="#D93671"/>
+        app:tint="#FFFFFF"
+        />
+
 
 </RelativeLayout>

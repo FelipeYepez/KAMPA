@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NuevoSitio">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:background="#14B2B2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:autoSizeMaxTextSize="25sp"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:text="Nuevo sitio"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" />
+
+
+            <TextView
+                android:id="@+id/titleNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="0dp"
+                android:text="Nombre"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/inputNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:hint="Nombre sitio"
+                android:textSize="16dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="45dp">
+
+
+                <TextView
+                    android:id="@+id/titleImagen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/descripcion"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="Imagen"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/capturarImagenButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
+
+                <ImageButton
+                    android:id="@+id/galeriaImagenButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imagenSitio"
+                android:layout_width="match_parent"
+                android:layout_height="275dp"
+                android:src="@drawable/default_sitio">
+
+            </ImageView>
+
+
+            <TextView
+                android:id="@+id/titleLocalizacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/descripcion"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="0dp"
+                android:text="Localización"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="275dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:orientation="horizontal">
+
+                <com.google.android.gms.maps.MapView xmlns:map="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/mapCreate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    map:liteMode="true" />
+
+                <ImageView
+                    android:id="@+id/pinPoint"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_google_pin" />
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/titleDescripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/descripcion"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="0dp"
+                android:text="Descripción"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/inputDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:hint="Descripción Sitio"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/titleHistoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/descripcion"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="0dp"
+                android:text="Historia"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/inputHistoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:hint="Historia sitio"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/titleTipoSitio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/descripcion"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="0dp"
+                android:text="Categoría"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupTipo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp">
+
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/titlePagina"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/descripcion"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="45dp"
+                android:layout_marginBottom="0dp"
+                android:text="Página oficial"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/inputPagina"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:hint="Página sitio"
+                android:textSize="16dp" />
+
+            <Button
+                android:id="@+id/submitButtonSitio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="#14B2B2"
+                android:text="AÑADIR SITIO"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+</RelativeLayout>
