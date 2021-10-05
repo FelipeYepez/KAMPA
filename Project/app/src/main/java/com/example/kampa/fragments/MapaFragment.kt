@@ -25,13 +25,12 @@ import android.location.Location
 import org.jetbrains.annotations.NotNull
 
 import androidx.annotation.NonNull
+import androidx.annotation.RequiresPermission
 
 import com.google.android.gms.tasks.OnCompleteListener
 
 import com.google.android.gms.location.LocationServices
-
-
-
+import java.util.jar.Manifest
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -39,6 +38,7 @@ import com.google.android.gms.location.LocationServices
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val TAG = "MapaFragment"
+private const val ZOOM : Float = 15F
 
 /**
  * A simple [Fragment] subclass.
@@ -53,7 +53,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     private var gMap: GoogleMap? = null
     private lateinit var mainActivity: MainActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
-
+    private lateinit var  currentLocation: Location
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +87,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             val i = Intent(activity, NuevoSitio::class.java)
 
             i.putExtra("permission", mainActivity.isPermissionGranted)
+            i.putExtra("currentLocation",currentLocation)
 
             startActivity(i)
 
@@ -103,6 +104,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
 
         map?.getMapAsync(this)
         query()
+
     }
 
     private fun query() {
@@ -173,30 +175,39 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         gMap = p0
         gMap?.setMyLocationEnabled(mainActivity.isPermissionGranted!!)
         gMap?.setOnMarkerClickListener(this)
+        getDeviceLocation()
+
     }
-//    fun getDeviceLocation() {
-//        Log.d(TAG, "getDeviceLocation: getting the device's current location")
-//        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
-//        try {
-//            if (mainActivity.isPermissionGranted!!) {
-//                val location: Task = mFusedLocationProviderClient.getLastLocation()
-//                location.addOnCompleteListener(OnCompleteListener<Any?> { task ->
-//                    if (task.isSuccessful) {
-//                        Log.d(TAG, "onComplete: found location!")
-//                        currentLocation = task.result as Location
-//                    } else {
-//                        Log.d(TAG, "onComplete: current location is null")
-//                        Toast.makeText(
-//                            context,
-//                            "Unable to get current location",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                })
-//            }
-//        } catch (e: SecurityException) {
-//            Log.d(TAG, "getDeviceLocation: SecurityException: " + e.message)
-//        }
-//    }
+
+    @RequiresPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    fun getDeviceLocation() {
+        Log.d(TAG, "getDeviceLocation: getting the device's current location")
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        try {
+            if (mainActivity.isPermissionGranted!!) {
+                val location: Task<Location> = mFusedLocationProviderClient.getLastLocation()
+                location.addOnCompleteListener(OnCompleteListener<Location> { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "onComplete: found location!")
+                        currentLocation = task.result as Location
+
+
+                        gMap?.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(LatLng(currentLocation.latitude, currentLocation.longitude), ZOOM)
+                        )
+                    } else {
+                        Log.d(TAG, "onComplete: current location is null")
+                        Toast.makeText(
+                            context,
+                            "Unable to get current location",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+            }
+        } catch (e: SecurityException) {
+            Log.d(TAG, "getDeviceLocation: SecurityException: " + e.message)
+        }
+    }
 
 }

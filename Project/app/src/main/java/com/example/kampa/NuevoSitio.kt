@@ -29,7 +29,9 @@ import android.graphics.ImageDecoder
 import android.os.Build
 
 import android.graphics.Bitmap
+import android.location.Location
 import androidx.core.app.ActivityCompat.startActivityForResult
+import com.google.android.gms.maps.model.LatLng
 import java.io.File
 import java.net.URI
 
@@ -42,6 +44,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     var imagenSitio:ImageView? = null
     var selectedImage: Uri? = null
     var permission: Boolean? = null
+    var currentLocation: Location? = null
 
 
 
@@ -59,6 +62,13 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
             extras?.get("permission") as Boolean
         } else {
             savedInstanceState.getSerializable("permission") as Boolean
+        }
+
+        currentLocation = if (savedInstanceState == null) {
+            val extras = intent.extras
+            extras?.get("currentLocation") as Location
+        } else {
+            savedInstanceState.getSerializable("currentLocation") as Location
         }
 
         var sitio = Sitio()
@@ -161,13 +171,13 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
         gMap = googleMap
         gMap?.setMyLocationEnabled(permission!!)
 
-//        val latLng = LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())
-//        mMap.moveCamera(
-//            CameraUpdateFactory.newLatLngZoom(
-//                latLng,
-//                18f
-//            )
-//        )
+       val latLng = LatLng(currentLocation!!.getLatitude(), currentLocation!!.getLongitude())
+        gMap?.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                latLng,
+                18f
+            )
+        )
 //        mMap.setOnMapClickListener(OnMapClickListener {
 //            Log.d(TAG, "onMapClick: clicked on map!")
 //            val intent = Intent(this@CreateActivity, NewLocationActivity::class.java)
