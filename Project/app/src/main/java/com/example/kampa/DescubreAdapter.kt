@@ -65,9 +65,6 @@ class DescubreAdapter(private val context: Context, private val data: ArrayList<
         fun bind(item: Publicacion, context: Context) {
             loadImages(item.foto, swipeCardImage)
 
-            //var sitio = item.get("Sitio")
-            //swipeCardName.setText(sitio.get("nombre").toString())
-
             swipeCardName.setText(item.idSitio?.nombre)
             swipeCardDescription.setText(item.descripcion.toString())
         }

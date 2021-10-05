@@ -1,25 +1,24 @@
 package com.example.kampa.fragments
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
-import androidx.fragment.app.FragmentActivity
+import android.widget.ImageButton
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kampa.Constantes
 import com.example.kampa.DescubreAdapter
-import com.example.kampa.MainActivity
 import com.example.kampa.R
 import com.example.kampa.models.Publicacion
-import com.example.kampa.models.Sitio
-import com.parse.ParseObject
-import com.parse.ParseQuery
+import com.example.kampa.models.UsuarioSitio
+import com.parse.*
 import com.yuyakaido.android.cardstackview.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +39,7 @@ class DescubreFragment : Fragment(), CardStackListener {
     private lateinit var adapter:DescubreAdapter
     private lateinit var swipeCard: CardStackView
     private lateinit var data: ArrayList<Publicacion>
+    private lateinit var lastPublicacionCardDisappeared: Publicacion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +64,44 @@ class DescubreFragment : Fragment(), CardStackListener {
             setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
             setOverlayInterpolator(LinearInterpolator())
         }
+        setupButton(view)
         initializeData()
 
+    }
+
+    private fun setupButton(view: View) {
+        val dislikeBtn: ImageButton = view.findViewById(R.id.btnDescubreDislike)
+        dislikeBtn.setOnClickListener {
+            val setting = SwipeAnimationSetting.Builder()
+                .setDirection(Direction.Left)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(AccelerateInterpolator())
+                .build()
+            cardStackLayoutManager.setSwipeAnimationSetting(setting)
+            swipeCard.swipe()
+        }
+
+        val wishListBtn: ImageButton = view.findViewById(R.id.btnDescubreWishlist)
+        wishListBtn.setOnClickListener {
+            val setting = SwipeAnimationSetting.Builder()
+                .setDirection(Direction.Top)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(DecelerateInterpolator())
+                .build()
+            cardStackLayoutManager.setSwipeAnimationSetting(setting)
+            swipeCard.swipe()
+        }
+
+        val likeBtn: ImageButton = view.findViewById(R.id.btnDescubreLike)
+        likeBtn.setOnClickListener {
+            val setting = SwipeAnimationSetting.Builder()
+                .setDirection(Direction.Right)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(AccelerateInterpolator())
+                .build()
+            cardStackLayoutManager.setSwipeAnimationSetting(setting)
+            swipeCard.swipe()
+        }
     }
 
     private fun initializeData(){
@@ -88,6 +124,8 @@ class DescubreFragment : Fragment(), CardStackListener {
     private fun initializeList(){
         cardStackLayoutManager.setStackFrom(StackFrom.Top)
         cardStackLayoutManager.setTranslationInterval(4.0f)
+        cardStackLayoutManager.setCanScrollHorizontal(true)
+        cardStackLayoutManager.setCanScrollVertical(true)
         swipeCard.layoutManager = cardStackLayoutManager
         adapter = DescubreAdapter(requireContext(), data)
         swipeCard.adapter = adapter
@@ -118,12 +156,59 @@ class DescubreFragment : Fragment(), CardStackListener {
             }
     }
 
+    private fun swipeParse(publicacion: Publicacion, direction: String){
+        if(direction == "Left" || direction == "Right"){
+            val query: ParseQuery<Publicacion> = ParseQuery.getQuery(Publicacion::class.java)
+            query.getInBackground(publicacion.objectId, GetCallback{publi: Publicacion, e ->
+                if(e == null){
+                    if(direction == "Left"){
+                        publi.increment(Constantes.NUM_DISLIKES)
+                    }
+                    else{
+                        publi.increment(Constantes.NUM_LIKES)
+                    }
+                    publi.saveInBackground()
+                }
+                else{
+                    Log.e("e", "Failed to search Publicacion by id", e)
+                }
+            })
+        }
+        else if(direction == "Top"){
+            val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
+            query.whereEqualTo(Constantes.ID_SITIO, publicacion.idSitio)
+            //query.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+            //query.whereEqualTo(Constantes.ID_USUARIO, "cudNJhBZr7")
+            query.findInBackground(FindCallback{usuarioSitio: List<UsuarioSitio>, e ->
+                if(e == null){
+                    //Log.d("ParseUser", ParseUser.getCurrentUser().objectId.toString())
+                    Log.d("UsuarioSitio", "Obtenidos " + usuarioSitio.size)
+                }
+            })
+        }
+        else{
+            // Rewind
+            val setting = RewindAnimationSetting.Builder()
+                .setDirection(Direction.Bottom)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(DecelerateInterpolator())
+                .build()
+            cardStackLayoutManager.setRewindAnimationSetting(setting)
+            swipeCard.rewind()
+        }
+    }
+
     override fun onCardDragging(direction: Direction?, ratio: Float) {
         //TODO("Not yet implemented")
+        //Log.d("Dragging", direction.toString())
     }
 
     override fun onCardSwiped(direction: Direction?) {
         //TODO("Not yet implemented")
+        swipeParse(lastPublicacionCardDisappeared, direction.toString())
+        //Log.d("direction", direction.toString())
+        //lastPublicacionCardDissapeared = null
+
     }
 
     override fun onCardRewound() {
@@ -139,6 +224,8 @@ class DescubreFragment : Fragment(), CardStackListener {
     }
 
     override fun onCardDisappeared(view: View?, position: Int) {
+        lastPublicacionCardDisappeared = data[position]
+        // Log.d("Publicacion", data[position].descripcion.toString())
         //TODO("Not yet implemented")
     }
 }
