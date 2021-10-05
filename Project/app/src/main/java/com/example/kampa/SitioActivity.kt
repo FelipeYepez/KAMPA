@@ -26,9 +26,12 @@ class SitioActivity : AppCompatActivity() {
         } else {
             savedInstanceState.getSerializable("sitio") as Sitio
         }
+
+        /*
+         * On click Listener para el botón de registrar denuncia
+         */
         registrarDenuncia = findViewById(R.id.DenunciarBtn)
         registrarDenuncia.setOnClickListener{
-            Log.d("registrarDenuncia", "Siiiu")
             val intent = Intent(this, CrearDenunciaActivity::class.java)
             intent.putExtra("sitio", sitio)
             startActivity(intent)
