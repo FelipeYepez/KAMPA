@@ -95,16 +95,14 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         }
     }
 
-
-
     private fun add_Marker(sitio: Sitio) {
-            val marker = gMap!!.addMarker(
+            val marker = gMap?.addMarker(
                 MarkerOptions()
                     .title(sitio.nombre)
                     .position(LatLng(sitio.ubicacion!!.latitude, sitio.ubicacion!!.longitude))
 
             )
-        marker.tag = sitio
+        marker?.tag = sitio
     }
     /** Called when the user clicks a marker.  */
     override fun onMarkerClick(marker: Marker): Boolean {

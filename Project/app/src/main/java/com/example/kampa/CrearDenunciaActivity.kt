@@ -21,13 +21,15 @@ import java.io.File
 import android.widget.Toast
 import com.parse.SaveCallback
 import android.R.id.message
+import android.app.Activity
 import android.content.Intent
+import com.parse.ParseObject
 
 
 class CrearDenunciaActivity : AppCompatActivity() {
     private lateinit var imagen: ImageView
     private lateinit var uploadImageBtn: Button
-    private lateinit var selectedImage: Uri
+    private var selectedImage: Uri? = null
     private var permissionBool: Boolean = false
     private lateinit var enviarDenuncia: Button
     private lateinit var descripcion: EditText
@@ -44,6 +46,7 @@ class CrearDenunciaActivity : AppCompatActivity() {
             savedInstanceState.getSerializable("sitio") as Sitio
         }
 
+
         var title: TextView = findViewById(R.id.title)
         title.text = sitio.nombre
 
@@ -51,58 +54,64 @@ class CrearDenunciaActivity : AppCompatActivity() {
         imagen = findViewById(R.id.imagenDenuncia)
         uploadImageBtn = findViewById(R.id.subirImagenBtn)
 
-        val getAction = registerForActivityResult(
-            ActivityResultContracts.GetContent(),
-            ActivityResultCallback { uri ->
-                imagen.setImageURI(uri)
-                selectedImage = uri
+        var startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                selectedImage = intent?.data
+                imagen!!.setImageURI(selectedImage)
             }
-        )
+        }
 
         uploadImageBtn.setOnClickListener{
-            Log.d("enviar", "click")
             checkPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE, 1)
             Log.d("ImageBtn", permissionBool.toString())
             if(permissionBool){
-                getAction.launch("image/*")
+                val i = Intent()
+                i.type = "image/*"
+                i.action = Intent.ACTION_GET_CONTENT
+
+                startForResult.launch(Intent.createChooser(i, "Select Picture"))
             }
             else{
                 Snackbar.make(findViewById(android.R.id.content), "KAMPA no tiene acceso a Galería", Snackbar.LENGTH_SHORT).show()
             }
         }
 
+
         enviarDenuncia = findViewById(R.id.enviarDenunciaBtn)
         descripcion = findViewById(R.id.descripcion)
         Log.d("sitio", sitio.toString())
 
         enviarDenuncia.setOnClickListener{
-            Log.d("enviar", "click")
-            val denuncia = Denuncia()
+            var denuncia = Denuncia()
 
             denuncia.idSitio = sitio
             denuncia.descripcion = descripcion.text.toString()
-            //val photoFile = getPhotoFileUri(selectedImage.toString())
-            //val parseFile = ParseFile(photoFile)
-            //denuncia.fotos = parseFile
+
+            //if(selectedImage != null){
+                //denuncia.foto = ParseFile(File(selectedImage?.path))
+            //}
+
             denuncia.estado = "sinResolver"
-            //denuncia.idUsuario = ParseUser.getCurrentUser()
-            /*
-            denuncia.saveInBackground(SaveCallback { e ->
+            //denuncia.put("idUsuario", ParseUser.getCurrentUser().objectId)
+
+            denuncia.saveInBackground { e ->
                 if (e == null) {
-                    Toast.makeText(
-                        this@CrearDenunciaActivity, "Successfully created message on Parse",
-                        Toast.LENGTH_SHORT
+                    Snackbar.make(
+                        findViewById(android.R.id.content), "Se creó correctamente la denuncia",
+                        Snackbar.LENGTH_SHORT
                     ).show()
                 } else {
-                    Log.e("e", "Failed to save message", e)
+                    Log.e("e", "Failed to save denuncia", e)
                 }
-            })
-            */
+            }
+
             Log.d("enviar", "click")
 
-            val i = Intent(this, SitioActivity::class.java)
-            i.putExtra("sitio", sitio)
-            startActivity(i)
+           val i = Intent(this, SitioActivity::class.java)
+           i.putExtra("sitio", sitio)
+           startActivity(i)
         }
     }
 
@@ -114,17 +123,5 @@ class CrearDenunciaActivity : AppCompatActivity() {
         else{
             permissionBool = true
         }
-    }
-
-    fun getPhotoFileUri(fileName: String): File? {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
-        val mediaStorageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-
-        // Return the file target for the photo based on filename
-        //if (mediaStorageDir != null) {
-        return File(mediaStorageDir?.path + File.separator + fileName)
-        //}
     }
 }

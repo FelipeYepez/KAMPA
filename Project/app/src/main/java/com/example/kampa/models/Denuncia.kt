@@ -21,7 +21,7 @@ class Denuncia : ParseObject() {
             put(Constantes.ID_SITIO, _idSitio!!)
         }
 
-    var fotos: ParseFile?
+    var foto: ParseFile?
         get() = getParseFile(Constantes.FOTOS)
         set(_fotos) {
             put(Constantes.FOTOS, _fotos!!)
