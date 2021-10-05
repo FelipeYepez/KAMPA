@@ -14,10 +14,11 @@ import com.example.kampa.R
 import com.example.kampa.adapters.FavoritosAdapter
 import com.example.kampa.models.Wishlist
 import com.example.kampa.Constantes
+import com.example.kampa.interfaces.SitiosFavoritosInterface
 import com.parse.*
 
 
-class FavoritosFragment : Fragment() {
+class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
 
     val TAG = "FavoritosFragment"
 
@@ -31,7 +32,6 @@ class FavoritosFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
         ): View? {
-
         return inflater.inflate(R.layout.fragment_favoritos, container, false)
     }
 
@@ -39,7 +39,7 @@ class FavoritosFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         tvTitle = view.findViewById(R.id.tvTitle)
-        rvFavoritos = view. findViewById(R.id.rvFavoritos)
+        rvFavoritos = view.findViewById(R.id.rvFavoritos)
 
         getFavoritosList()
     }
@@ -51,9 +51,6 @@ class FavoritosFragment : Fragment() {
         query.findInBackground { objects: List<Wishlist>?, e: ParseException? ->
             if (e == null) {
                 if (objects != null) {
-                    for (listObject in objects) {
-                        Log.d(TAG, listObject.nombre.toString())
-                    }
                     initializeList(objects)
                 }
             }
@@ -65,10 +62,24 @@ class FavoritosFragment : Fragment() {
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         linearLayoutManager.scrollToPosition(0)
 
-        favoritosAdapter = FavoritosAdapter(this.context, favoritosList)
+        favoritosAdapter = FavoritosAdapter(this.context, favoritosList, this@FavoritosFragment)
 
         rvFavoritos.layoutManager = linearLayoutManager
         rvFavoritos.adapter = favoritosAdapter
         rvFavoritos.itemAnimator = DefaultItemAnimator()
+    }
+
+    override fun passData(wishlist: Wishlist) {
+        val bundle = Bundle()
+
+        bundle.putParcelable(Constantes.WISHLIST, wishlist)
+
+        val transaction = this.parentFragmentManager.beginTransaction()
+        val sitiosFavoritosFragment = SitiosFavoritosFragment()
+        sitiosFavoritosFragment.arguments = bundle
+
+        transaction.replace(R.id.fragmentContainer, sitiosFavoritosFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }
