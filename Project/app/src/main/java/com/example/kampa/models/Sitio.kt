@@ -1,6 +1,5 @@
 package com.example.kampa.models
 
-import com.example.kampa.Constantes.FOTO
 import com.parse.*
 
 
@@ -8,44 +7,52 @@ import com.parse.*
 
 @ParseClassName("Sitio")
 class Sitio : ParseObject(){
+
     var nombre : String?
-        get() = getString(NOMBRE)
-        set(nombre) = put(NOMBRE,nombre!!)
-    var descripcion: String?
-        get() = getString(DESCRIPCION)
-        set(descripcion) = put(DESCRIPCION,descripcion!!)
-    var foto: ParseFile?
-        get() = getParseFile(FOTO)
-        set(foto) = put(FOTO,foto!!)
-    var direccion: String?
-        get() = getString(DIRECCION)
-        set(direccion) = put(DIRECCION,direccion!!)
-    var ubicacion: ParseGeoPoint?
-        get() = getParseGeoPoint(UBICACION)
-        set(ubicacion) = put(UBICACION,ubicacion!!)
-    var historia: String?
-        get() = getString(HISTORIA)
-        set(historia) = put(HISTORIA,historia!!)
-    var paginaOficial: String?
-        get() = getString(PAGINA_OFICIAL)
-        set(paginaOficial) = put(PAGINA_OFICIAL,paginaOficial!!)
-    var idTipoSitio: TipoSitio?
-        get() = getParseObject(ID_TIPO_SITIO) as TipoSitio?
-        set(_idTipoSitio) {
-            put(ID_TIPO_SITIO, _idTipoSitio!!)
+        get() = getString(Constantes.NOMBRE)
+        set(_nombre) {
+            put(Constantes.NOMBRE,_nombre!!)
         }
 
-    companion object {
-        const val NOMBRE ="nombre"
-        const val DESCRIPCION = "descripcion"
-        const val DIRECCION ="direccion"
-        const val UBICACION = "ubicacion"
-        const val HISTORIA = "historia"
-        const val PAGINA_OFICIAL = "paginaOficial"
-        const val FOTOS = "fotos"
-        const val ID_TIPO_SITIO = "idTipoSitio"
-    }
+    var descripcion: String?
+        get() = getString(Constantes.DESCRIPCION)
+        set(_descripcion) {
+            put(Constantes.DESCRIPCION, _descripcion!!)
+        }
 
+    var foto: ParseFile?
+        get() = getParseFile(Constantes.FOTO)!!
+        set(_foto) {
+            put(Constantes.FOTO, _foto!!)
+        }
 
+    var direccion: String?
+        get() = getString(Constantes.DIRECCION)
+        set(_direccion) {
+            put(Constantes.DIRECCION, _direccion!!)
+        }
 
+    var ubicacion: ParseGeoPoint?
+        get() = getParseGeoPoint(Constantes.UBICACION)
+        set(_ubicacion) {
+            put(Constantes.UBICACION, _ubicacion!!)
+        }
+
+    var historia: String?
+        get() = getString(Constantes.HISTORIA)
+        set(_historia) {
+            put(Constantes.HISTORIA, _historia!!)
+        }
+
+    var paginaOficial: String?
+        get() = getString(Constantes.PAGINA_OFICIAL)
+        set(_paginaOficial) {
+            put(Constantes.PAGINA_OFICIAL, _paginaOficial!!)
+        }
+
+    var idTipoSitio: TipoSitio?
+        get() = getParseObject(Constantes.ID_TIPO_SITIO) as TipoSitio?
+        set(_idTipoSitio) {
+            put(Constantes.ID_TIPO_SITIO, _idTipoSitio!!)
+        }
 }

@@ -23,12 +23,12 @@
             android:textSize="16dp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFavoritos"
+            android:id="@+id/rvSitiosFavoritos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/fabAdd"
-            android:layout_marginTop="15dp"
-            android:layout_below="@+id/tvTitle" />
+            android:layout_below="@+id/tvTitle"
+            android:layout_marginTop="15dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabAdd"
