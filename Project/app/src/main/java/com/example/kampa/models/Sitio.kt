@@ -1,9 +1,7 @@
 package com.example.kampa.models
 
+import com.example.kampa.Constantes
 import com.parse.*
-
-
-
 
 @ParseClassName("Sitio")
 class Sitio : ParseObject(){
