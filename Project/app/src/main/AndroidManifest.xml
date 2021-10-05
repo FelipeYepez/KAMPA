@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KAMPA">
         <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="true"
+            android:label="@string/title_activity_login" />
+        <activity android:name=".MainActivity">
+        <activity
             android:name=".UploadImageActivity"
             android:exported="true" />
         <activity
