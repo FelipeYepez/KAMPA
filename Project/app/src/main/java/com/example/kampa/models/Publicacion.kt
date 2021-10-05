@@ -1,5 +1,6 @@
 package com.example.kampa.models
 
+import com.example.kampa.Constantes
 import com.parse.ParseClassName
 import com.parse.ParseFile
 import com.parse.ParseObject
@@ -9,46 +10,37 @@ import com.parse.ParseUser
 class Publicacion : ParseObject() {
 
     var idUsuario: ParseUser?
-        get() = getParseUser(ID_USUARIO)
+        get() = getParseUser(Constantes.ID_USUARIO)
         set(_idUsuario) {
-            put(ID_USUARIO, _idUsuario!!)
+            put(Constantes.ID_USUARIO, _idUsuario!!)
             }
 
     var idSitio: Sitio?
-        get() = getParseObject(ID_SITIO) as Sitio?
+        get() = getParseObject(Constantes.ID_SITIO) as Sitio?
         set(_idSitio) {
-            put(ID_SITIO, _idSitio!!)
+            put(Constantes.ID_SITIO, _idSitio!!)
         }
 
     var foto: ParseFile?
-        get() = getParseFile(FOTO)
+        get() = getParseFile(Constantes.FOTO)
         set(_foto) {
-            put(FOTO, _foto!!)
+            put(Constantes.FOTO, _foto!!)
         }
 
     var numLikes: Int?
-        get() = getInt(NUM_LIKES)
+        get() = getInt(Constantes.NUM_LIKES)
         set(_numLikes) {
-            put(NUM_LIKES, _numLikes!!)
+            put(Constantes.NUM_LIKES, _numLikes!!)
         }
 
     var numDislikes: Int?
-        get() = getInt(NUM_DISLIKES)
+        get() = getInt(Constantes.NUM_DISLIKES)
         set(_numDislikes) {
-            put(NUM_DISLIKES, _numDislikes!!)
+            put(Constantes.NUM_DISLIKES, _numDislikes!!)
         }
     var descripcion: String?
-        get() = getString(DESCRIPCION)
+        get() = getString(Constantes.DESCRIPCION)
         set(_descripcion) {
-            put(DESCRIPCION, _descripcion!!)
+            put(Constantes.DESCRIPCION, _descripcion!!)
         }
-
-    companion object {
-        const val ID_USUARIO = "idUsuario"
-        const val ID_SITIO = "idSitio"
-        const val FOTO = "foto"
-        const val NUM_LIKES = "numLikes"
-        const val NUM_DISLIKES = "numDislikes"
-        const val DESCRIPCION = "descripcion"
-    }
 }
