@@ -4,6 +4,7 @@ import com.parse.ParseFile
 import com.parse.ParseObject
 import com.parse.ParseUser
 
+
 class CustomUser : ParseObject() {
 
     private var mUser = ParseUser()

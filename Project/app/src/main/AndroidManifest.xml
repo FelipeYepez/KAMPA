@@ -13,6 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KAMPA">
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="true"
+            android:label="@string/title_activity_login" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,11 +26,11 @@
         </activity>
 
         <meta-data
-            android:name = "parseApplicationId"
-            android:value = "${PARSE_APPLICATION_ID}"/>
+            android:name="parseApplicationId"
+            android:value="${PARSE_APPLICATION_ID}" />
         <meta-data
-            android:name = "parseClientKey"
-            android:value = "${PARSE_CLIENT_KEY}"/>
+            android:name="parseClientKey"
+            android:value="${PARSE_CLIENT_KEY}" />
     </application>
 
 </manifest>
