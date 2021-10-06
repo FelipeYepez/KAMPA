@@ -19,7 +19,14 @@ class Sitio : ParseObject(){
         }
 
     var foto: ParseFile?
-        get() = getParseFile(Constantes.FOTO)!!
+        get() {
+            var fotoSitio : ParseFile? = getParseFile(Constantes.FOTO)
+            if (fotoSitio == null) {
+                return null
+            } else {
+                return fotoSitio
+            }
+        }
         set(_foto) {
             put(Constantes.FOTO, _foto!!)
         }
