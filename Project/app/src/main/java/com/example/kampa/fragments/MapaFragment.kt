@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.kampa.models.Sitio
-import com.example.kampa.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
@@ -18,8 +17,20 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.parse.ParseQuery
 import android.content.Intent
-import com.example.kampa.MainActivity
-import com.example.kampa.SitioActivity
+import com.google.android.gms.tasks.Task
+import com.example.kampa.*
+import com.example.kampa.R
+import android.location.Location
+
+import org.jetbrains.annotations.NotNull
+
+import androidx.annotation.NonNull
+import androidx.annotation.RequiresPermission
+
+import com.google.android.gms.tasks.OnCompleteListener
+
+import com.google.android.gms.location.LocationServices
+import java.util.jar.Manifest
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,6 +38,7 @@ import com.example.kampa.SitioActivity
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val TAG = "MapaFragment"
+private const val ZOOM : Float = 15F
 
 /**
  * A simple [Fragment] subclass.
@@ -37,11 +49,11 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var map : SupportMapFragment? = null
-    private  var gMap : GoogleMap? = null
-    private  lateinit var mainActivity : MainActivity
-    private var fab : FloatingActionButton? = null
-    private var mLocationClient : FusedLocationProviderClient? = null
+    private var map: SupportMapFragment? = null
+    private var gMap: GoogleMap? = null
+    private lateinit var mainActivity: MainActivity
+    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var  currentLocation: Location
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,32 +74,48 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         return inflater.inflate(R.layout.fragment_mapa, container, false)
     }
 
-    override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initMap()
 
 
+        val fab: FloatingActionButton = view.findViewById(R.id.NuevoSitio)
+
+        fab.setOnClickListener {
+
+            val i = Intent(activity, NuevoSitio::class.java)
+
+            i.putExtra("permission", mainActivity.isPermissionGranted)
+            i.putExtra("currentLocation",currentLocation)
+
+            startActivity(i)
+
+
+        }
+
+
     }
 
     private fun initMap() {
-        map =childFragmentManager.findFragmentById(
+        map = childFragmentManager.findFragmentById(
             R.id.map_fragment
         ) as? SupportMapFragment
 
         map?.getMapAsync(this)
         query()
+
     }
 
-    private fun query(){
+    private fun query() {
         val query: ParseQuery<Sitio> = ParseQuery.getQuery(Sitio::class.java)
 
         query.findInBackground { itemList, e ->
             if (e == null) {
                 // Access the array of results here
-                for (el in itemList ) {
+                for (el in itemList) {
                     add_Marker(el)
-                    Log.d(TAG,el.nombre!!)
+                    Log.d(TAG, el.nombre!!)
                 }
             } else {
                 Log.d("item", "Error: " + e.message)
@@ -96,22 +124,22 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     }
 
 
-
     private fun add_Marker(sitio: Sitio) {
-            val marker = gMap!!.addMarker(
-                MarkerOptions()
-                    .title(sitio.nombre)
-                    .position(LatLng(sitio.ubicacion!!.latitude, sitio.ubicacion!!.longitude))
+        val marker = gMap!!.addMarker(
+            MarkerOptions()
+                .title(sitio.nombre)
+                .position(LatLng(sitio.ubicacion!!.latitude, sitio.ubicacion!!.longitude))
 
-            )
+        )
         marker.tag = sitio
     }
+
     /** Called when the user clicks a marker.  */
     override fun onMarkerClick(marker: Marker): Boolean {
 
-        Log.d(TAG,"entered onclick ")
+        Log.d(TAG, "entered onclick ")
 
-        val sitio : Sitio = marker.tag as Sitio
+        val sitio: Sitio = marker.tag as Sitio
 
         val i = Intent(activity, SitioActivity::class.java)
 
@@ -137,51 +165,49 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             MapaFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
-                     putString(ARG_PARAM2, param2)
+                    putString(ARG_PARAM2, param2)
                 }
             }
     }
 
     @SuppressLint("MissingPermission")
     override fun onMapReady(p0: GoogleMap?) {
-        Toast.makeText(context, "onMapReady", Toast.LENGTH_SHORT).show()
         gMap = p0
         gMap?.setMyLocationEnabled(mainActivity.isPermissionGranted!!)
         gMap?.setOnMarkerClickListener(this)
+        getDeviceLocation()
+
     }
 
-    override fun onStart() {
-        super.onStart()
-        map?.onStart()
+    @RequiresPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    fun getDeviceLocation() {
+        Log.d(TAG, "getDeviceLocation: getting the device's current location")
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        try {
+            if (mainActivity.isPermissionGranted!!) {
+                val location: Task<Location> = mFusedLocationProviderClient.getLastLocation()
+                location.addOnCompleteListener(OnCompleteListener<Location> { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "onComplete: found location!")
+                        currentLocation = task.result as Location
+
+
+                        gMap?.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(LatLng(currentLocation.latitude, currentLocation.longitude), ZOOM)
+                        )
+                    } else {
+                        Log.d(TAG, "onComplete: current location is null")
+                        Toast.makeText(
+                            context,
+                            "Unable to get current location",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+            }
+        } catch (e: SecurityException) {
+            Log.d(TAG, "getDeviceLocation: SecurityException: " + e.message)
+        }
     }
 
-    override fun onResume() {
-        super.onResume()
-        map?.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        map?.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        map?.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        map?.onDestroy()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        map?.onSaveInstanceState(outState)
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        map?.onLowMemory()
-    }
 }
