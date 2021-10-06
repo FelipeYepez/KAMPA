@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -23,12 +24,16 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
+    private val TAG: String = "LoginActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Log.d(TAG,binding.toString())
+
 
         val username = binding.username
         val password = binding.password
@@ -37,17 +42,18 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
+        Log.d(TAG,loginViewModel.toString())
 
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
-            val loginState = it ?: return@Observer
-
-            // disable login button unless both username / password is valid
-            login.isEnabled = loginState.isDataValid
-
-            if (loginState.passwordError != null) {
-                password.error = getString(loginState.passwordError)
-            }
-        })
+//        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
+//            val loginState = it ?: return@Observer
+//
+//            // disable login button unless both username / password is valid
+           login.isEnabled = true
+//
+//            if (loginState.passwordError != null) {
+//                password.error = getString(loginState.passwordError)
+//            }
+//        })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
@@ -57,13 +63,14 @@ class LoginActivity : AppCompatActivity() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
+                Log.d(TAG,"login succesfull")
                 updateUiWithUser(loginResult.success)
                 goToMainActivity()
             }
-            setResult(Activity.RESULT_OK)
+            //setResult(Activity.RESULT_OK)
 
             //Complete and destroy login activity once successful
-            finish()
+            //finish()
         })
 
         username.afterTextChanged {

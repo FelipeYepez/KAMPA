@@ -1,6 +1,7 @@
 package com.example.kampa.ui.login
 
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,17 +26,27 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
 
     fun login(username: String, password: String) {
-        ParseUser.logInInBackground(
-            username, password
-        ) { user: ParseUser?, e: ParseException ->
+        Log.d("LoginViewModel", "here")
+
+        ParseUser.logInInBackground(username,password) { user: ParseUser?, e: ParseException? ->
+            if (e == null){
+
             if (user != null) {
                 _loginResult.value =
                     LoginResult(success = LoggedInUserView(displayName = username))
             } else {
                 _loginResult.value = LoginResult(error = R.string.login_failed)
             }
+            }
+            else{
+                e.printStackTrace()
+            }
         }
+
     }
+
+
+
 
     fun loginDataChanged(password: String) {
         if (!isPasswordValid(password)) {
