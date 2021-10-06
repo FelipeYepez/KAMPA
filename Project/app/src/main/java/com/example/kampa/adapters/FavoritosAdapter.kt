@@ -1,5 +1,6 @@
 package com.example.kampa.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,9 +13,10 @@ import com.example.kampa.R
 import com.example.kampa.adapters.FavoritosAdapter.ViewHolder
 import com.example.kampa.interfaces.SitiosFavoritosInterface
 import com.example.kampa.models.Wishlist
+import com.example.kampa.models.WishlistSitio
 
 class FavoritosAdapter(private val context: Context?,
-                       private val data: List<Wishlist>,
+                       private val data: MutableList<Wishlist>,
                        private val listener: SitiosFavoritosInterface)
     : RecyclerView.Adapter<ViewHolder>() {
 
@@ -28,6 +30,16 @@ class FavoritosAdapter(private val context: Context?,
 
     override fun getItemCount(): Int {
         return data.size
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun deleteItem(position: Int) {
+        data.removeAt(position)
+        notifyDataSetChanged()
+    }
+
+    fun getItem(position : Int): Wishlist {
+        return data.get(position)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

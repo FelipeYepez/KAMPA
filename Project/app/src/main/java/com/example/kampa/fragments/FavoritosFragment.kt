@@ -8,13 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kampa.R
 import com.example.kampa.adapters.FavoritosAdapter
 import com.example.kampa.models.Wishlist
 import com.example.kampa.Constantes
+import com.example.kampa.SwipeGestureDelete
 import com.example.kampa.interfaces.SitiosFavoritosInterface
+import com.example.kampa.models.WishlistSitio
 import com.parse.*
 
 
@@ -48,7 +51,8 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         val query: ParseQuery<Wishlist> = ParseQuery.getQuery(Wishlist::class.java)
 
         // query.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser().toString())
-        query.findInBackground { objects: List<Wishlist>?, e: ParseException? ->
+        query.whereEqualTo(Constantes.IS_DELETED, false)
+        query.findInBackground { objects: MutableList<Wishlist>?, e: ParseException? ->
             if (e == null) {
                 if (objects != null) {
                     initializeList(objects)
@@ -57,7 +61,7 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         }
     }
 
-    private fun initializeList(favoritosList: List<Wishlist>) {
+    private fun initializeList(favoritosList: MutableList<Wishlist>) {
         linearLayoutManager = LinearLayoutManager(this.context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         linearLayoutManager.scrollToPosition(0)
@@ -67,6 +71,28 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         rvFavoritos.layoutManager = linearLayoutManager
         rvFavoritos.adapter = favoritosAdapter
         rvFavoritos.itemAnimator = DefaultItemAnimator()
+
+        initializeGesture()
+    }
+
+    private fun initializeGesture() {
+        val swipeGesture = object : SwipeGestureDelete(this.context) {
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        val position : Int = viewHolder.adapterPosition
+                        val wishlistEliminada : Wishlist = favoritosAdapter.getItem(position)
+                        favoritosAdapter.deleteItem(position)
+                        wishlistEliminada.isDeleted = true
+                        wishlistEliminada.saveInBackground()
+                    }
+                }
+            }
+        }
+
+        val touchHelper = ItemTouchHelper(swipeGesture)
+        touchHelper.attachToRecyclerView(rvFavoritos)
     }
 
     override fun passData(wishlist: Wishlist) {

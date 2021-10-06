@@ -16,6 +16,7 @@ object Constantes {
     val ID_TIPO_SITIO = "idTipoSitio"
     val ID_USUARIO = "idUsuario"
     val ID_WISHLIST = "idWishlist"
+    val IS_DELETED = "isDeleted"
     val IS_VISITADO = "isVisitado"
     val IS_WISHLIST = "isWishlist"
     val NOMBRE = "nombre"
