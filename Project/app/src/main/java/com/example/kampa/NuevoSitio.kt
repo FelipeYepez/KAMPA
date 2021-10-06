@@ -36,6 +36,8 @@ import java.io.File
 import java.net.URI
 
 
+
+
 class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     val TAG = "NuevoSitio"
     var listTipoSitio = mutableListOf<TipoSitio>()
@@ -45,7 +47,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     var selectedImage: Uri? = null
     var permission: Boolean? = null
     var currentLocation: Location? = null
-
+    val NEW_LOCATION_ACTIVITY_REQUEST_CODE = 942
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -178,12 +180,25 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
                 18f
             )
         )
-//        mMap.setOnMapClickListener(OnMapClickListener {
-//            Log.d(TAG, "onMapClick: clicked on map!")
-//            val intent = Intent(this@CreateActivity, NewLocationActivity::class.java)
-//            intent.putExtra("currentLocation", currentLocation)
-//            startActivityForResult(intent, NEW_LOCATION_ACTIVITY_REQUEST_CODE)
-//        })
+//        val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//                result ->
+//            if (result.resultCode == Activity.RESULT_OK) {
+//                val intent = result.data
+//                currentLocation = intent!!.getParcelableExtra("latLngLocation")
+//                Log.d(TAG,currentLocation.toString())
+//
+//            }
+//        }
+        gMap?.setOnMapClickListener(GoogleMap.OnMapClickListener {
+            Log.d(TAG, "onMapClick: clicked on map!")
+            val i = Intent(this, NewLocationActivity::class.java)
+            i.putExtra("currentLocation", currentLocation)
+
+            startActivity(i)
+
+
+
+        })
     }
 
 
