@@ -29,7 +29,7 @@
             android:name=".SitioActivity"
             android:exported="true" />
         <activity
-            android:name=".NuevoSitio"
+            android:name=".MainActivity"
             android:exported="true" />
         <activity android:name=".ui.login.LoginActivity">
             <intent-filter>
