@@ -16,4 +16,9 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="cambiar_nombre_lista_deseos">Cambiar Nombre a la Lista de Deseos</string>
+    <string name="nuevo_nombre">Nuevo nombre</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="nombre_vacio">Error: Nombre Vacío</string>
 </resources>
