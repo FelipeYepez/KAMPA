@@ -115,9 +115,7 @@ class CrearDenunciaActivity : AppCompatActivity() {
 
 
             denuncia.estado = "sinResolver"
-            //Log.d("usuario", ParseUser.getCurrentUser().toString())
-            //denuncia.idUsuario = ParseUser.getCurrentUser()
-            //denuncia.put("idUsuario", ParseUser.getCurrentUser().objectId)
+            denuncia.idUsuario = ParseUser.getCurrentUser()
 
             denuncia.saveInBackground { e ->
                 if (e == null) {
