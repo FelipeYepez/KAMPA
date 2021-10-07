@@ -25,6 +25,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="true" />
+
         <activity
             android:name=".UploadImageActivity"
             android:exported="true" />
@@ -45,6 +50,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -62,5 +68,6 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
     </application>
+
 
 </manifest>
