@@ -5,6 +5,8 @@ plugins {
     id 'kotlin-android-extensions'
 }
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 30
 
@@ -31,6 +33,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    // Enable data binding for swipes
+    dataBinding {
+        enabled = true
     }
     buildFeatures {
         viewBinding true
@@ -68,6 +75,12 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     // CameraX View class
     implementation "androidx.camera:camera-view:1.0.0-alpha27"
+
+    // Dependencies for swipes
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
+    implementation "com.yuyakaido.android:card-stack-view:2.3.4"
+    implementation 'com.facebook.fresco:fresco:2.1.0'
+
     //Añadir Carousel
     //implementation 'com.github.denzcoskun:ImageSlideShow:0.0.6'
     // Glide
