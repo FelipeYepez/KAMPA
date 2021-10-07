@@ -1,5 +1,6 @@
 package com.example.kampa.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,10 +13,11 @@ import com.bumptech.glide.Glide
 import com.example.kampa.R
 import com.example.kampa.models.Wishlist
 import com.example.kampa.models.WishlistSitio
+import com.parse.ParseFile
 import com.parse.ParseObject
 
 class SitiosFavoritosAdapter(private val context: Context?,
-                             private var data: List<WishlistSitio>)
+                             private var data: MutableList<WishlistSitio>)
     : RecyclerView.Adapter<SitiosFavoritosAdapter.ViewHolder>() {
 
     private val TAG = "SitiosFavoritosAdapter"
@@ -37,8 +39,14 @@ class SitiosFavoritosAdapter(private val context: Context?,
         return data.size
     }
 
-    fun addAll(datos: List<WishlistSitio>) {
-        data = datos
+    @SuppressLint("NotifyDataSetChanged")
+    fun deleteItem(position: Int) {
+        data.removeAt(position)
+        notifyDataSetChanged()
+    }
+
+    fun getItem(position : Int): WishlistSitio {
+        return data.get(position)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -61,8 +69,14 @@ class SitiosFavoritosAdapter(private val context: Context?,
 
             // TODO: Click Listener to ibDirections and to the item
 
+            val urlFotoSitio = if (item.idSitio?.foto == null) {
+                R.drawable.buildings
+            } else {
+                item.idSitio?.foto?.url.toString()
+            }
+
             Glide.with(context)
-                .load(item.idSitio?.foto?.url)
+                .load(urlFotoSitio)
                 .placeholder(R.drawable.buildings)
                 .error(R.drawable.buildings)
                 .into(ivFotoSitio)
