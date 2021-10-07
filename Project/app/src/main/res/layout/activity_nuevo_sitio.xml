@@ -132,7 +132,7 @@
                 android:textSize="24dp"
                 android:textStyle="bold" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="275dp"
                 android:layout_gravity="center_vertical"
@@ -156,7 +156,7 @@
                     android:src="@drawable/ic_google_pin" />
 
 
-            </LinearLayout>
+            </RelativeLayout>
 
 
             <TextView

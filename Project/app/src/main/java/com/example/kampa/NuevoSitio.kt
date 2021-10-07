@@ -30,6 +30,7 @@ import android.os.Build
 
 import android.graphics.Bitmap
 import android.location.Location
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat.startActivityForResult
 import com.google.android.gms.maps.model.LatLng
 import java.io.File
@@ -48,6 +49,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     var permission: Boolean? = null
     var currentLocation: Location? = null
     val NEW_LOCATION_ACTIVITY_REQUEST_CODE = 942
+    lateinit var startFR : ActivityResultLauncher<Intent>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +84,22 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
                 val intent = result.data
                 selectedImage = intent?.data
                 imagenSitio!!.setImageURI(selectedImage)
+            }
+        }
+
+        startFR = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                val latLngLocation = LatLng(intent!!.getDoubleExtra("latitude",0.0),intent!!.getDoubleExtra("longitude",0.0))
+                Log.d(TAG,latLngLocation.toString())
+                currentLocation!!.latitude =latLngLocation.latitude
+                currentLocation!!.longitude =latLngLocation.longitude
+
+                gMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngLocation, 18f))
+
+
+
             }
         }
 
@@ -121,7 +139,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
             val inputPagina:EditText = findViewById(R.id.inputPagina)
             sitio.paginaOficial = inputPagina.text.toString()
 
-            val ubicacion = ParseGeoPoint(-30.0, 40.0)
+            val ubicacion = ParseGeoPoint(currentLocation!!.latitude,currentLocation!!.longitude)
             sitio.ubicacion = ubicacion
 
             val tipoSitio:RadioGroup = findViewById(R.id.radioGroupTipo)
@@ -135,6 +153,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
                     Log.d(TAG, e.toString())
                 }
             }
+            finish()
         }
     }
 
@@ -180,22 +199,13 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
                 18f
             )
         )
-//        val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-//                result ->
-//            if (result.resultCode == Activity.RESULT_OK) {
-//                val intent = result.data
-//                currentLocation = intent!!.getParcelableExtra("latLngLocation")
-//                Log.d(TAG,currentLocation.toString())
-//
-//            }
-//        }
+
         gMap?.setOnMapClickListener(GoogleMap.OnMapClickListener {
             Log.d(TAG, "onMapClick: clicked on map!")
             val i = Intent(this, NewLocationActivity::class.java)
             i.putExtra("currentLocation", currentLocation)
 
-            startActivity(i)
-
+            startFR.launch(i)
 
 
         })
