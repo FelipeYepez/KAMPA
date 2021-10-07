@@ -21,4 +21,8 @@
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
     <string name="nombre_vacio">Error: Nombre Vacío</string>
+    <string name="nueva_lista_favoritos">Nueva Lista de Favoritos</string>
+    <string name="crear">Crear</string>
+    <string name="error_conexion">No se pudo guardar. Error de conexión</string>
+    <string name="lista_favoritos_creada">"Se creó la lista: "</string>
 </resources>

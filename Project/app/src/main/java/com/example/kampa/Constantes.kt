@@ -1,6 +1,7 @@
 package com.example.kampa
 
 object Constantes {
+    val CREATED_AT = "createdAt"
     val DESCRIPCION = "descripcion"
     val DIRECCION = "direccion"
     val ESTADO = "estado"
