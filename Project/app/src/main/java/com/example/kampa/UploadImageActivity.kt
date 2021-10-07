@@ -79,7 +79,7 @@ class UploadImageActivity : AppCompatActivity() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
                     val msg = "Photo capture succeeded: $savedUri"
-                    
+
                     val intent = Intent()
                     intent.data = savedUri
                     setResult(RESULT_OK, intent)

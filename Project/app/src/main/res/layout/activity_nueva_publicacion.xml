@@ -52,7 +52,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginStart="45dp"
                 android:layout_marginEnd="45dp"
-                android:text="Imagen"
+                android:text="Imagen*"
                 android:textSize="24dp"
                 android:textStyle="bold" />
 
@@ -107,7 +107,7 @@
                 android:layout_marginTop="35dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
-                android:text="Descripción*"
+                android:text="Descripción"
                 android:textSize="24dp"
                 android:textStyle="bold" />
 
