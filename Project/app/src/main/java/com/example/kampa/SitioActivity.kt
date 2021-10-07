@@ -19,7 +19,7 @@ import com.parse.ParseFile
 
 
 class SitioActivity : AppCompatActivity() {
-    private lateinit var registrarDenuncia: ImageButton
+    private lateinit var registrarDenuncia: Button
 
     val TAG = "SitioActivity"
 
