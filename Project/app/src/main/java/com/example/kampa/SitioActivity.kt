@@ -1,21 +1,18 @@
 package com.example.kampa
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.ImageButton
-import android.graphics.BitmapFactory
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.kampa.R
+import com.example.kampa.models.Publicacion
 import com.example.kampa.models.Sitio
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.parse.GetDataCallback
 import com.parse.ParseFile
-
-//import com.denzcoskun.imageslider.ImageSlider
-//import com.denzcoskun.imageslider.models.SlideModel
 
 
 class SitioActivity : AppCompatActivity() {
@@ -45,6 +42,16 @@ class SitioActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val nuevaPublicacion: FloatingActionButton = findViewById(R.id.floatingActionButton)
+        nuevaPublicacion.setOnClickListener{
+
+            val i = Intent(this, NuevaPublicacion::class.java)
+
+            i.putExtra("sitio", sitio)
+
+            startActivity(i)
+        }
+
         val title:TextView = findViewById(R.id.title)
         title.text = sitio.nombre
 
@@ -53,6 +60,14 @@ class SitioActivity : AppCompatActivity() {
 
         val historia : TextView = findViewById(R.id.historia)
         historia.text = sitio.historia
+
+        val titleHistoria : TextView = findViewById(R.id.titleHistoria)
+        if(historia.text.length > 0){
+            titleHistoria.visibility = View.VISIBLE
+        }
+        else{
+            titleHistoria.visibility = View.INVISIBLE
+        }
 
         val paginaOficial :TextView = findViewById(R.id.paginaOficial)
         paginaOficial.text= sitio.paginaOficial
@@ -77,6 +92,7 @@ class SitioActivity : AppCompatActivity() {
         else{
             Log.d(TAG, "Foto = NULL")
         }
+
     }
 
 }
