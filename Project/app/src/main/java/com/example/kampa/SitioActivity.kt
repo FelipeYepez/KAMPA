@@ -1,8 +1,12 @@
 package com.example.kampa
-import android.graphics.BitmapFactory
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
+import android.graphics.BitmapFactory
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.kampa.R
@@ -15,18 +19,30 @@ import com.parse.ParseFile
 
 
 class SitioActivity : AppCompatActivity() {
+    private lateinit var registrarDenuncia: Button
 
     val TAG = "SitioActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sitio)
+
         val sitio: Sitio?
         sitio = if (savedInstanceState == null) {
             val extras = intent.extras
             extras?.get("sitio") as Sitio
         } else {
             savedInstanceState.getSerializable("sitio") as Sitio
+        }
+
+        /*
+         * On click Listener para el botón de registrar denuncia
+         */
+        registrarDenuncia = findViewById(R.id.DenunciarBtn)
+        registrarDenuncia.setOnClickListener{
+            val intent = Intent(this, CrearDenunciaActivity::class.java)
+            intent.putExtra("sitio", sitio)
+            startActivity(intent)
         }
 
         val title:TextView = findViewById(R.id.title)

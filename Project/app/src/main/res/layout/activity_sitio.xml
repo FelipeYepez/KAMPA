@@ -61,37 +61,48 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
 
-                <ImageButton
+                <Button
                     android:id="@+id/addWishListBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="45dp"
-                    app:srcCompat="@drawable/icono_favoritos"
-                    android:background="@color/white"/>
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/icono_favoritos"
+                    android:drawableTint="#ECB518"
+                    android:gravity="center"
+                    android:text="Deseos"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    app:backgroundTint="@color/white" />
 
-                <TextView
-                    android:id="@+id/addWishListText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Guardar"
-                    android:textSize="14dp" />
-
-                <ImageButton
+                <Button
                     android:id="@+id/VisitedBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="45dp"
-                    app:srcCompat="@drawable/marker"
-                    android:background="@color/white"/>
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/marker"
+                    android:gravity="center"
+                    android:text="Visitado"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    app:backgroundTint="@color/white" />
 
-                <TextView
-                    android:id="@+id/VisitedText"
+                <Button
+                    android:id="@+id/DenunciarBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Guardar"
-                    android:textSize="14dp" />
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/ic_baseline_warning_24"
+                    android:gravity="center"
+                    android:text="Denunciar"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    app:backgroundTint="@color/white" />
 
             </LinearLayout>
 
