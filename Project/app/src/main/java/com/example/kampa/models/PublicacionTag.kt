@@ -1,6 +1,5 @@
 package com.example.kampa.models
 
-import android.nfc.Tag
 import com.example.kampa.Constantes
 import com.parse.ParseClassName
 import com.parse.ParseFile

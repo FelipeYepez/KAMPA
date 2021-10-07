@@ -6,7 +6,7 @@ import com.parse.*
 @ParseClassName("UsuarioTag")
 class UsuarioTag : ParseObject() {
 
-    var idTag: ParseObject?
+    var idTag: Tag?
         get() = getParseObject(Constantes.ID_TAG) as Tag?
         set(_idTag) {
             put(Constantes.ID_TAG, _idTag!!)
