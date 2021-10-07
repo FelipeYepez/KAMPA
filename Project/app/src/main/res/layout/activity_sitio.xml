@@ -16,20 +16,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!--<com.denzcoskun.imageslider.ImageSlider
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:auto_cycle="true"
-                app:delay="0"
-                app:period="3000"
-                app:placeholder="@color/black"
-                app:error_image="@color/purple_700"
-                android:id="@+id/slider"
-                app:corner_radius="20"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="100dp"/>-->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="57dp"
@@ -46,6 +32,7 @@
                     android:autoSizeTextType="uniform"
                     android:gravity="center"
                     android:text="TextView"
+                    android:textStyle="bold"
                     android:textColor="@color/white" />
 
             </LinearLayout>
@@ -54,39 +41,68 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp">
 
-                <ImageButton
+                <ImageView
+                    android:id="@+id/foto"
+                    android:layout_width="wrap_content"
+                    android:maxHeight="60dp"
+                    android:maxWidth="60dp"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/default_sitio" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <Button
                     android:id="@+id/addWishListBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="45dp"
-                    app:srcCompat="@drawable/icono_favoritos"
-                    android:background="@color/white"/>
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/icono_favoritos"
+                    android:drawableTint="#ECB518"
+                    android:gravity="center"
+                    android:text="Deseos"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    app:backgroundTint="@color/white" />
 
-                <TextView
-                    android:id="@+id/addWishListText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Guardar"
-                    android:textSize="14dp" />
-
-                <ImageButton
+                <Button
                     android:id="@+id/VisitedBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="45dp"
-                    app:srcCompat="@drawable/marker"
-                    android:background="@color/white"/>
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/marker"
+                    android:gravity="center"
+                    android:text="Visitado"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    app:backgroundTint="@color/white" />
 
-                <TextView
-                    android:id="@+id/VisitedText"
+                <Button
+                    android:id="@+id/DenunciarBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Guardar"
-                    android:textSize="14dp" />
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/ic_baseline_warning_24"
+                    android:gravity="center"
+                    android:text="Denunciar"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    app:backgroundTint="@color/white" />
 
             </LinearLayout>
 
@@ -103,6 +119,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
+                android:textStyle="bold"
                 android:text="Descripción"
                 android:textSize="24dp"/>
 
@@ -128,6 +145,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
+                android:textStyle="bold"
                 android:layout_marginTop="75dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
@@ -160,7 +178,8 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="50dp"
-                android:text="Pagina Oficial"
+                android:autoLink="web"
+                android:text=""
                 android:textSize="16dp"
                 android:linksClickable="true"/>
 
@@ -173,15 +192,19 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="320dp"
-        android:layout_marginEnd="34dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:clickable="true"
-        app:srcCompat="@drawable/plus"
-        android:background="@color/white"
-        app:borderWidth="0dp" />
+        app:backgroundTint="#D93671"
+        app:borderWidth="0dp"
+        app:srcCompat="@drawable/ic_baseline_add_24"
+        app:tint="#FFFFFF"
+        />
+
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.example.kampa.models
 
 import com.example.kampa.Constantes
 import com.parse.ParseClassName
+import com.parse.ParseFile
 import com.parse.ParseObject
 import com.parse.ParseUser
 
@@ -18,5 +19,17 @@ class Wishlist : ParseObject() {
         get() = getString(Constantes.NOMBRE)
         set(_nombre) {
             put(Constantes.NOMBRE, _nombre!!)
+        }
+
+    var fotoWishlist: ParseFile?
+        get() = getParseFile(Constantes.FOTO_WISHLIST)
+        set(_fotoWishlist) {
+            put(Constantes.FOTO_WISHLIST, _fotoWishlist!!)
+        }
+
+    var isDeleted: Boolean?
+        get() = getBoolean(Constantes.IS_DELETED)
+        set(_isDeleted) {
+            put(Constantes.IS_DELETED, _isDeleted!!)
         }
 }

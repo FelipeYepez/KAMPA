@@ -1,60 +1,111 @@
 package com.example.kampa.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kampa.R
+import com.example.kampa.adapters.FavoritosAdapter
+import com.example.kampa.models.Wishlist
+import com.example.kampa.Constantes
+import com.example.kampa.SwipeGestureDelete
+import com.example.kampa.interfaces.SitiosFavoritosInterface
+import com.example.kampa.models.WishlistSitio
+import com.parse.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FavoritosFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class FavoritosFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    val TAG = "FavoritosFragment"
+
+    private lateinit var tvTitle: TextView
+    private lateinit var rvFavoritos: RecyclerView
+
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var favoritosAdapter: FavoritosAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+        ): View? {
         return inflater.inflate(R.layout.fragment_favoritos, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FavoritosFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FavoritosFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        tvTitle = view.findViewById(R.id.tvTitle)
+        rvFavoritos = view.findViewById(R.id.rvFavoritos)
+
+        getFavoritosList()
+    }
+
+    private fun getFavoritosList() {
+        val query: ParseQuery<Wishlist> = ParseQuery.getQuery(Wishlist::class.java)
+
+        // query.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser().toString())
+        query.whereEqualTo(Constantes.IS_DELETED, false)
+        query.findInBackground { objects: MutableList<Wishlist>?, e: ParseException? ->
+            if (e == null) {
+                if (objects != null) {
+                    initializeList(objects)
                 }
             }
+        }
+    }
+
+    private fun initializeList(favoritosList: MutableList<Wishlist>) {
+        linearLayoutManager = LinearLayoutManager(this.context)
+        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        linearLayoutManager.scrollToPosition(0)
+
+        favoritosAdapter = FavoritosAdapter(this.context, favoritosList, this@FavoritosFragment)
+
+        rvFavoritos.layoutManager = linearLayoutManager
+        rvFavoritos.adapter = favoritosAdapter
+        rvFavoritos.itemAnimator = DefaultItemAnimator()
+
+        initializeGesture()
+    }
+
+    private fun initializeGesture() {
+        val swipeGesture = object : SwipeGestureDelete(this.context) {
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        val position : Int = viewHolder.adapterPosition
+                        val wishlistEliminada : Wishlist = favoritosAdapter.getItem(position)
+                        favoritosAdapter.deleteItem(position)
+                        wishlistEliminada.isDeleted = true
+                        wishlistEliminada.saveInBackground()
+                    }
+                }
+            }
+        }
+
+        val touchHelper = ItemTouchHelper(swipeGesture)
+        touchHelper.attachToRecyclerView(rvFavoritos)
+    }
+
+    override fun passData(wishlist: Wishlist) {
+        val bundle = Bundle()
+
+        bundle.putParcelable(Constantes.WISHLIST, wishlist)
+
+        val transaction = this.parentFragmentManager.beginTransaction()
+        val sitiosFavoritosFragment = SitiosFavoritosFragment()
+        sitiosFavoritosFragment.arguments = bundle
+
+        transaction.replace(R.id.fragmentContainer, sitiosFavoritosFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }
