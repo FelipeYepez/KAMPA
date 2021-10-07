@@ -1,5 +1,6 @@
 package com.example.kampa
 
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,7 +9,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.GoogleMap
 import android.location.Location
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -44,7 +44,8 @@ class NewLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 val i = Intent()
                 // Pass relevant data back as a result
                 val latLngLocation = map!!.cameraPosition.target
-                i.putExtra("latLngLocation", latLngLocation)
+                i.putExtra("latitude", latLngLocation.latitude)
+                i.putExtra("longitude", latLngLocation.longitude)
                 // Activity finished ok, return the data
                 setResult(RESULT_OK, i) // set result code and bundle data for response
                 finish() // closes the activity, pass data to parent
