@@ -1,12 +1,16 @@
 package com.example.kampa
+import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.kampa.models.Publicacion
 import com.example.kampa.models.Sitio
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.parse.GetDataCallback
 import com.parse.ParseFile
 
@@ -24,6 +28,16 @@ class SitioActivity : AppCompatActivity() {
             extras?.get("sitio") as Sitio
         } else {
             savedInstanceState.getSerializable("sitio") as Sitio
+        }
+
+        val nuevaPublicacion: FloatingActionButton = findViewById(R.id.floatingActionButton)
+        nuevaPublicacion.setOnClickListener{
+
+            val i = Intent(this, NuevaPublicacion::class.java)
+
+            i.putExtra("sitio", sitio)
+
+            startActivity(i)
         }
 
         val title:TextView = findViewById(R.id.title)
@@ -66,6 +80,7 @@ class SitioActivity : AppCompatActivity() {
         else{
             Log.d(TAG, "Foto = NULL")
         }
+
     }
 
 }

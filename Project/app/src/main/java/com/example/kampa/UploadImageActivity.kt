@@ -79,9 +79,7 @@ class UploadImageActivity : AppCompatActivity() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
                     val msg = "Photo capture succeeded: $savedUri"
-
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    //Log.d(TAG, msg)
+                    
                     val intent = Intent()
                     intent.data = savedUri
                     setResult(RESULT_OK, intent)

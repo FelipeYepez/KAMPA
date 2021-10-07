@@ -60,7 +60,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     private var param2: String? = null
     private var map: SupportMapFragment? = null
     private var gMap: GoogleMap? = null
-    private var userObject: CustomUser? = null
+    private var roleObject: Rol? = null
     private lateinit var mainActivity: MainActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var  currentLocation: Location
@@ -94,7 +94,9 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
 
         var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
 
-        if(currentRole.objectId.toString() == "YfxFlZ7BCz"){
+        roleQuery(currentRole.objectId.toString())
+
+        if(roleObject?.descripcion == "administrador"){
             fab.visibility = View.VISIBLE
             fab.setOnClickListener {
 
@@ -138,7 +140,15 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             }
         }
     }
-    
+
+    private fun roleQuery(id:String){
+        val query = ParseQuery<Rol>("Rol")
+        try {
+            roleObject = query[id]
+        } catch (e: ParseException) {
+            Log.d(TAG, e.toString())
+        }
+    }
 
     private fun add_Marker(sitio: Sitio) {
         val marker = gMap!!.addMarker(

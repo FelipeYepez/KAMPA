@@ -44,15 +44,6 @@ import java.io.ByteArrayOutputStream
 
 import java.io.InputStream
 
-
-
-
-
-
-
-
-
-
 class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     val TAG = "NuevoSitio"
     var listTipoSitio = mutableListOf<TipoSitio>()
@@ -177,7 +168,6 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
             }
 
             if(sitio.nombre!!.length > 0 && sitio.descripcion!!.length > 0 && idCheckedButton != -1){
-                Log.d(TAG, "dentro de if")
                 sitio.saveInBackground { e ->
                     if (e == null) {
                         Log.d(TAG, "saved")
