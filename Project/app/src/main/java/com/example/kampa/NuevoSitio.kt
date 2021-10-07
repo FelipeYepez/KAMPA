@@ -1,6 +1,7 @@
 package com.example.kampa
 
 import android.Manifest
+import android.R.attr
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -35,6 +36,19 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 import com.google.android.gms.maps.model.LatLng
 import java.io.File
 import java.net.URI
+import android.database.Cursor
+
+import android.R.attr.data
+import android.R.attr.path
+import java.io.ByteArrayOutputStream
+
+import java.io.InputStream
+
+
+
+
+
+
 
 
 
@@ -45,7 +59,8 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     var map :MapView? = null
     var gMap : GoogleMap? = null
     var imagenSitio:ImageView? = null
-    var selectedImage: Uri? = null
+    var selectedBitmapImage: Bitmap? = null
+    var selectedUriImage: Uri? = null
     var permission: Boolean? = null
     var currentLocation: Location? = null
     val NEW_LOCATION_ACTIVITY_REQUEST_CODE = 942
@@ -81,9 +96,17 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
         var startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result ->
             if (result.resultCode == Activity.RESULT_OK) {
+
                 val intent = result.data
-                selectedImage = intent?.data
-                imagenSitio!!.setImageURI(selectedImage)
+
+                if (intent?.data != null && "content".equals(intent!!.data?.getScheme())) {
+                    selectedBitmapImage = bitmapFromUri(intent?.data)
+                    imagenSitio!!.setImageBitmap(selectedBitmapImage)
+                }
+                else{
+                    selectedUriImage = intent?.data
+                    imagenSitio!!.setImageURI(selectedUriImage)
+                }
             }
         }
 
@@ -103,21 +126,19 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
             }
         }
 
-        val capturarImagenButton: ImageButton = findViewById(R.id.capturarImagenButton)
+        val capturarImagenButton: Button = findViewById(R.id.capturarImagenButton)
         capturarImagenButton.setOnClickListener{
 
             startForResult.launch(Intent(this, UploadImageActivity::class.java))
-
         }
 
-        val galeriaImagenButton: ImageButton = findViewById(R.id.galeriaImagenButton)
+        val galeriaImagenButton: Button = findViewById(R.id.galeriaImagenButton)
         galeriaImagenButton.setOnClickListener{
             val i = Intent()
             i.type = "image/*"
             i.action = Intent.ACTION_GET_CONTENT
 
             startForResult.launch(Intent.createChooser(i, "Select Picture"))
-
         }
 
         val submitButtonSitio:Button = findViewById(R.id.submitButtonSitio)
@@ -126,8 +147,15 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
             val inputNombre:EditText = findViewById(R.id.inputNombre)
             sitio.nombre = inputNombre.text.toString()
 
-            if(selectedImage != null){
-                sitio.foto = ParseFile(File(selectedImage?.path))
+            if(selectedBitmapImage != null){
+                val stream = ByteArrayOutputStream()
+                selectedBitmapImage!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                val byteArray = stream.toByteArray()
+                sitio.foto = ParseFile("Sitio" + (0..1000000000).random().toString() + "-" +".png" , byteArray)
+            }
+
+            else if(selectedUriImage != null){
+                sitio.foto = ParseFile(File(selectedUriImage?.path))
             }
 
             val inputDescripcion:EditText = findViewById(R.id.inputDescripcion)
@@ -144,16 +172,25 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
 
             val tipoSitio:RadioGroup = findViewById(R.id.radioGroupTipo)
             val idCheckedButton = tipoSitio.checkedRadioButtonId
-            sitio.idTipoSitio = listTipoSitio[idCheckedButton]
-
-            sitio.saveInBackground { e ->
-                if (e == null) {
-                    Log.d(TAG, "saved")
-                } else {
-                    Log.d(TAG, e.toString())
-                }
+            if(idCheckedButton != -1){
+                sitio.idTipoSitio = listTipoSitio[idCheckedButton]
             }
-            finish()
+
+            if(sitio.nombre!!.length > 0 && sitio.descripcion!!.length > 0 && idCheckedButton != -1){
+                Log.d(TAG, "dentro de if")
+                sitio.saveInBackground { e ->
+                    if (e == null) {
+                        Log.d(TAG, "saved")
+                    } else {
+                        Log.d(TAG, e.toString())
+                    }
+                }
+                finish()
+            }
+            else{
+                Toast.makeText(this, "Llena todos los campos obligatorios", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 
@@ -211,7 +248,23 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
         })
     }
 
-
+    fun bitmapFromUri(photoUri: Uri?): Bitmap? {
+        var image: Bitmap? = null
+        try {
+            // check version of Android on device
+            image = if (Build.VERSION.SDK_INT > 27) {
+                // on newer versions of Android, use the new decodeBitmap method
+                val source: ImageDecoder.Source = ImageDecoder.createSource(this.contentResolver, photoUri!!)
+                ImageDecoder.decodeBitmap(source)
+            } else {
+                // support older versions of Android by using getBitmap
+                MediaStore.Images.Media.getBitmap(this.contentResolver, photoUri)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return image
+    }
 
 
 }

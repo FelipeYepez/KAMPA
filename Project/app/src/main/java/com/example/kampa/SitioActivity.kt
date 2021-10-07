@@ -3,15 +3,12 @@ import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.kampa.R
 import com.example.kampa.models.Sitio
 import com.parse.GetDataCallback
 import com.parse.ParseFile
-
-//import com.denzcoskun.imageslider.ImageSlider
-//import com.denzcoskun.imageslider.models.SlideModel
 
 
 class SitioActivity : AppCompatActivity() {
@@ -37,6 +34,14 @@ class SitioActivity : AppCompatActivity() {
 
         val historia : TextView = findViewById(R.id.historia)
         historia.text = sitio.historia
+
+        val titleHistoria : TextView = findViewById(R.id.titleHistoria)
+        if(historia.text.length > 0){
+            titleHistoria.visibility = View.VISIBLE
+        }
+        else{
+            titleHistoria.visibility = View.INVISIBLE
+        }
 
         val paginaOficial :TextView = findViewById(R.id.paginaOficial)
         paginaOficial.text= sitio.paginaOficial
