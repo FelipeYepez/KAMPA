@@ -68,19 +68,41 @@
                 android:singleLine="false"
                 android:textSize="16dp" />
 
-            <Button
-                android:id="@+id/subirImagenBtn"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginLeft="45dp"
-                android:layout_marginTop="30dp"
-                android:drawableLeft="@drawable/ic_baseline_image_24"
-                android:drawableTint="#ECB518"
-                android:gravity="center"
-                android:text="Agregar Foto"
-                android:textColor="@color/black"
-                app:backgroundTint="@color/white" />
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/subirImagenBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="45dp"
+                    android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/ic_baseline_image_24"
+                    android:drawableTint="#ECB518"
+                    android:gravity="center"
+                    android:text="Galería"
+                    android:textColor="@color/black"
+                    app:backgroundTint="@color/white" />
+
+                <Button
+                    android:id="@+id/tomarFotoBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/ic_camera"
+                    android:drawableTint="#ECB518"
+                    android:gravity="center"
+                    android:text="Cámara"
+                    android:textColor="@color/black"
+                    app:backgroundTint="@color/white" />
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/imagenDenuncia"
@@ -102,10 +124,10 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
                 android:drawableLeft="@drawable/ic_baseline_warning_24"
+                android:drawableTint="@color/white"
                 android:gravity="center"
                 android:text="Enviar Denuncia"
-                app:backgroundTint="#D93671"
-                android:drawableTint="@color/white"/>
+                app:backgroundTint="#D93671" />
         </LinearLayout>
 
     </ScrollView>
