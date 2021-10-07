@@ -15,7 +15,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.parse.ParseQuery
 import android.content.Intent
 import com.google.android.gms.tasks.Task
 import com.example.kampa.*
@@ -26,11 +25,21 @@ import org.jetbrains.annotations.NotNull
 
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresPermission
+import com.example.kampa.models.CustomUser
+import com.example.kampa.models.Rol
 
 import com.google.android.gms.tasks.OnCompleteListener
 
 import com.google.android.gms.location.LocationServices
+import com.parse.*
+import com.parse.ParseObject.createWithoutData
 import java.util.jar.Manifest
+import com.parse.ParseObject
+
+import com.parse.ParseQuery
+
+
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -51,6 +60,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     private var param2: String? = null
     private var map: SupportMapFragment? = null
     private var gMap: GoogleMap? = null
+    private var userObject: CustomUser? = null
     private lateinit var mainActivity: MainActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var  currentLocation: Location
@@ -80,18 +90,25 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         initMap()
 
 
-        val fab: FloatingActionButton = view.findViewById(R.id.NuevoSitio)
+        var fab: FloatingActionButton = view.findViewById(R.id.NuevoSitio)
 
-        fab.setOnClickListener {
+        var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
 
-            val i = Intent(activity, NuevoSitio::class.java)
+        if(currentRole.objectId.toString() == "YfxFlZ7BCz"){
+            fab.visibility = View.VISIBLE
+            fab.setOnClickListener {
 
-            i.putExtra("permission", mainActivity.isPermissionGranted)
-            i.putExtra("currentLocation",currentLocation)
+                val i = Intent(activity, NuevoSitio::class.java)
 
-            startActivity(i)
+                i.putExtra("permission", mainActivity.isPermissionGranted)
+                i.putExtra("currentLocation",currentLocation)
 
+                startActivity(i)
+            }
+        }
 
+        else{
+            fab.visibility = View.INVISIBLE
         }
 
 
@@ -115,14 +132,13 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
                 // Access the array of results here
                 for (el in itemList) {
                     add_Marker(el)
-                    Log.d(TAG, el.nombre!!)
                 }
             } else {
                 Log.d("item", "Error: " + e.message)
             }
         }
     }
-
+    
 
     private fun add_Marker(sitio: Sitio) {
         val marker = gMap!!.addMarker(

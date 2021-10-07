@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KAMPA">
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".MainActivity"
             android:exported="true"/>
         <activity
             android:name=".UploadImageActivity"
@@ -32,7 +32,7 @@
             android:name=".NewLocationActivity"
             android:exported="true" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
