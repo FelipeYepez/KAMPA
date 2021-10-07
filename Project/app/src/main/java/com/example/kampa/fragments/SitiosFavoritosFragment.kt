@@ -1,22 +1,28 @@
 package com.example.kampa.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kampa.Constantes
 import com.example.kampa.R
+import com.example.kampa.SwipeGestureDelete
 import com.example.kampa.adapters.SitiosFavoritosAdapter
 import com.example.kampa.models.Wishlist
 import com.example.kampa.models.WishlistSitio
 import com.parse.ParseException
 import com.parse.ParseQuery
+import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
 
 class SitiosFavoritosFragment : Fragment() {
 
@@ -24,6 +30,7 @@ class SitiosFavoritosFragment : Fragment() {
 
     private lateinit var tvTitle: TextView
     private lateinit var rvSitiosFavoritos: RecyclerView
+    private lateinit var ibChangeName: ImageButton
 
     private lateinit var wishlist: Wishlist
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -41,6 +48,7 @@ class SitiosFavoritosFragment : Fragment() {
 
         tvTitle = view.findViewById(R.id.tvTitle)
         rvSitiosFavoritos = view.findViewById(R.id.rvSitiosFavoritos)
+        ibChangeName = view.findViewById(R.id.ibChangeName)
 
         initializeArguments()
         getSitiosFavoritosList()
@@ -49,6 +57,10 @@ class SitiosFavoritosFragment : Fragment() {
     private fun initializeArguments() {
         wishlist = arguments?.getParcelable<Wishlist>(Constantes.WISHLIST)!!
         tvTitle.text = wishlist.nombre.toString()
+
+        ibChangeName.setOnClickListener {
+            changeName()
+        }
     }
 
     private fun getSitiosFavoritosList() {
@@ -56,7 +68,7 @@ class SitiosFavoritosFragment : Fragment() {
 
         query.include(Constantes.ID_SITIO)
         query.whereEqualTo(Constantes.ID_WISHLIST, wishlist)
-        query.findInBackground { objects: List<WishlistSitio>?, e: ParseException? ->
+        query.findInBackground { objects: MutableList<WishlistSitio>?, e: ParseException? ->
             if (e == null) {
                 if (objects != null) {
                     initializeList(objects)
@@ -65,7 +77,7 @@ class SitiosFavoritosFragment : Fragment() {
         }
     }
 
-    private fun initializeList(sitiosFavoritosList: List<WishlistSitio>) {
+    private fun initializeList(sitiosFavoritosList: MutableList<WishlistSitio>) {
         linearLayoutManager = LinearLayoutManager(this.context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         linearLayoutManager.scrollToPosition(0)
@@ -75,6 +87,54 @@ class SitiosFavoritosFragment : Fragment() {
         rvSitiosFavoritos.layoutManager = linearLayoutManager
         rvSitiosFavoritos.adapter = sitiosFavoritosAdapter
         rvSitiosFavoritos.itemAnimator = DefaultItemAnimator()
+
+        initializeGesture()
     }
 
+    private fun initializeGesture() {
+        val swipeGesture = object : SwipeGestureDelete(this.context) {
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        val position : Int = viewHolder.adapterPosition
+                        val sitioEliminado : WishlistSitio = sitiosFavoritosAdapter.getItem(position)
+                        sitiosFavoritosAdapter.deleteItem(position)
+                        sitioEliminado.deleteInBackground()
+                    }
+                }
+            }
+        }
+
+        val touchHelper = ItemTouchHelper(swipeGesture)
+        touchHelper.attachToRecyclerView(rvSitiosFavoritos)
+    }
+
+    private fun changeName() {
+        val myDialogView = LayoutInflater
+            .from(this.context)
+            .inflate(R.layout.cambiar_nombre_dialogo, null)
+
+        val builder = AlertDialog.Builder(this.context)
+            .setView(myDialogView)
+            .setTitle(R.string.cambiar_nombre_lista_deseos)
+            .setPositiveButton(R.string.aceptar,
+                DialogInterface.OnClickListener { dialog, id ->
+                    val nuevoNombre = myDialogView.etNuevoNombre.text.toString()
+
+                    if (nuevoNombre.isNotEmpty()) {
+                        tvTitle.text = nuevoNombre
+                        wishlist.nombre = nuevoNombre
+                        wishlist.saveInBackground()
+                    } else {
+                        Toast.makeText(this.context, R.string.nombre_vacio, Toast.LENGTH_SHORT).show()
+                    }
+                })
+            .setNegativeButton(R.string.cancelar,
+                DialogInterface.OnClickListener { dialog, id ->
+                    dialog.cancel()
+                })
+
+        builder.show()
+    }
 }

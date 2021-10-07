@@ -18,6 +18,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KAMPA">
         <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".UploadImageActivity"
             android:exported="true" />
         <activity
@@ -25,16 +34,13 @@
             android:exported="true" />
         <activity android:name=".CrearDenunciaActivity" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:name=".NuevoSitio"
+            android:exported="true" />
+        <activity
+            android:name=".NewLocationActivity"
+            android:exported="true" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
-        <activity android:name=".NuevoSitio"/>
+        <activity android:name=".MainActivity"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

@@ -26,4 +26,10 @@ class Wishlist : ParseObject() {
         set(_fotoWishlist) {
             put(Constantes.FOTO_WISHLIST, _fotoWishlist!!)
         }
+
+    var isDeleted: Boolean?
+        get() = getBoolean(Constantes.IS_DELETED)
+        set(_isDeleted) {
+            put(Constantes.IS_DELETED, _isDeleted!!)
+        }
 }

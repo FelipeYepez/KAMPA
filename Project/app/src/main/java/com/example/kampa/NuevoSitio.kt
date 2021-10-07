@@ -1,5 +1,7 @@
 package com.example.kampa
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -27,9 +29,14 @@ import android.graphics.ImageDecoder
 import android.os.Build
 
 import android.graphics.Bitmap
+import android.location.Location
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat.startActivityForResult
+import com.google.android.gms.maps.model.LatLng
 import java.io.File
 import java.net.URI
+
+
 
 
 class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
@@ -39,14 +46,34 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
     var gMap : GoogleMap? = null
     var imagenSitio:ImageView? = null
     var selectedImage: Uri? = null
+    var permission: Boolean? = null
+    var currentLocation: Location? = null
+    val NEW_LOCATION_ACTIVITY_REQUEST_CODE = 942
+    lateinit var startFR : ActivityResultLauncher<Intent>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nuevo_sitio)
 
+
         initMap()
 
         desplegarTipoSitio()
+
+        permission = if (savedInstanceState == null) {
+            val extras = intent.extras
+            extras?.get("permission") as Boolean
+        } else {
+            savedInstanceState.getSerializable("permission") as Boolean
+        }
+
+        currentLocation = if (savedInstanceState == null) {
+            val extras = intent.extras
+            extras?.get("currentLocation") as Location
+        } else {
+            savedInstanceState.getSerializable("currentLocation") as Location
+        }
 
         var sitio = Sitio()
         imagenSitio = findViewById(R.id.imagenSitio)
@@ -57,6 +84,22 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
                 val intent = result.data
                 selectedImage = intent?.data
                 imagenSitio!!.setImageURI(selectedImage)
+            }
+        }
+
+        startFR = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                val latLngLocation = LatLng(intent!!.getDoubleExtra("latitude",0.0),intent!!.getDoubleExtra("longitude",0.0))
+                Log.d(TAG,latLngLocation.toString())
+                currentLocation!!.latitude =latLngLocation.latitude
+                currentLocation!!.longitude =latLngLocation.longitude
+
+                gMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngLocation, 18f))
+
+
+
             }
         }
 
@@ -96,7 +139,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
             val inputPagina:EditText = findViewById(R.id.inputPagina)
             sitio.paginaOficial = inputPagina.text.toString()
 
-            val ubicacion = ParseGeoPoint(-30.0, 40.0)
+            val ubicacion = ParseGeoPoint(currentLocation!!.latitude,currentLocation!!.longitude)
             sitio.ubicacion = ubicacion
 
             val tipoSitio:RadioGroup = findViewById(R.id.radioGroupTipo)
@@ -110,6 +153,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
                     Log.d(TAG, e.toString())
                 }
             }
+            finish()
         }
     }
 
@@ -142,44 +186,32 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
 
     }
 
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d(TAG, "onMapReady: entered onMapReady")
         gMap = googleMap
-//        val latLng = LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())
-//        mMap.moveCamera(
-//            CameraUpdateFactory.newLatLngZoom(
-//                latLng,
-//                18f
-//            )
-//        )
-//        mMap.setOnMapClickListener(OnMapClickListener {
-//            Log.d(TAG, "onMapClick: clicked on map!")
-//            val intent = Intent(this@CreateActivity, NewLocationActivity::class.java)
-//            intent.putExtra("currentLocation", currentLocation)
-//            startActivityForResult(intent, NEW_LOCATION_ACTIVITY_REQUEST_CODE)
-//        })
+        gMap?.setMyLocationEnabled(permission!!)
+
+       val latLng = LatLng(currentLocation!!.getLatitude(), currentLocation!!.getLongitude())
+        gMap?.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                latLng,
+                18f
+            )
+        )
+
+        gMap?.setOnMapClickListener(GoogleMap.OnMapClickListener {
+            Log.d(TAG, "onMapClick: clicked on map!")
+            val i = Intent(this, NewLocationActivity::class.java)
+            i.putExtra("currentLocation", currentLocation)
+
+            startFR.launch(i)
+
+
+        })
     }
 
-    fun loadFromUri(photoUri: Uri?): Bitmap? {
-        var image: Bitmap? = null
-        try {
-            // check version of Android on device
-            image = if (Build.VERSION.SDK_INT > 27) {
-                // on newer versions of Android, use the new decodeBitmap method
-                val source = ImageDecoder.createSource(
-                    this.contentResolver,
-                    photoUri!!
-                )
-                ImageDecoder.decodeBitmap(source)
-            } else {
-                // support older versions of Android by using getBitmap
-                MediaStore.Images.Media.getBitmap(this.contentResolver, photoUri)
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return image
-    }
+
 
 
 }
