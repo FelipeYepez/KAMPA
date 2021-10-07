@@ -184,12 +184,12 @@ class DescubreFragment : Fragment(), CardStackListener {
                 // Parse Query para guardar Sitio en WishList de Usuario
                 val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
                 query.whereEqualTo(Constantes.ID_SITIO, publicacion.idSitio)
-                //query.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+                query.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
 
                 // Parse Query para obtener primer registro de Parse
-                query.getFirstInBackground(GetCallback { usuarioSitio: UsuarioSitio, e ->
+                query.getFirstInBackground(GetCallback { usuarioSitio: UsuarioSitio?, e ->
                     // Si registro ya existe
-                    if (e == null) {
+                    if (e == null && usuarioSitio != null) {
                         // Si Sitio de Publicación ya existe en Wishlist
                         if(usuarioSitio.isWishlist == true){
                             Toast.makeText(requireContext(), "Ya existe en tu Wishlist", Toast.LENGTH_LONG).show()
@@ -207,13 +207,12 @@ class DescubreFragment : Fragment(), CardStackListener {
                     else {
                         // No se obtuvo resultado de GetCallBack
                         if (e.code == 101) {
+                            // Modificar Likes o Dislikes totales de Publicación
+                            publicacion.increment(Constantes.NUM_LIKES, 2)
+
                             val usuarioSitioNuevo = UsuarioSitio()
                             usuarioSitioNuevo.idSitio = publicacion.idSitio
-                            //usuarioSitioNuevo.idUsuario = ParseUser.getCurrentUser()
-                            usuarioSitioNuevo.put(
-                                Constantes.ID_USUARIO,
-                                ParseUser.createWithoutData("_User", "He2NkOKrLT")
-                            )
+                            usuarioSitioNuevo.idUsuario = ParseUser.getCurrentUser()
                             usuarioSitioNuevo.isWishlist = true
                             usuarioSitioNuevo.saveInBackground()
                         } else {
@@ -237,8 +236,8 @@ class DescubreFragment : Fragment(), CardStackListener {
             query.whereEqualTo(Constantes.ID_PUBLICACION, publicacion)
             // Parse Query obtiene Tags relacionados a Usuario en cuestión
             val query2: ParseQuery<UsuarioTag> = ParseQuery.getQuery(UsuarioTag::class.java)
-            // ID USUARIO
-            // query2.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+            query2.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+
             // Parse Query obtiene tags ya existentes con usuario para modificarlas
             query2.whereMatchesKeyInQuery(Constantes.ID_TAG, Constantes.ID_TAG, query)
             query2.findInBackground(FindCallback { usuarioTags: List<UsuarioTag>, e ->
@@ -261,8 +260,8 @@ class DescubreFragment : Fragment(), CardStackListener {
 
                     // Parse Query para relacionar nuevos tags con usuario
                     val query3: ParseQuery<UsuarioTag> = ParseQuery.getQuery(UsuarioTag::class.java)
-                    // ID USUARIO
-                    //query3.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+                    query3.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+
                     // Parse Query obtiene tags de Publicacion sin relacionar con usuario
                     query.whereDoesNotMatchKeyInQuery(Constantes.ID_TAG, Constantes.ID_TAG, query3)
                     query.findInBackground(FindCallback {
@@ -275,11 +274,7 @@ class DescubreFragment : Fragment(), CardStackListener {
                             for (tagPubli in tagsPublicacionCrear) {
                                 // Crea objeto y asigna respectivas características
                                 val usuarioTag = UsuarioTag()
-                                //usuarioTag.idUsuario = ParseUser.getCurrentUser()
-                                usuarioTag.put(
-                                    Constantes.ID_USUARIO,
-                                    ParseUser.createWithoutData("_User", "He2NkOKrLT")
-                                )
+                                usuarioTag.idUsuario = ParseUser.getCurrentUser()
                                 usuarioTag.idTag = tagPubli.idTag
                                 if (direction == "Left") {
                                     usuarioTag.numDislikes = 1
