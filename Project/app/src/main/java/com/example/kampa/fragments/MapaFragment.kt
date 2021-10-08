@@ -168,7 +168,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         val sitio: Sitio = marker.tag as Sitio
 
         val i = Intent(activity, SitioActivity::class.java)
-
+        i.putExtra("permission", mainActivity.isPermissionGranted)
+        i.putExtra("currentLocation",currentLocation)
         i.putExtra("sitio", sitio)
 
         startActivity(i)
@@ -213,7 +214,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             if (mainActivity.isPermissionGranted!!) {
                 val location: Task<Location> = mFusedLocationProviderClient.getLastLocation()
                 location.addOnCompleteListener(OnCompleteListener<Location> { task ->
-                    if (task.isSuccessful) {
+                    if (task.isSuccessful && task.result != null) {
                         Log.d(TAG, "onComplete: found location!")
                         currentLocation = task.result as Location
 

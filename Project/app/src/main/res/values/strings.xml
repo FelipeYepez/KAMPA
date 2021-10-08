@@ -25,4 +25,6 @@
     <string name="crear">Crear</string>
     <string name="error_conexion">No se pudo guardar. Error de conexión</string>
     <string name="lista_favoritos_creada">"Se creó la lista: "</string>
+    <string name="editar_sitio">Editar Sitio</string>
+    <string name="confirmar_cambios">Confirmar Cambios</string>
 </resources>

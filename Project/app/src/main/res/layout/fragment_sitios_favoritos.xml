@@ -28,9 +28,9 @@
             android:id="@+id/ibChangeName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/tvTitle"
             android:layout_above="@id/rvSitiosFavoritos"
             android:layout_alignTop="@+id/tvTitle"
+            android:layout_toEndOf="@+id/tvTitle"
             android:background="@android:color/transparent"
             android:src="@android:drawable/ic_menu_edit"
             app:tint="@color/blue_color" />
