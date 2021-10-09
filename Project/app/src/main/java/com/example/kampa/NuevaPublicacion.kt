@@ -14,8 +14,13 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kampa.models.Publicacion
 import com.example.kampa.models.Sitio
+import com.example.kampa.models.Tag
+import com.example.kampa.models.TipoSitio
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.parse.ParseFile
 import com.parse.ParseGeoPoint
+import com.parse.ParseQuery
 import com.parse.ParseUser
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -26,6 +31,8 @@ class NuevaPublicacion : AppCompatActivity() {
     var imagenPublicacion: ImageView? = null
     var selectedBitmapImage: Bitmap? = null
     var selectedUriImage: Uri? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +82,8 @@ class NuevaPublicacion : AppCompatActivity() {
             startForResult.launch(Intent.createChooser(i, "Select Picture"))
         }
 
+
+
         val submitButtonPublicacion: Button = findViewById(R.id.submitButtonSitio)
         submitButtonPublicacion.setOnClickListener{
 
@@ -111,6 +120,25 @@ class NuevaPublicacion : AppCompatActivity() {
 
         }
     }
+//    fun desplegarTags(){
+//        val chips :ChipGroup = findViewById(R.id.chipGroupTag)
+//        val query: ParseQuery<Tag> = ParseQuery.getQuery(Tag::class.java)
+//        query.findInBackground { itemList, e ->
+//            if (e == null) {
+//                var id = 0
+//                for (el in itemList ) {
+//                    var chip= Chip(this)
+//                    chip.text = el.descripcion
+//                    chip.id = id
+//                    chips.addView(chip, -1)
+//                    listTags.add(id, el)
+//                    id = id + 1
+//                }
+//            } else {
+//                Log.d("item", "Error: " + e.message)
+//            }
+//        }
+//    }
 
     fun bitmapFromUri(photoUri: Uri?): Bitmap? {
         var image: Bitmap? = null
