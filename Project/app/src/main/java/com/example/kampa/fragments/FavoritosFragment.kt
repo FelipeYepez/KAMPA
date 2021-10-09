@@ -123,6 +123,11 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
                     initializeList(objects)
                 }
             }
+            else{
+                if(e.code == 100){
+                    Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

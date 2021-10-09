@@ -61,6 +61,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     private var map: SupportMapFragment? = null
     private var gMap: GoogleMap? = null
     private var roleObject: Rol? = null
+    var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
     private lateinit var mainActivity: MainActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var  currentLocation: Location
@@ -92,9 +93,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
 
         var fab: FloatingActionButton = view.findViewById(R.id.NuevoSitio)
 
-        var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
-
-        roleQuery(currentRole.objectId.toString())
 
         if(roleObject?.descripcion == "administrador"){
             fab.visibility = View.VISIBLE
@@ -114,6 +112,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         }
 
 
+
     }
 
     private fun initMap() {
@@ -121,22 +120,27 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             R.id.map_fragment
         ) as? SupportMapFragment
 
-        map?.getMapAsync(this)
-        query()
-
+        query(map)
     }
 
-    private fun query() {
+    private fun query(map:SupportMapFragment?) {
+
         val query: ParseQuery<Sitio> = ParseQuery.getQuery(Sitio::class.java)
 
         query.findInBackground { itemList, e ->
             if (e == null) {
+                map?.getMapAsync(this)
                 // Access the array of results here
                 for (el in itemList) {
                     add_Marker(el)
                 }
+                roleQuery(currentRole.objectId.toString())
             } else {
                 Log.d("item", "Error: " + e.message)
+
+                if(e.code == 100){
+                    Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
