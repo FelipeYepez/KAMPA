@@ -69,6 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/ic_baseline_image_24"
                     android:drawableTint="#ECB518"
                     android:gravity="center"
                     android:text="Galería"
@@ -81,6 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_marginLeft="20dp"
+                    android:drawableLeft="@drawable/ic_camera"
                     android:layout_marginTop="30dp"
                     android:drawableTint="#ECB518"
                     android:gravity="center"
@@ -91,10 +93,15 @@
             </LinearLayout>
 
             <ImageView
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/imagenPublicacion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </ImageView>
+                android:layout_height="wrap_content"
+                android:maxHeight="400dp"
+                android:adjustViewBounds="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                app:srcCompat="@drawable/default_sitio" />
 
             <TextView
                 android:id="@+id/titleDescripcion"
@@ -124,6 +131,21 @@
                 android:textSize="16dp" />
 
 
+            <Spinner
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </Spinner>
+
+            <com.google.android.material.chip.ChipGroup
+
+                android:id="@+id/chipGroupTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </com.google.android.material.chip.ChipGroup>
 
 
             <Button
@@ -138,6 +160,7 @@
                 android:text="AÑADIR PUBLICACIÓN"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
+
 
 
         </LinearLayout>

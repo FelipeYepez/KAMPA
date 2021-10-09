@@ -26,7 +26,7 @@
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:autoSizeMaxTextSize="25sp"
+                    android:autoSizeMaxTextSize="30sp"
                     android:autoSizeMinTextSize="12sp"
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
@@ -56,8 +56,9 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
+                android:textColor="@color/black"
                 android:text="Nombre*"
-                android:textSize="24dp"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <EditText
@@ -78,11 +79,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="30dp"
                 android:layout_marginStart="45dp"
+                android:layout_marginTop="30dp"
+                android:textColor="@color/black"
                 android:layout_marginEnd="45dp"
                 android:text="Imagen"
-                android:textSize="24dp"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -101,6 +103,7 @@
                     android:drawableTint="#ECB518"
                     android:gravity="center"
                     android:text="Galería"
+                    android:drawableLeft="@drawable/ic_baseline_image_24"
                     android:textColor="@color/black"
                     app:backgroundTint="@color/white" />
 
@@ -111,6 +114,7 @@
                     android:layout_gravity="left"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/ic_camera"
                     android:drawableTint="#ECB518"
                     android:gravity="center"
                     android:text="Cámara"
@@ -122,8 +126,7 @@
             <ImageView
                 android:id="@+id/imagenSitio"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </ImageView>
+                android:layout_height="wrap_content"></ImageView>
 
 
             <TextView
@@ -135,10 +138,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="35dp"
+                android:textColor="@color/black"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
                 android:text="Localización"
-                android:textSize="24dp"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <RelativeLayout
@@ -177,10 +181,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="35dp"
+                android:textColor="@color/black"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
                 android:text="Descripción*"
-                android:textSize="24dp"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <EditText
@@ -203,11 +208,12 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
+                android:textColor="@color/black"
                 android:layout_marginTop="35dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
                 android:text="Historia"
-                android:textSize="24dp"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <EditText
@@ -228,13 +234,14 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/descripcion"
                 android:layout_alignParentStart="true"
+                android:textColor="@color/black"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="35dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
                 android:text="Categoría*"
-                android:textSize="24dp"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <RadioGroup
@@ -257,9 +264,10 @@
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="35dp"
                 android:layout_marginEnd="45dp"
+                android:textColor="@color/black"
                 android:layout_marginBottom="0dp"
                 android:text="Página oficial"
-                android:textSize="24dp"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <EditText
