@@ -116,7 +116,10 @@ class DescubreFragment : Fragment(), CardStackListener {
                 }
                 initializeList()
             } else {
-                Log.d("item", "Error: " + e.message)
+                Log.e("item", "Error code: ${e.code}", e)
+                if(e.code == 100){
+                    Toast.makeText(requireContext(), "No hay conexión a Internet", Toast.LENGTH_LONG).show()
+                }
             }
         }
 
