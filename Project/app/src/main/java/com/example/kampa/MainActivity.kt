@@ -7,6 +7,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.kampa.databinding.ActivityAprobarFragmentBinding
+import com.example.kampa.fragments.AprobarFragment
 import com.example.kampa.fragments.DescubreFragment
 import com.example.kampa.fragments.FavoritosFragment
 import com.example.kampa.fragments.MapaFragment
@@ -23,7 +25,7 @@ val TAG : String = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     // Variables para navegación en el Menú
-    private val descubreFragment = DescubreFragment()
+    private val descubreFragment = AprobarFragment()
     private val mapaFragment = MapaFragment()
     private val favoritosFragment = FavoritosFragment()
     var isPermissionGranted : Boolean? = false
