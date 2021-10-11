@@ -25,7 +25,7 @@ val TAG : String = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     // Variables para navegación en el Menú
-    private val descubreFragment = AprobarFragment()
+    private val descubreFragment = DescubreFragment()
     private val mapaFragment = MapaFragment()
     private val favoritosFragment = FavoritosFragment()
     var isPermissionGranted : Boolean? = false
