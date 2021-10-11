@@ -120,6 +120,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             R.id.map_fragment
         ) as? SupportMapFragment
 
+        map?.getMapAsync(this)
+
         query(map)
     }
 
@@ -129,7 +131,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
 
         query.findInBackground { itemList, e ->
             if (e == null) {
-                map?.getMapAsync(this)
                 // Access the array of results here
                 for (el in itemList) {
                     add_Marker(el)

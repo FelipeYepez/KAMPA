@@ -1,5 +1,6 @@
 package com.example.kampa
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,8 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import com.example.kampa.models.Publicacion
 import com.example.kampa.models.Sitio
 import com.example.kampa.models.Tag
@@ -27,10 +30,15 @@ import java.io.File
 import java.io.IOException
 
 class NuevaPublicacion : AppCompatActivity() {
-    val TAG = "NuevaPublicacion"
-    var imagenPublicacion: ImageView? = null
-    var selectedBitmapImage: Bitmap? = null
-    var selectedUriImage: Uri? = null
+    private val TAG = "NuevaPublicacion"
+    private var imagenPublicacion: ImageView? = null
+    private var selectedBitmapImage: Bitmap? = null
+    private var selectedUriImage: Uri? = null
+    private lateinit var tags: Spinner
+    private var selectedTag :Int = 0
+    private var listTags: ArrayList<Tag>? = null
+    lateinit private var chips : ChipGroup
+
 
 
 
@@ -46,6 +54,17 @@ class NuevaPublicacion : AppCompatActivity() {
         } else {
             savedInstanceState.getSerializable("sitio") as Sitio
         }
+        tags =findViewById(R.id.tags)
+        desplegarTags()
+        chips = findViewById(R.id.chipGroupTag)
+
+        var botonTag:Button = findViewById(R.id.botonTag)
+        botonTag.setOnClickListener{
+            Log.d(TAG, "entro a creaChipTag")
+            creaChipTag()
+        }
+
+
 
         var publicacion = Publicacion()
         imagenPublicacion = findViewById(R.id.imagenPublicacion)
@@ -120,25 +139,41 @@ class NuevaPublicacion : AppCompatActivity() {
 
         }
     }
-//    fun desplegarTags(){
-//        val chips :ChipGroup = findViewById(R.id.chipGroupTag)
-//        val query: ParseQuery<Tag> = ParseQuery.getQuery(Tag::class.java)
-//        query.findInBackground { itemList, e ->
-//            if (e == null) {
-//                var id = 0
-//                for (el in itemList ) {
-//                    var chip= Chip(this)
-//                    chip.text = el.descripcion
-//                    chip.id = id
-//                    chips.addView(chip, -1)
-//                    listTags.add(id, el)
-//                    id = id + 1
-//                }
-//            } else {
-//                Log.d("item", "Error: " + e.message)
+    fun desplegarTags(){
+        val query: ParseQuery<Tag> = ParseQuery.getQuery(Tag::class.java)
+        val adapter: ArrayAdapter<String>  =  ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item)
+        query.findInBackground { itemList, e ->
+            if (e == null) {
+                var id = 0
+                for (el in itemList ) {
+                    listTags?.add(id, el)
+                    adapter.add(el.descripcion)
+                    id = id + 1
+                }
+
+                tags.adapter = adapter
+            } else {
+                Log.d("item", "Error: " + e.message)
+            }
+        }
+    }
+    //Añade el tag actualmente selecionado al chipgroup
+    fun creaChipTag(){
+        Log.d(TAG, "entro a creaChipTag")
+        var chipTag:Chip = Chip(this)
+        chipTag.text = tags.selectedItem.toString()
+
+//        var chipTag:Chip = layoutInflater.inflate(R.layout.chip_item,null,false) as Chip
+//        chipTag.text = tags.selectedItem.toString()
+//        chipTag.setOnCloseIconClickListener{
+//            fun OnClick(view: View){
+//                chips.removeView(view)
 //            }
 //        }
-//    }
+//
+//        //falta validar que el tag no haya sido seleccionado antes y que ya haya seleccionado algun tag
+       chips.addView(chipTag)
+    }
 
     fun bitmapFromUri(photoUri: Uri?): Bitmap? {
         var image: Bitmap? = null
