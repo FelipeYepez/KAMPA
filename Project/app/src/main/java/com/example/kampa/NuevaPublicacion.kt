@@ -38,6 +38,7 @@ class NuevaPublicacion : AppCompatActivity() {
     private var selectedTag :Int = 0
     private var listTags: ArrayList<Tag>? = null
     lateinit private var chips : ChipGroup
+    private var addedChips = mutableListOf<Int>()
 
 
 
@@ -160,19 +161,24 @@ class NuevaPublicacion : AppCompatActivity() {
     //Añade el tag actualmente selecionado al chipgroup
     fun creaChipTag(){
         Log.d(TAG, "entro a creaChipTag")
-        var chipTag:Chip = Chip(this)
+        var chipTag:Chip = layoutInflater.inflate(R.layout.chip_item,null,false) as Chip
+        chipTag.setOnCloseIconClickListener { view ->
+            chips.removeView(view)
+        }
+
         chipTag.text = tags.selectedItem.toString()
 
-//        var chipTag:Chip = layoutInflater.inflate(R.layout.chip_item,null,false) as Chip
-//        chipTag.text = tags.selectedItem.toString()
-//        chipTag.setOnCloseIconClickListener{
-//            fun OnClick(view: View){
-//                chips.removeView(view)
-//            }
-//        }
-//
-//        //falta validar que el tag no haya sido seleccionado antes y que ya haya seleccionado algun tag
-       chips.addView(chipTag)
+
+
+        val found = addedChips.contains(tags.selectedItemId.toInt())
+
+        // validar que el tag no haya sido seleccionado antes y que ya haya seleccionado algun tag
+        if(!found){
+            addedChips.add(tags.selectedItemId.toInt())
+            chips.addView(chipTag)
+        }
+
+
     }
 
     fun bitmapFromUri(photoUri: Uri?): Bitmap? {

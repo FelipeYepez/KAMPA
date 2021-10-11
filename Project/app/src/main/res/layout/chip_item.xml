@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <com.google.android.material.chip.Chip
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/chipItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,5 +9,3 @@
         app:closeIcon="@drawable/ic_baseline_close_24">
 
     </com.google.android.material.chip.Chip>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
