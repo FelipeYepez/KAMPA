@@ -120,16 +120,16 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             R.id.map_fragment
         ) as? SupportMapFragment
 
-        query(map)
+        map?.getMapAsync(this)
+        query()
     }
 
-    private fun query(map:SupportMapFragment?) {
+    private fun query() {
 
         val query: ParseQuery<Sitio> = ParseQuery.getQuery(Sitio::class.java)
 
         query.findInBackground { itemList, e ->
             if (e == null) {
-                map?.getMapAsync(this)
                 // Access the array of results here
                 for (el in itemList) {
                     add_Marker(el)

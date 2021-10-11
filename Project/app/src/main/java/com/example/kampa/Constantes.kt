@@ -4,10 +4,12 @@ import com.parse.ParseQuery
 
 object Constantes {
     val ADMINISTRADOR = "administrador"
+    val APROBADA = "aprobada"
     val CREATED_AT = "createdAt"
     val CURRENT_LOCATION = "currentLocation"
     val DESCRIPCION = "descripcion"
     val DIRECCION = "direccion"
+    val ELIMINADA = "eliminada"
     val ESTADO = "estado"
     val FOTO = "foto"
     val FOTOS = "fotos"
