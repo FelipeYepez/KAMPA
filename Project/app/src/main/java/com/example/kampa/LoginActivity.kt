@@ -46,12 +46,16 @@ class LoginActivity : AppCompatActivity() {
         progressDialog?.show()
         ParseUser.logInInBackground(username,password) { parseUser: ParseUser?, parseException: ParseException? ->
             progressDialog?.dismiss()
-            if (parseUser != null) {
-                goToMainActivity()
-            } else {
-                ParseUser.logOut()
-                if (parseException != null) {
-                    Toast.makeText(this, parseException.message, Toast.LENGTH_LONG).show()
+            if (parseException == null){
+                if (parseUser != null) {
+                    goToMainActivity()
+                } else {
+                    ParseUser.logOut()
+                }
+            }
+            else{
+                if(parseException.code == 100){
+                    Toast.makeText(this, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
                 }
             }
         }

@@ -1,7 +1,11 @@
 package com.example.kampa
 
+import com.parse.ParseQuery
+
 object Constantes {
+    val ADMINISTRADOR = "administrador"
     val CREATED_AT = "createdAt"
+    val CURRENT_LOCATION = "currentLocation"
     val DESCRIPCION = "descripcion"
     val DIRECCION = "direccion"
     val ESTADO = "estado"
@@ -25,6 +29,8 @@ object Constantes {
     val NUM_LIKES = "numLikes"
     val NUM_PUBLICACIONES = "numPublicaciones"
     val PAGINA_OFICIAL = "paginaOficial"
+    val PERMISSION = "permission"
+    val SITIO = "sitio"
     val UBICACION = "ubicacion"
     val WISHLIST = "wishlist"
 }

@@ -167,7 +167,7 @@ class NuevoSitio : AppCompatActivity(), OnMapReadyCallback  {
                 sitio.idTipoSitio = listTipoSitio[idCheckedButton]
             }
 
-            if(sitio.nombre!!.length > 0 && sitio.descripcion!!.length > 0 && idCheckedButton != -1){
+            if(sitio.nombre!!.length > 0 || sitio.descripcion!!.length > 0 || idCheckedButton != -1){
                 sitio.saveInBackground { e ->
                     if (e == null) {
                         Log.d(TAG, "saved")
