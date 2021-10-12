@@ -43,4 +43,16 @@ class Publicacion : ParseObject() {
         set(_descripcion) {
             put(Constantes.DESCRIPCION, _descripcion!!)
         }
+
+    var eliminada: Boolean?
+        get() = getBoolean(Constantes.ELIMINADA)
+        set(_eliminada) {
+            put(Constantes.ELIMINADA, _eliminada!!)
+        }
+
+    var aprobada: Boolean?
+        get() = getBoolean(Constantes.APROBADA)
+        set(_aprobada) {
+            put(Constantes.APROBADA, _aprobada!!)
+        }
 }

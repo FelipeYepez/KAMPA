@@ -112,7 +112,9 @@ class DescubreFragment : Fragment(), CardStackListener {
         query.findInBackground { itemList, e ->
             if (e == null) {
                 for(element in itemList) {
-                    data.add(element)
+                    if(element.eliminada == false && element.aprobada == true) {
+                        data.add(element)
+                    }
                 }
                 initializeList()
             } else {

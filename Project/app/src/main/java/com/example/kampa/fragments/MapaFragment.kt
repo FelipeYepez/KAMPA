@@ -125,7 +125,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         query(map)
     }
 
-    private fun query(map:SupportMapFragment?) {
+    private fun query() {
 
         val query: ParseQuery<Sitio> = ParseQuery.getQuery(Sitio::class.java)
 
