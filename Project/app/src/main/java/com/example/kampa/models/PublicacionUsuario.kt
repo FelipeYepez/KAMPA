@@ -1,10 +1,7 @@
-package com.example.kampa.Models
+package com.example.kampa.models
 
 import com.example.kampa.Constantes
-import com.example.kampa.models.Publicacion
-import com.parse.ParseClassName
-import com.parse.ParseObject
-import com.parse.ParseUser
+import com.parse.*
 
 @ParseClassName("PublicacionUsuario")
 class PublicacionUsuario : ParseObject() {
@@ -18,5 +15,10 @@ class PublicacionUsuario : ParseObject() {
         get() = getParseObject(Constantes.ID_PUBLICACION) as Publicacion?
         set(_idPublicacion) {
             put(Constantes.ID_PUBLICACION, _idPublicacion!!)
+        }
+    var conReaccion: Boolean?
+        get() = getBoolean(Constantes.CON_REACCION)
+        set(_conReaccion){
+            put(Constantes.CON_REACCION, _conReaccion!!)
         }
 }

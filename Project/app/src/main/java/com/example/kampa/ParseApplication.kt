@@ -38,6 +38,7 @@ class ParseApplication : Application() {
         ParseObject.registerSubclass(UsuarioTag::class.java)
         ParseObject.registerSubclass(Wishlist::class.java)
         ParseObject.registerSubclass(WishlistSitio::class.java)
+        ParseObject.registerSubclass(PublicacionUsuario::class.java)
 
         // Get secret keys
         val ai: ApplicationInfo = applicationContext.packageManager

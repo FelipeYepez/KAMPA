@@ -16,7 +16,6 @@ import com.example.kampa.Constantes
 import com.example.kampa.DescubreAdapter
 import com.example.kampa.R
 import com.example.kampa.models.*
-import com.google.android.material.snackbar.Snackbar
 import com.parse.*
 import com.yuyakaido.android.cardstackview.*
 
@@ -116,7 +115,10 @@ class DescubreFragment : Fragment(), CardStackListener {
                 }
                 initializeList()
             } else {
-                Log.d("item", "Error: " + e.message)
+                Log.e("item", "Error code: ${e.code}", e)
+                if(e.code == 100){
+                    Toast.makeText(requireContext(), "No hay conexión a Internet", Toast.LENGTH_LONG).show()
+                }
             }
         }
 
@@ -167,6 +169,89 @@ class DescubreFragment : Fragment(), CardStackListener {
         swipeCard.rewind()
     }
 
+    private fun actualizarTags(publicacion: Publicacion, direction: String){
+        // Modificar Tags de Publicacion relacionadas con Usuario pertenecientes a Publicacion
+        // Lista para modificar Tags de Publicacion relacionadas con usuario
+        val listUsuarioTag = ArrayList<UsuarioTag>()
+
+        // Parse Query para obtener Tags de Publicacion
+        val query: ParseQuery<PublicacionTag> = ParseQuery.getQuery(PublicacionTag::class.java)
+        query.whereEqualTo(Constantes.ID_PUBLICACION, publicacion)
+        // Parse Query obtiene Tags relacionados a Usuario en cuestión
+        val query2: ParseQuery<UsuarioTag> = ParseQuery.getQuery(UsuarioTag::class.java)
+        query2.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+
+        // Parse Query obtiene tags ya existentes con usuario para modificarlas
+        query2.whereMatchesKeyInQuery(Constantes.ID_TAG, Constantes.ID_TAG, query)
+        query2.findInBackground(FindCallback { usuarioTags: List<UsuarioTag>, e ->
+            if (e != null) {
+                rewindCard()
+                return@FindCallback
+            } else {
+                // Iterar Lista de Query para almacenar Objetos Modificados
+                for (usuarioTag in usuarioTags) {
+                    if (direction == "Left") {
+                        usuarioTag.increment(Constantes.NUM_DISLIKES)
+                    } else if (direction == "Right") {
+                        usuarioTag.increment(Constantes.NUM_LIKES)
+                    } else if (direction == "Top") {
+                        usuarioTag.increment(Constantes.NUM_LIKES, 2)
+                    }
+                    // Almacenar Objeto modificado en lista
+                    listUsuarioTag.add(usuarioTag)
+                }
+
+                // Parse Query para relacionar nuevos tags con usuario
+                val query3: ParseQuery<UsuarioTag> = ParseQuery.getQuery(UsuarioTag::class.java)
+                query3.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+
+                // Parse Query obtiene tags de Publicacion sin relacionar con usuario
+                query.whereDoesNotMatchKeyInQuery(Constantes.ID_TAG, Constantes.ID_TAG, query3)
+                query.findInBackground(FindCallback {
+                        tagsPublicacionCrear: List<PublicacionTag>, e ->
+                    if (e != null) {
+                        rewindCard()
+                        return@FindCallback
+                    } else {
+                        // Itera Lista de Query para crear y almacenar Objetos
+                        for (tagPubli in tagsPublicacionCrear) {
+                            // Crea objeto y asigna respectivas características
+                            val usuarioTag = UsuarioTag()
+                            usuarioTag.idUsuario = ParseUser.getCurrentUser()
+                            usuarioTag.idTag = tagPubli.idTag
+                            if (direction == "Left") {
+                                usuarioTag.numDislikes = 1
+                            } else if (direction == "Right") {
+                                usuarioTag.numLikes = 1
+                            } else if (direction == "Top") {
+                                usuarioTag.numLikes = 2
+                            }
+                            // Almacenar nuevo objeto en lista
+                            listUsuarioTag.add(usuarioTag)
+                        }
+                        // Guardar en Parse tanto objetos nuevos como modificados
+                        // Guarda relación entre Usuario con Tags de Publicación
+                        ParseObject.saveAllInBackground(listUsuarioTag) { e ->
+                            if (e != null) {
+                                Log.e("Error", "error save all", e)
+                                rewindCard()
+                                return@saveAllInBackground
+                            }
+                            else{
+                                val publicacionUsuario = PublicacionUsuario()
+                                publicacionUsuario.idPublicacion = publicacion
+                                publicacionUsuario.idUsuario = ParseUser.getCurrentUser()
+                                publicacionUsuario.conReaccion = true
+                                publicacionUsuario.saveInBackground()
+                            }
+                        }
+                    }
+                })
+            }
+
+        })
+    }
+
     private fun swipeParse(publicacion: Publicacion, direction: String) {
         // Se dio like, dislike o guardar en WishList a una publicación
         if(direction == "Right" || direction == "Left" || direction == "Top"){
@@ -174,10 +259,16 @@ class DescubreFragment : Fragment(), CardStackListener {
             // Si fue dislike
             if (direction == "Left") {
                 publicacion.increment(Constantes.NUM_DISLIKES)
+                // Guardar en Parse Publicacion actualizada con Likes o Dislikes
+                publicacion.saveInBackground()
+                actualizarTags(publicacion, direction)
             }
             // Si fue like
             else if (direction == "Right") {
                 publicacion.increment(Constantes.NUM_LIKES)
+                // Guardar en Parse Publicacion actualizada con Likes o Dislikes
+                publicacion.saveInBackground()
+                actualizarTags(publicacion, direction)
             }
             // si fue se guardó sitio en Wishlist
             else if (direction == "Top") {
@@ -200,21 +291,27 @@ class DescubreFragment : Fragment(), CardStackListener {
                         else{
                             // Modificar Likes o Dislikes totales de Publicación
                             publicacion.increment(Constantes.NUM_LIKES, 2)
+                            // Guardar en Parse Publicacion actualizada con Likes o Dislikes
+                            publicacion.saveInBackground()
                             usuarioSitio.put(Constantes.IS_WISHLIST, true)
                             usuarioSitio.saveInBackground()
+                            actualizarTags(publicacion, direction)
                         }
                     }
                     else {
-                        // No se obtuvo resultado de GetCallBack
+                        // No se obtuvo resultado de GetCallBack, crear registro
                         if (e.code == 101) {
                             // Modificar Likes o Dislikes totales de Publicación
                             publicacion.increment(Constantes.NUM_LIKES, 2)
-
+                            // Guardar en Parse Publicacion actualizada con Likes o Dislikes
+                            publicacion.saveInBackground()
                             val usuarioSitioNuevo = UsuarioSitio()
                             usuarioSitioNuevo.idSitio = publicacion.idSitio
                             usuarioSitioNuevo.idUsuario = ParseUser.getCurrentUser()
                             usuarioSitioNuevo.isWishlist = true
+                            usuarioSitioNuevo.isVisitado = false
                             usuarioSitioNuevo.saveInBackground()
+                            actualizarTags(publicacion, direction)
                         } else {
                             Log.e("Error", "No se guarda con wishlist", e)
                             rewindCard()
@@ -223,83 +320,7 @@ class DescubreFragment : Fragment(), CardStackListener {
                     }
                 })
             }
-            // Guardar en Parse Publicacion actualizada con Likes o Dislikes
-            publicacion.saveInBackground()
 
-
-            // Modificar Tags de Publicacion relacionadas con Usuario pertenecientes a Publicacion
-            // Lista para modificar Tags de Publicacion relacionadas con usuario
-            val listUsuarioTag = ArrayList<UsuarioTag>()
-
-            // Parse Query para obtener Tags de Publicacion
-            val query: ParseQuery<PublicacionTag> = ParseQuery.getQuery(PublicacionTag::class.java)
-            query.whereEqualTo(Constantes.ID_PUBLICACION, publicacion)
-            // Parse Query obtiene Tags relacionados a Usuario en cuestión
-            val query2: ParseQuery<UsuarioTag> = ParseQuery.getQuery(UsuarioTag::class.java)
-            query2.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
-
-            // Parse Query obtiene tags ya existentes con usuario para modificarlas
-            query2.whereMatchesKeyInQuery(Constantes.ID_TAG, Constantes.ID_TAG, query)
-            query2.findInBackground(FindCallback { usuarioTags: List<UsuarioTag>, e ->
-                if (e != null) {
-                    rewindCard()
-                    return@FindCallback
-                } else {
-                    // Iterar Lista de Query para almacenar Objetos Modificados
-                    for (usuarioTag in usuarioTags) {
-                        if (direction == "Left") {
-                            usuarioTag.increment(Constantes.NUM_DISLIKES)
-                        } else if (direction == "Right") {
-                            usuarioTag.increment(Constantes.NUM_LIKES)
-                        } else if (direction == "Top") {
-                            usuarioTag.increment(Constantes.NUM_LIKES, 2)
-                        }
-                        // Almacenar Objeto modificado en lista
-                        listUsuarioTag.add(usuarioTag)
-                    }
-
-                    // Parse Query para relacionar nuevos tags con usuario
-                    val query3: ParseQuery<UsuarioTag> = ParseQuery.getQuery(UsuarioTag::class.java)
-                    query3.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
-
-                    // Parse Query obtiene tags de Publicacion sin relacionar con usuario
-                    query.whereDoesNotMatchKeyInQuery(Constantes.ID_TAG, Constantes.ID_TAG, query3)
-                    query.findInBackground(FindCallback {
-                            tagsPublicacionCrear: List<PublicacionTag>, e ->
-                        if (e != null) {
-                            rewindCard()
-                            return@FindCallback
-                        } else {
-                            // Itera Lista de Query para crear y almacenar Objetos
-                            for (tagPubli in tagsPublicacionCrear) {
-                                // Crea objeto y asigna respectivas características
-                                val usuarioTag = UsuarioTag()
-                                usuarioTag.idUsuario = ParseUser.getCurrentUser()
-                                usuarioTag.idTag = tagPubli.idTag
-                                if (direction == "Left") {
-                                    usuarioTag.numDislikes = 1
-                                } else if (direction == "Right") {
-                                    usuarioTag.numLikes = 1
-                                } else if (direction == "Top") {
-                                    usuarioTag.numLikes = 2
-                                }
-                                // Almacenar nuevo objeto en lista
-                                listUsuarioTag.add(usuarioTag)
-                            }
-                            // Guardar en Parse tanto objetos nuevos como modificados
-                            // Guarda relación entre Usuario con Tags de Publicación
-                            ParseObject.saveAllInBackground(listUsuarioTag) { e ->
-                                if (e != null) {
-                                    Log.e("Error", "error save all", e)
-                                    rewindCard()
-                                    return@saveAllInBackground
-                                }
-                            }
-                        }
-                    })
-                }
-
-            })
         }
         else{
             rewindCard()

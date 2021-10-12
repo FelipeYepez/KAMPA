@@ -26,4 +26,5 @@ object Constantes {
     val PAGINA_OFICIAL = "paginaOficial"
     val UBICACION = "ubicacion"
     val WISHLIST = "wishlist"
+    val CON_REACCION = "conReaccion"
 }
