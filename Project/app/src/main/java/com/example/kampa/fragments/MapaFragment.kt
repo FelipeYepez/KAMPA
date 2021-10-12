@@ -8,29 +8,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.kampa.models.Sitio
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.content.Intent
 import com.google.android.gms.tasks.Task
 import com.example.kampa.*
 import com.example.kampa.R
 import android.location.Location
+import android.widget.RadioButton
+import android.widget.RadioGroup
 
 import org.jetbrains.annotations.NotNull
 
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresPermission
-import com.example.kampa.models.CustomUser
-import com.example.kampa.models.Rol
+import com.example.kampa.models.*
 
 import com.google.android.gms.tasks.OnCompleteListener
 
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.*
 import com.parse.*
 import com.parse.ParseObject.createWithoutData
 import java.util.jar.Manifest
@@ -156,13 +154,36 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     }
 
     private fun add_Marker(sitio: Sitio) {
+        var color = 0F
+        var usuarioSitio = UsuarioSitio()
+        val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
+        query.whereEqualTo("idUsuario", ParseUser.getCurrentUser())
+        query.whereEqualTo("idSitio", sitio)
+        query.findInBackground { itemList, e ->
+            if (e == null && itemList.size > 0) {
+                usuarioSitio = itemList.get(0)
+
+                if(usuarioSitio.isVisitado == true){
+                    color = 260F
+                }
+                else if(usuarioSitio.isWishlist == true){
+                    color = 47F
+                }
+
+            } else if(e != null) {
+                Log.d(TAG, "Error: " + e.message)
+            } else{
+                Log.d(TAG, "Vacio")
+            }
+
             val marker = gMap?.addMarker(
                 MarkerOptions()
                     .title(sitio.nombre)
                     .position(LatLng(sitio.ubicacion!!.latitude, sitio.ubicacion!!.longitude))
-
+                    .icon(BitmapDescriptorFactory.defaultMarker(color))
             )
-        marker?.tag = sitio
+            marker?.tag = sitio
+        }
     }
 
     /** Called when the user clicks a marker.  */
@@ -240,6 +261,24 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         } catch (e: SecurityException) {
             Log.d(TAG, "getDeviceLocation: SecurityException: " + e.message)
         }
+    }
+
+    fun queryUsuarioSitio(usuario:ParseUser, sitio:Sitio):UsuarioSitio{
+        val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
+        query.whereEqualTo("idUsuario", ParseUser.getCurrentUser())
+        query.whereEqualTo("idSitio", sitio)
+        var usuarioSitio = UsuarioSitio()
+        query.findInBackground { itemList, e ->
+            if (e == null && itemList.size > 0) {
+                usuarioSitio = itemList.get(0)
+                Log.d(TAG, usuarioSitio.objectId)
+            } else if(e != null) {
+                Log.d(TAG, "Error: " + e.message)
+            } else{
+                Log.d(TAG, "Vacio")
+            }
+        }
+        return usuarioSitio
     }
 
 }

@@ -173,12 +173,10 @@ class AprobarFragment : Fragment(), CardStackListener {
             // Si se elimina
             if (direction == "Left") {
                 publicacion.eliminada = true
-                Log.d(TAG, "eliminada")
             }
             // Si se aprueba
             else if (direction == "Right") {
                 publicacion.aprobada = true
-                Log.d(TAG, "aprobada")
             }
 
             // Guardar en Parse publicacion actualizada
