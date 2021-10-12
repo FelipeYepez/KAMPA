@@ -122,7 +122,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
 
         map?.getMapAsync(this)
 
-        query(map)
+        query()
     }
 
     private fun query() {
