@@ -15,16 +15,10 @@ import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import com.example.kampa.models.Publicacion
-import com.example.kampa.models.Sitio
-import com.example.kampa.models.Tag
-import com.example.kampa.models.TipoSitio
+import com.example.kampa.models.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.parse.ParseFile
-import com.parse.ParseGeoPoint
-import com.parse.ParseQuery
-import com.parse.ParseUser
+import com.parse.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -36,7 +30,7 @@ class NuevaPublicacion : AppCompatActivity() {
     private var selectedUriImage: Uri? = null
     private lateinit var tags: Spinner
     private var selectedTag :Int = 0
-    private var listTags: ArrayList<Tag>? = null
+    private var listTags = mutableListOf<Tag>()
     lateinit private var chips : ChipGroup
     private var addedChips = mutableListOf<Int>()
 
@@ -68,6 +62,7 @@ class NuevaPublicacion : AppCompatActivity() {
 
 
         var publicacion = Publicacion()
+
         imagenPublicacion = findViewById(R.id.imagenPublicacion)
 
         var startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -127,16 +122,33 @@ class NuevaPublicacion : AppCompatActivity() {
             if(selectedUriImage != null || selectedBitmapImage != null){
                 publicacion.saveInBackground { e ->
                     if (e == null) {
-                        Log.d(TAG, "saved")
+                        Log.d(TAG, "saved publicacion")
+                        for (el in addedChips){
+                            Log.d(TAG,el.toString())
+                            var publicacionTag = PublicacionTag()
+                            publicacionTag.idTag = listTags[el]
+                            publicacionTag.idPublicacion = publicacion
+                            publicacionTag.saveInBackground { err ->
+                                if (err == null) {
+                                    Log.d(TAG, "saved tag")
+                                    finish()
+                                } else {
+                                    Log.d(TAG, err.toString())
+                                }
+                            }
+                        }
                     } else {
                         Log.d(TAG, e.toString())
                     }
                 }
-                finish()
+
             }
             else{
                 Toast.makeText(this, "Llena todos los campos obligatorios", Toast.LENGTH_SHORT).show()
             }
+
+
+
 
         }
     }
@@ -147,7 +159,7 @@ class NuevaPublicacion : AppCompatActivity() {
             if (e == null) {
                 var id = 0
                 for (el in itemList ) {
-                    listTags?.add(id, el)
+                    listTags.add(el)
                     adapter.add(el.descripcion)
                     id = id + 1
                 }
@@ -165,10 +177,7 @@ class NuevaPublicacion : AppCompatActivity() {
         chipTag.setOnCloseIconClickListener { view ->
             chips.removeView(view)
         }
-
         chipTag.text = tags.selectedItem.toString()
-
-
 
         val found = addedChips.contains(tags.selectedItemId.toInt())
 
