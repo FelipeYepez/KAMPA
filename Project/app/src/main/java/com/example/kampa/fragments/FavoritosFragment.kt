@@ -27,10 +27,6 @@ import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
 import kotlinx.android.synthetic.main.fragment_favoritos.*
 import com.parse.Parse
 
-
-
-
-
 class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
 
     val TAG = "FavoritosFragment"
@@ -98,8 +94,6 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
                             }
                         }
                     } else {
-                        // Se queda el dialogo? o se va?
-                            // si se queda mejor para que el usuario siga intentando
                         Toast.makeText(this.context, R.string.nombre_vacio, Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -122,11 +116,8 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
                 if (objects != null) {
                     initializeList(objects)
                 }
-            }
-            else{
-                if(e.code == 100){
-                    Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
-                }
+            } else if(e.code == 100){
+                Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -136,7 +127,10 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         linearLayoutManager.scrollToPosition(0)
 
-        favoritosAdapter = FavoritosAdapter(this.context, favoritosList, this@FavoritosFragment)
+        favoritosAdapter = FavoritosAdapter(
+            this.context,
+            favoritosList,
+            this@FavoritosFragment)
 
         rvFavoritos.layoutManager = linearLayoutManager
         rvFavoritos.adapter = favoritosAdapter
