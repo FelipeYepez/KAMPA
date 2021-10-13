@@ -35,4 +35,5 @@ object Constantes {
     val SITIO = "sitio"
     val UBICACION = "ubicacion"
     val WISHLIST = "wishlist"
+    val OBJECT_ID = "objectId"
 }
