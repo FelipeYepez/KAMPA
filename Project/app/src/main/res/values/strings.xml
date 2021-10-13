@@ -39,4 +39,7 @@
     <string name="inv_lida">Inválida</string>
     <string name="procesada">Procesada</string>
     <string name="invalida">Inválida</string>
+    <string name="declinar">Declinar</string>
+    <string name="ir_a_google_maps">¿Desea ir a Google Maps?</string>
+    <string name="abrir_google_maps">Abrir Google Maps</string>
 </resources>
