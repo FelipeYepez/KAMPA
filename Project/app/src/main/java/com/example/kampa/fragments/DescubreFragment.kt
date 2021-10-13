@@ -1,5 +1,7 @@
 package com.example.kampa.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -16,8 +18,10 @@ import com.example.kampa.Constantes
 import com.example.kampa.DescubreAdapter
 import com.example.kampa.R
 import com.example.kampa.models.*
+import com.example.kampa.models.Wishlist
 import com.parse.*
 import com.yuyakaido.android.cardstackview.*
+import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
 import org.json.JSONObject
 import java.util.*
 import kotlin.Comparator
@@ -349,6 +353,96 @@ class DescubreFragment : Fragment(), CardStackListener {
             }
             // si fue se guardó sitio en Wishlist
             else if (direction == "Top") {
+                val query1: ParseQuery<Wishlist> = ParseQuery.getQuery(Wishlist::class.java)
+
+                query1.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+                query1.whereEqualTo(Constantes.IS_DELETED, false)
+                query1.orderByDescending(Constantes.CREATED_AT)
+                query1.findInBackground { objects: MutableList<Wishlist>?, e: ParseException? ->
+                    if (e == null) {
+                        if (objects != null) {
+                            val listFavs : MutableList<String> = mutableListOf()
+                            for(obj in objects){
+                                listFavs.add(obj.nombre.toString())
+                            }
+                            val arr : Array<String> = listFavs.toTypedArray()
+                            val builder = AlertDialog.Builder(this.context)
+                                .setTitle(R.string.Lista_favoritos)
+                                .setItems(arr){dialog, which ->
+                                    val nWishlistSitio : WishlistSitio = WishlistSitio()
+                                    nWishlistSitio.idWishlist = objects[which]
+                                    nWishlistSitio.idSitio = publicacion.idSitio
+                                    nWishlistSitio.saveInBackground { e ->
+                                        // Si se pudo guardar
+                                        if (e == null) {
+                                            Toast.makeText(this.context, R.string.Lista_favoritos_exito, Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(this.context, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                            dialog.cancel()
+                                        }
+                                    }
+                                }
+                                .setPositiveButton(R.string.crear_lista,
+                                    DialogInterface.OnClickListener { dialog, id ->
+                                        val myDialogView = LayoutInflater
+                                            .from(this.context)
+                                            .inflate(R.layout.crear_lista_favoritos_dialogo, null)
+
+                                        val builder2 = AlertDialog.Builder(this.context)
+                                            .setView(myDialogView)
+                                            .setTitle(R.string.nueva_lista_favoritos)
+                                            .setPositiveButton(R.string.crear,
+                                                DialogInterface.OnClickListener { dialog, id ->
+                                                    val nuevoNombre = myDialogView.etNuevoNombre.text.toString()
+
+                                                    if (nuevoNombre.isNotEmpty()) {
+                                                        val nuevaWishlist: Wishlist = Wishlist()
+                                                        nuevaWishlist.nombre = nuevoNombre
+                                                        nuevaWishlist.idUsuario = ParseUser.getCurrentUser()
+
+                                                        nuevaWishlist.saveInBackground { e ->
+                                                            if (e == null) {
+                                                                val nWishlistSitio : WishlistSitio = WishlistSitio()
+                                                                nWishlistSitio.idWishlist = nuevaWishlist
+                                                                nWishlistSitio.idSitio = publicacion.idSitio
+                                                                nWishlistSitio.saveInBackground { e ->
+                                                                    if (e == null) {
+                                                                        Toast.makeText(this.context, R.string.Lista_favoritos_exito, Toast.LENGTH_SHORT).show()
+                                                                    } else {
+                                                                        Toast.makeText(this.context, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                                                        dialog.cancel()
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(this.context, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                                                dialog.cancel()
+                                                            }
+                                                        }
+                                                    } else {
+                                                        Toast.makeText(this.context, R.string.nombre_vacio, Toast.LENGTH_SHORT).show()
+                                                    }
+                                                })
+                                            .setNegativeButton(R.string.cancelar,
+                                                DialogInterface.OnClickListener { dialog, id ->
+                                                    dialog.cancel()
+                                                })
+
+                                        builder2.show()
+                                    })
+                                .setNegativeButton(R.string.cancelar,
+                                    DialogInterface.OnClickListener { dialog, id ->
+                                        dialog.cancel()
+                                    })
+                            builder.show()
+                        }
+                    }
+                    else{
+                        if(e.code == 100){
+                            Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
                 // Parse Query para guardar Sitio en WishList de Usuario
                 val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
                 query.whereEqualTo(Constantes.ID_SITIO, publicacion.idSitio)

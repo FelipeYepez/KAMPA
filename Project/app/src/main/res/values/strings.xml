@@ -39,4 +39,7 @@
     <string name="inv_lida">Inválida</string>
     <string name="procesada">Procesada</string>
     <string name="invalida">Inválida</string>
+    <string name="Lista_favoritos">Seleccionar lista de favoritos</string>
+    <string name="Lista_favoritos_exito">Sitio insertado a lista de favoritos con exito</string>
+    <string name="crear_lista">Crear nueva lista</string>
 </resources>
