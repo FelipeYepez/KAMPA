@@ -36,6 +36,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
+
 class CrearDenunciaActivity : AppCompatActivity() {
     private lateinit var imagen: ImageView
     private lateinit var uploadImageBtn: Button
@@ -128,10 +129,8 @@ class CrearDenunciaActivity : AppCompatActivity() {
 
 
             Log.d("enviar", "click")
+            finish()
 
-           val i = Intent(this, SitioActivity::class.java)
-           i.putExtra("sitio", sitio)
-           startActivity(i)
         }
     }
 
