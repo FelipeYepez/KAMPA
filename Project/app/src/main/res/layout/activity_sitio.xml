@@ -76,7 +76,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:weightSum="3">
 
                 <Button
                     android:id="@+id/addWishListBtn"
@@ -91,7 +93,8 @@
                     android:text="Deseos"
                     android:textColor="@color/black"
                     android:textSize="12dp"
-                    app:backgroundTint="@color/white" />
+                    app:backgroundTint="@color/white"
+                    android:layout_weight="1"/>
 
                 <Button
                     android:id="@+id/VisitedBtn"
@@ -105,7 +108,8 @@
                     android:text="Visitado"
                     android:textColor="@color/black"
                     android:textSize="12dp"
-                    app:backgroundTint="@color/white" />
+                    app:backgroundTint="@color/white"
+                    android:layout_weight="1"/>
 
                 <Button
                     android:id="@+id/DenunciarBtn"
@@ -119,7 +123,8 @@
                     android:text="Denunciar"
                     android:textColor="@color/black"
                     android:textSize="12dp"
-                    app:backgroundTint="@color/white" />
+                    app:backgroundTint="@color/white"
+                    android:layout_weight="1"/>
 
             </LinearLayout>
 
