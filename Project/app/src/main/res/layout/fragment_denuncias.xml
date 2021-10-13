@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.FavoritosFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/denunciasTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="Denuncias"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutButons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/denunciasTitle"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/btnSinResolver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sin resolver"
+                android:padding="8dp"
+                android:backgroundTint="#E3E3E3"
+                android:textColor="@color/black"/>
+
+            <Button
+                android:id="@+id/btnProcesadas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Procesadas"
+                android:padding="8dp"
+                android:backgroundTint="#E3E3E3"
+                android:textColor="@color/black"/>
+
+            <Button
+                android:id="@+id/btnInvalidas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Inválidas"
+                android:backgroundTint="#E3E3E3"
+                android:textColor="@color/black"/>
+
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/viewDenuncias"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layoutButons"
+            android:layout_marginTop="10dp" />
+    </RelativeLayout>
+
+
+</FrameLayout>

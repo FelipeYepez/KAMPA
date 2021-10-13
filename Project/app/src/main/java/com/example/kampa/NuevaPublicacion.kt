@@ -130,7 +130,7 @@ class NuevaPublicacion : AppCompatActivity() {
                         Log.d(TAG, "saved publicacion")
                         for (el in addedChips){
                             Log.d(TAG,el.toString())
-                            var publicacionTag = PublicacionTag()
+                            var publicacionTag = PublicacionTags()
                             publicacionTag.idTag = listTags[el]
                             publicacionTag.idPublicacion = publicacion
                             publicacionTag.saveInBackground { err ->

@@ -23,6 +23,12 @@
             android:name=".fragments.AprobarFragment"
             android:exported="true" />
         <activity
+            android:name=".DenunciaActivity"
+            android:exported="true" />
+        <activity
+            android:name=".AdminMenu"
+            android:exported="true" />
+        <activity
             android:name=".EditarSitio"
             android:exported="true" />
         <activity
