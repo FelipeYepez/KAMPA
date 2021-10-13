@@ -10,8 +10,14 @@ import com.google.android.gms.maps.GoogleMap
 import android.location.Location
 import android.util.Log
 import android.widget.Button
+import com.example.kampa.BuildConfig.GOOGLE_MAPS_API_KEY
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.PlacesClient
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import org.jetbrains.annotations.NotNull
 
 
@@ -61,8 +67,9 @@ class NewLocationActivity : AppCompatActivity(), OnMapReadyCallback {
         // Initialize the AutocompleteSupportFragment.
 //        val autocompleteFragment: AutocompleteSupportFragment? =
 //            supportFragmentManager.findFragmentById(R.id.autocompleteNewLocation) as AutocompleteSupportFragment?
+//
 //        if (!Places.isInitialized()) {
-//            Places.initialize(this, getString(R.string.google_maps_key))
+//            Places.initialize(this, GOOGLE_MAPS_API_KEY))
 //        }
 //        val placesClient: PlacesClient = Places.createClient(this)
 //
@@ -74,8 +81,8 @@ class NewLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 //                Place.Field.LAT_LNG
 //            )
 //        )
-
-        // Set up a PlaceSelectionListener to handle the response.
+//
+//         Set up a PlaceSelectionListener to handle the response.
 //        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener() {
 //            fun onPlaceSelected(place: Place) {
 //                Log.i(
@@ -90,7 +97,7 @@ class NewLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 //                Log.i(TAG, "An error occurred: $status")
 //            }
 //        })
-
+//
 //    }
 
     override fun onMapReady(@NotNull googleMap: GoogleMap) {
