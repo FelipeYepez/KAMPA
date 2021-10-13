@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/iconoAprobar"
+        android:icon="@drawable/ic_aprove"
+        android:title="Aprobar" />
+
+    <item
+        android:id="@+id/iconoMapa"
+        android:icon="@drawable/icono_mapa"
+        android:title="Mapa" />
+
+    <item
+        android:id="@+id/iconoDenuncias"
+        android:icon="@drawable/ic_baseline_warning_24"
+        android:title="Denuncias" />
+
+</menu>
