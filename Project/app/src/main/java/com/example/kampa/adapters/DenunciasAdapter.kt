@@ -13,11 +13,14 @@ import com.example.kampa.models.Denuncia
 import com.parse.GetDataCallback
 import com.parse.ParseFile
 
-class DenunciasAdapter(private val context: Context, private val data: ArrayList<Denuncia>): RecyclerView.Adapter<DenunciasAdapter.ViewHolder>() {
+class DenunciasAdapter(private val context: Context,
+                       private val data: ArrayList<Denuncia>,
+                       private val onItemClicked: (position: Int) -> Unit):
+    RecyclerView.Adapter<DenunciasAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DenunciasAdapter.ViewHolder {
         var layoutInflater = LayoutInflater.from(parent.context)
-        return ViewHolder(layoutInflater.inflate(R.layout.item_denuncias, parent, false))
+        return ViewHolder(layoutInflater.inflate(R.layout.item_denuncias, parent, false), onItemClicked)
     }
 
     override fun getItemCount(): Int {
@@ -29,10 +32,19 @@ class DenunciasAdapter(private val context: Context, private val data: ArrayList
         holder.bind(item, context)
     }
 
-    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(
+        view: View,
+        private val onItemClicked: (position: Int) -> Unit
+    ): RecyclerView.ViewHolder(view), View.OnClickListener {
+
         private var fotoDenuncia: ImageView = view.findViewById(R.id.fotoDenuncia)
         private var denunciasTitle: TextView = view.findViewById(R.id.denunciasTitle)
         private var denunciaDescripcion: TextView = view.findViewById(R.id.denunciaDescripcion)
+
+        init {
+            view.setOnClickListener(this)
+        }
+
 
         private fun loadImages(foto: ParseFile?, imgView: ImageView) {
             if (foto != null) {
@@ -53,6 +65,11 @@ class DenunciasAdapter(private val context: Context, private val data: ArrayList
             loadImages(item.fotos, fotoDenuncia)
             denunciasTitle.setText(item.idSitio?.nombre)
             denunciaDescripcion.setText(item.descripcion)
+        }
+
+        override fun onClick(v: View) {
+            val position = adapterPosition
+            onItemClicked(position)
         }
 
     }
