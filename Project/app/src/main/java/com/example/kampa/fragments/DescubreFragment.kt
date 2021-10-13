@@ -18,6 +18,11 @@ import com.example.kampa.R
 import com.example.kampa.models.*
 import com.parse.*
 import com.yuyakaido.android.cardstackview.*
+import org.json.JSONObject
+import java.util.*
+import kotlin.Comparator
+import kotlin.collections.ArrayList
+import java.util.PriorityQueue
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -105,20 +110,91 @@ class DescubreFragment : Fragment(), CardStackListener {
     }
 
     private fun initializeData(){
-        val query: ParseQuery<Publicacion> = ParseQuery.getQuery(Publicacion::class.java)
         data = ArrayList()
-        query.include(Constantes.ID_SITIO)
-        query.findInBackground { itemList, e ->
-            if (e == null) {
-                for(element in itemList) {
-                    data.add(element)
-                }
-                initializeList()
-            } else {
+
+        // Obtener Publicaciones con las que ya iteractuo el usuario
+        val queryOldPublicaciones: ParseQuery<PublicacionUsuario> = ParseQuery.getQuery(PublicacionUsuario::class.java)
+        queryOldPublicaciones.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+
+        // Obtener nuevas publicaciones que no ha visto aún el usuario
+        val queryNewPublicaciones: ParseQuery<Publicacion> = ParseQuery.getQuery(Publicacion::class.java)
+        queryNewPublicaciones.whereDoesNotMatchKeyInQuery(Constantes.OBJECT_ID, "${Constantes.ID_PUBLICACION}.${Constantes.OBJECT_ID}", queryOldPublicaciones)
+        queryNewPublicaciones.include(Constantes.ID_SITIO)
+        queryNewPublicaciones.findInBackground { newPublicaciones, e ->
+            if (e != null) {
                 Log.e("item", "Error code: ${e.code}", e)
                 if(e.code == 100){
                     Toast.makeText(requireContext(), "No hay conexión a Internet", Toast.LENGTH_LONG).show()
                 }
+                return@findInBackground
+            }
+            else {
+
+                // Obtener tags relacionados a cada Publicacion nueva para el usuario
+                val queryTagsPublicaciones: ParseQuery<PublicacionTags> = ParseQuery.getQuery(PublicacionTags::class.java)
+                queryTagsPublicaciones.whereMatchesQuery(Constantes.ID_PUBLICACION, queryNewPublicaciones)
+                queryTagsPublicaciones.findInBackground(FindCallback{
+                        tagsPublicaciones: List<PublicacionTags>, e ->
+                    if(e != null){
+                        Log.e("Error", "No carga tags de publicaciones", e)
+                        return@FindCallback
+                    }
+                    else{
+                        // Obtener puntuacion de cada tag segun usuario
+                        val queryTagsUsuario: ParseQuery<UsuarioTag> = ParseQuery.getQuery(UsuarioTag::class.java)
+                        queryTagsUsuario.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+                        queryTagsUsuario.whereMatchesKeyInQuery(Constantes.ID_TAG, Constantes.ID_TAG, queryTagsPublicaciones)
+                        queryTagsUsuario.findInBackground{tagsUsuario, e ->
+                            if(e != null){
+                                Log.e("Error", "No carga tags de usuario", e)
+                                return@findInBackground
+                            }
+                            // Se obtuvieron todos los tags para realizar priorizacion
+                            else{
+                                // Crear JSON de tags usuario para acceder en tiempo constante
+                                var jsonUsuarioTags = JSONObject()
+                                for(tagUsuario in tagsUsuario){
+                                    val dif: Int = tagUsuario.numLikes!! - tagUsuario.numDislikes!!
+                                    jsonUsuarioTags.put(tagUsuario.idTag!!.objectId.toString(), dif)
+                                }
+
+                                // Crear Arreglo para almacenar tuplas
+                                var publicacionesPriorityOrder: ArrayList<Tuple> = ArrayList()
+
+                                // Almacenar tuplas de publicacion con prioridad
+                                // Recorrer cada publicacion con cada uno de sus tags
+                                // sumar prioridad de publicacion segun likes de usuario a tag
+                                for(publicacion in newPublicaciones){
+                                    // Inicializar prioridad 0
+                                    var prioridadPublicacion: Int = 0
+                                    for(tagPublicacion in tagsPublicaciones){
+                                        // Verificar que tag pertenezca a publicacion
+                                        if(tagPublicacion.idPublicacion!!.objectId == publicacion.objectId){
+                                            // Comprobar si usuario cuenta con likes a tag
+                                            if(jsonUsuarioTags.has(tagPublicacion.idTag!!.objectId.toString())){
+                                                // Aumentar prioridad segun gusto de usuario
+                                                prioridadPublicacion += jsonUsuarioTags.getInt(tagPublicacion.idTag!!.objectId.toString())
+                                            }
+                                        }
+                                    }
+                                    // agregar tupla de publicacion con prioridad
+                                    publicacionesPriorityOrder.add(Tuple(publicacion, prioridadPublicacion))
+                                }
+
+                                // ordenar lista de publicacion de mayor a menor prioridad
+                                val sorted: List<Tuple> = publicacionesPriorityOrder
+                                    .sortedWith { t1, t2 -> t2.prioridad - t1.prioridad }
+
+                                // Agregar publicaciones en orden de prioridad a arreglo que
+                                // será enviado al adapter
+                                for(element in sorted) {
+                                    data.add(element.publicacion)
+                                }
+                                initializeList()
+                            }
+                        }
+                    }
+                })
             }
         }
 
@@ -175,7 +251,7 @@ class DescubreFragment : Fragment(), CardStackListener {
         val listUsuarioTag = ArrayList<UsuarioTag>()
 
         // Parse Query para obtener Tags de Publicacion
-        val query: ParseQuery<PublicacionTag> = ParseQuery.getQuery(PublicacionTag::class.java)
+        val query: ParseQuery<PublicacionTags> = ParseQuery.getQuery(PublicacionTags::class.java)
         query.whereEqualTo(Constantes.ID_PUBLICACION, publicacion)
         // Parse Query obtiene Tags relacionados a Usuario en cuestión
         val query2: ParseQuery<UsuarioTag> = ParseQuery.getQuery(UsuarioTag::class.java)
@@ -208,7 +284,7 @@ class DescubreFragment : Fragment(), CardStackListener {
                 // Parse Query obtiene tags de Publicacion sin relacionar con usuario
                 query.whereDoesNotMatchKeyInQuery(Constantes.ID_TAG, Constantes.ID_TAG, query3)
                 query.findInBackground(FindCallback {
-                        tagsPublicacionCrear: List<PublicacionTag>, e ->
+                        tagsPublicacionCrear: List<PublicacionTags>, e ->
                     if (e != null) {
                         rewindCard()
                         return@FindCallback
@@ -241,7 +317,6 @@ class DescubreFragment : Fragment(), CardStackListener {
                                 val publicacionUsuario = PublicacionUsuario()
                                 publicacionUsuario.idPublicacion = publicacion
                                 publicacionUsuario.idUsuario = ParseUser.getCurrentUser()
-                                publicacionUsuario.conReaccion = true
                                 publicacionUsuario.saveInBackground()
                             }
                         }
@@ -329,15 +404,11 @@ class DescubreFragment : Fragment(), CardStackListener {
 
     override fun onCardDragging(direction: Direction?, ratio: Float) {
         //TODO("Not yet implemented")
-        //Log.d("Dragging", direction.toString())
     }
 
     override fun onCardSwiped(direction: Direction?) {
         //TODO("Not yet implemented")
         swipeParse(lastPublicacionCardDisappeared, direction.toString())
-        //Log.d("direction", direction.toString())
-        //lastPublicacionCardDissapeared = null
-
     }
 
     override fun onCardRewound() {
@@ -354,7 +425,12 @@ class DescubreFragment : Fragment(), CardStackListener {
 
     override fun onCardDisappeared(view: View?, position: Int) {
         lastPublicacionCardDisappeared = data[position]
-        // Log.d("Publicacion", data[position].descripcion.toString())
         //TODO("Not yet implemented")
     }
+}
+
+// Clase para poder crear lista de publicaciones y ordenarlas segun prioridad
+class Tuple(publi: Publicacion, priori: Int){
+    val publicacion: Publicacion = publi
+    val prioridad: Int = priori
 }
