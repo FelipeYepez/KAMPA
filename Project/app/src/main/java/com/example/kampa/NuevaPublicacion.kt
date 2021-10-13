@@ -2,6 +2,7 @@ package com.example.kampa
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -33,6 +34,7 @@ class NuevaPublicacion : AppCompatActivity() {
     private var listTags = mutableListOf<Tag>()
     lateinit private var chips : ChipGroup
     private var addedChips = mutableListOf<Int>()
+
 
 
 
@@ -119,8 +121,11 @@ class NuevaPublicacion : AppCompatActivity() {
             publicacion.idSitio = sitio
             publicacion.idUsuario = ParseUser.getCurrentUser()
 
+            val progressDialog = ProgressDialog(this)
+
             if(selectedUriImage != null || selectedBitmapImage != null){
                 publicacion.saveInBackground { e ->
+                    progressDialog.show()
                     if (e == null) {
                         Log.d(TAG, "saved publicacion")
                         for (el in addedChips){
@@ -131,6 +136,8 @@ class NuevaPublicacion : AppCompatActivity() {
                             publicacionTag.saveInBackground { err ->
                                 if (err == null) {
                                     Log.d(TAG, "saved tag")
+
+
                                     finish()
                                 } else {
                                     Log.d(TAG, err.toString())
