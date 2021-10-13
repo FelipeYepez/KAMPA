@@ -28,7 +28,6 @@ class ParseApplication : Application() {
         // Define subclasses
         ParseObject.registerSubclass(Denuncia::class.java)
         ParseObject.registerSubclass(Publicacion::class.java)
-        ParseObject.registerSubclass(PublicacionTag::class.java)
         ParseObject.registerSubclass(Rol::class.java)
         ParseObject.registerSubclass(Sitio::class.java)
         ParseObject.registerSubclass(SitioTag::class.java)
@@ -39,6 +38,7 @@ class ParseApplication : Application() {
         ParseObject.registerSubclass(Wishlist::class.java)
         ParseObject.registerSubclass(WishlistSitio::class.java)
         ParseObject.registerSubclass(PublicacionUsuario::class.java)
+        ParseObject.registerSubclass(PublicacionTags::class.java)
 
         // Get secret keys
         val ai: ApplicationInfo = applicationContext.packageManager

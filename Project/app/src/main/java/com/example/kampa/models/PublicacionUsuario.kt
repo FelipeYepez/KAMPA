@@ -16,9 +16,4 @@ class PublicacionUsuario : ParseObject() {
         set(_idPublicacion) {
             put(Constantes.ID_PUBLICACION, _idPublicacion!!)
         }
-    var conReaccion: Boolean?
-        get() = getBoolean(Constantes.CON_REACCION)
-        set(_conReaccion){
-            put(Constantes.CON_REACCION, _conReaccion!!)
-        }
 }
