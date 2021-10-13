@@ -119,6 +119,8 @@ class DescubreFragment : Fragment(), CardStackListener {
         // Obtener nuevas publicaciones que no ha visto aún el usuario
         val queryNewPublicaciones: ParseQuery<Publicacion> = ParseQuery.getQuery(Publicacion::class.java)
         queryNewPublicaciones.whereDoesNotMatchKeyInQuery(Constantes.OBJECT_ID, "${Constantes.ID_PUBLICACION}.${Constantes.OBJECT_ID}", queryOldPublicaciones)
+        queryNewPublicaciones.whereEqualTo(Constantes.ELIMINADA, false)
+        queryNewPublicaciones.whereEqualTo(Constantes.APROBADA, true)
         queryNewPublicaciones.include(Constantes.ID_SITIO)
         queryNewPublicaciones.findInBackground { newPublicaciones, e ->
             if (e != null) {

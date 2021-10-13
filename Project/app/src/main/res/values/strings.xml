@@ -21,4 +21,22 @@
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
     <string name="nombre_vacio">Error: Nombre Vacío</string>
+    <string name="nueva_lista_favoritos">Nueva Lista de Favoritos</string>
+    <string name="crear">Crear</string>
+    <string name="error_conexion">No se pudo guardar. Error de conexión</string>
+    <string name="lista_favoritos_creada">"Se creó la lista: "</string>
+    <string name="editar_sitio">Editar Sitio</string>
+    <string name="confirmar_cambios">Confirmar Cambios</string>
+    <string name="title_activity_admin_menu">AdminMenu</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="inv_lida">Inválida</string>
+    <string name="procesada">Procesada</string>
+    <string name="invalida">Inválida</string>
 </resources>

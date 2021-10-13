@@ -26,7 +26,7 @@
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:autoSizeMaxTextSize="25sp"
+                    android:autoSizeMaxTextSize="30sp"
                     android:autoSizeMinTextSize="12sp"
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
@@ -56,8 +56,9 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
-                android:text="Nombre"
-                android:textSize="24dp"
+                android:textColor="@color/black"
+                android:text="Nombre*"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <EditText
@@ -72,49 +73,60 @@
                 android:hint="Nombre sitio"
                 android:textSize="16dp" />
 
+            <TextView
+                android:id="@+id/titleImagen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="30dp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="45dp"
+                android:text="Imagen"
+                android:textSize="19dp"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="45dp"
-                android:layout_marginTop="35dp"
-                android:layout_marginEnd="45dp">
+                android:layout_marginStart="45dp">
 
 
-                <TextView
-                    android:id="@+id/titleImagen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/descripcion"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="20dp"
-                    android:text="Imagen"
-                    android:textSize="24dp"
-                    android:textStyle="bold" />
-
-                <ImageButton
-                    android:id="@+id/capturarImagenButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
-
-                <ImageButton
+                <Button
                     android:id="@+id/galeriaImagenButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_baseline_add_photo_alternate_24" />
+                    android:layout_gravity="left"
+                    android:layout_marginTop="30dp"
+                    android:drawableTint="#ECB518"
+                    android:gravity="center"
+                    android:text="Galería"
+                    android:drawableLeft="@drawable/ic_baseline_image_24"
+                    android:textColor="@color/black"
+                    app:backgroundTint="@color/white" />
+
+                <Button
+                    android:id="@+id/capturarImagenButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/ic_camera"
+                    android:drawableTint="#ECB518"
+                    android:gravity="center"
+                    android:text="Cámara"
+                    android:textColor="@color/black"
+                    app:backgroundTint="@color/white" />
 
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imagenSitio"
                 android:layout_width="match_parent"
-                android:layout_height="275dp"
-                android:src="@drawable/default_sitio">
-
-            </ImageView>
+                android:layout_height="wrap_content"></ImageView>
 
 
             <TextView
@@ -126,10 +138,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="35dp"
+                android:textColor="@color/black"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
                 android:text="Localización"
-                android:textSize="24dp"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <RelativeLayout
@@ -168,10 +181,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="35dp"
+                android:textColor="@color/black"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
-                android:text="Descripción"
-                android:textSize="24dp"
+                android:text="Descripción*"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <EditText
@@ -194,11 +208,12 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
+                android:textColor="@color/black"
                 android:layout_marginTop="35dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
                 android:text="Historia"
-                android:textSize="24dp"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <EditText
@@ -219,13 +234,14 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/descripcion"
                 android:layout_alignParentStart="true"
+                android:textColor="@color/black"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="35dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
-                android:text="Categoría"
-                android:textSize="24dp"
+                android:text="Categoría*"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <RadioGroup
@@ -248,9 +264,10 @@
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="35dp"
                 android:layout_marginEnd="45dp"
+                android:textColor="@color/black"
                 android:layout_marginBottom="0dp"
                 android:text="Página oficial"
-                android:textSize="24dp"
+                android:textSize="19dp"
                 android:textStyle="bold" />
 
             <EditText
@@ -272,6 +289,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:layout_marginTop="32dp"
+                android:layout_marginBottom="20dp"
                 android:backgroundTint="#14B2B2"
                 android:text="AÑADIR SITIO"
                 android:textColor="@android:color/white"

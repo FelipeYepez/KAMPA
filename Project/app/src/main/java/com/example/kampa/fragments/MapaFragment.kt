@@ -8,29 +8,36 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.kampa.models.Sitio
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.parse.ParseQuery
 import android.content.Intent
 import com.google.android.gms.tasks.Task
 import com.example.kampa.*
 import com.example.kampa.R
 import android.location.Location
+import android.widget.RadioButton
+import android.widget.RadioGroup
 
 import org.jetbrains.annotations.NotNull
 
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresPermission
+import com.example.kampa.models.*
 
 import com.google.android.gms.tasks.OnCompleteListener
 
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.*
+import com.parse.*
+import com.parse.ParseObject.createWithoutData
 import java.util.jar.Manifest
+import com.parse.ParseObject
+
+import com.parse.ParseQuery
+
+
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -51,6 +58,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     private var param2: String? = null
     private var map: SupportMapFragment? = null
     private var gMap: GoogleMap? = null
+    private var roleObject: Rol? = null
+    var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
     private lateinit var mainActivity: MainActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var  currentLocation: Location
@@ -80,19 +89,26 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         initMap()
 
 
-        val fab: FloatingActionButton = view.findViewById(R.id.NuevoSitio)
-
-        fab.setOnClickListener {
-
-            val i = Intent(activity, NuevoSitio::class.java)
-
-            i.putExtra("permission", mainActivity.isPermissionGranted)
-            i.putExtra("currentLocation",currentLocation)
-
-            startActivity(i)
+        var fab: FloatingActionButton = view.findViewById(R.id.NuevoSitio)
 
 
+        if(roleObject?.descripcion == "administrador"){
+            fab.visibility = View.VISIBLE
+            fab.setOnClickListener {
+
+                val i = Intent(activity, NuevoSitio::class.java)
+
+                i.putExtra("permission", mainActivity.isPermissionGranted)
+                i.putExtra("currentLocation",currentLocation)
+
+                startActivity(i)
+            }
         }
+
+        else{
+            fab.visibility = View.INVISIBLE
+        }
+
 
 
     }
@@ -103,11 +119,12 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         ) as? SupportMapFragment
 
         map?.getMapAsync(this)
-        query()
 
+        query()
     }
 
     private fun query() {
+
         val query: ParseQuery<Sitio> = ParseQuery.getQuery(Sitio::class.java)
 
         query.findInBackground { itemList, e ->
@@ -115,22 +132,58 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
                 // Access the array of results here
                 for (el in itemList) {
                     add_Marker(el)
-                    Log.d(TAG, el.nombre!!)
                 }
+                roleQuery(currentRole.objectId.toString())
             } else {
                 Log.d("item", "Error: " + e.message)
+
+                if(e.code == 100){
+                    Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
+    private fun roleQuery(id:String){
+        val query = ParseQuery<Rol>("Rol")
+        try {
+            roleObject = query[id]
+        } catch (e: ParseException) {
+            Log.d(TAG, e.toString())
+        }
+    }
+
     private fun add_Marker(sitio: Sitio) {
+        var color = 0F
+        var usuarioSitio = UsuarioSitio()
+        val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
+        query.whereEqualTo("idUsuario", ParseUser.getCurrentUser())
+        query.whereEqualTo("idSitio", sitio)
+        query.findInBackground { itemList, e ->
+            if (e == null && itemList.size > 0) {
+                usuarioSitio = itemList.get(0)
+
+                if(usuarioSitio.isVisitado == true){
+                    color = 260F
+                }
+                else if(usuarioSitio.isWishlist == true){
+                    color = 47F
+                }
+
+            } else if(e != null) {
+                Log.d(TAG, "Error: " + e.message)
+            } else{
+                Log.d(TAG, "Vacio")
+            }
+
             val marker = gMap?.addMarker(
                 MarkerOptions()
                     .title(sitio.nombre)
                     .position(LatLng(sitio.ubicacion!!.latitude, sitio.ubicacion!!.longitude))
-
+                    .icon(BitmapDescriptorFactory.defaultMarker(color))
             )
-        marker?.tag = sitio
+            marker?.tag = sitio
+        }
     }
 
     /** Called when the user clicks a marker.  */
@@ -141,7 +194,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         val sitio: Sitio = marker.tag as Sitio
 
         val i = Intent(activity, SitioActivity::class.java)
-
+        i.putExtra("permission", mainActivity.isPermissionGranted)
+        i.putExtra("currentLocation",currentLocation)
         i.putExtra("sitio", sitio)
 
         startActivity(i)
@@ -186,7 +240,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             if (mainActivity.isPermissionGranted!!) {
                 val location: Task<Location> = mFusedLocationProviderClient.getLastLocation()
                 location.addOnCompleteListener(OnCompleteListener<Location> { task ->
-                    if (task.isSuccessful) {
+                    if (task.isSuccessful && task.result != null) {
                         Log.d(TAG, "onComplete: found location!")
                         currentLocation = task.result as Location
 
@@ -207,6 +261,24 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         } catch (e: SecurityException) {
             Log.d(TAG, "getDeviceLocation: SecurityException: " + e.message)
         }
+    }
+
+    fun queryUsuarioSitio(usuario:ParseUser, sitio:Sitio):UsuarioSitio{
+        val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
+        query.whereEqualTo("idUsuario", ParseUser.getCurrentUser())
+        query.whereEqualTo("idSitio", sitio)
+        var usuarioSitio = UsuarioSitio()
+        query.findInBackground { itemList, e ->
+            if (e == null && itemList.size > 0) {
+                usuarioSitio = itemList.get(0)
+                Log.d(TAG, usuarioSitio.objectId)
+            } else if(e != null) {
+                Log.d(TAG, "Error: " + e.message)
+            } else{
+                Log.d(TAG, "Vacio")
+            }
+        }
+        return usuarioSitio
     }
 
 }

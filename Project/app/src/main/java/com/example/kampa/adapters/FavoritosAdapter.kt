@@ -42,6 +42,12 @@ class FavoritosAdapter(private val context: Context?,
         return data.get(position)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun addToTop(wishlist: Wishlist) {
+        data.add(0, wishlist)
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var item: Wishlist = data[position]
         if (context != null) {
