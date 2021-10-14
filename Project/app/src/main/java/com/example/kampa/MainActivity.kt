@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        //Pide permiso para el mapa
         checkMyPermission()
 
         // Abrir Actividad con fragmento Descubre

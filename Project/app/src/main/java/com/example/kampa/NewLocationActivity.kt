@@ -2,6 +2,7 @@ package com.example.kampa
 
 
 import android.content.Intent
+import com.google.android.gms.common.api.Status
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -19,6 +20,7 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import org.jetbrains.annotations.NotNull
+import java.util.*
 
 
 class NewLocationActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -56,49 +58,47 @@ class NewLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 setResult(RESULT_OK, i) // set result code and bundle data for response
                 finish() // closes the activity, pass data to parent
         }
-    }
-
-
 
         /*********************************
          * Google Places API configuration
          */
 
         // Initialize the AutocompleteSupportFragment.
-//        val autocompleteFragment: AutocompleteSupportFragment? =
-//            supportFragmentManager.findFragmentById(R.id.autocompleteNewLocation) as AutocompleteSupportFragment?
-//
-//        if (!Places.isInitialized()) {
-//            Places.initialize(this, GOOGLE_MAPS_API_KEY))
-//        }
-//        val placesClient: PlacesClient = Places.createClient(this)
-//
-//        // Specify the types of place data to return.
-//        autocompleteFragment.setPlaceFields(
-//            Arrays.asList(
-//                Place.Field.ID,
-//                Place.Field.NAME,
-//                Place.Field.LAT_LNG
-//            )
-//        )
-//
-//         Set up a PlaceSelectionListener to handle the response.
-//        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener() {
-//            fun onPlaceSelected(place: Place) {
-//                Log.i(
-//                    TAG,
-//                    "Place: " + place.getName().toString() + ", " + place.getId()
-//                        .toString() + ", " + place.getLatLng()
-//                )
-//                map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 18f))
-//            }
-//
-//            fun onError(status: Status) {
-//                Log.i(TAG, "An error occurred: $status")
-//            }
-//        })
-//
-//    }
+        val autocompleteFragment: AutocompleteSupportFragment? =
+            supportFragmentManager.findFragmentById(R.id.autocompleteNewLocation) as AutocompleteSupportFragment?
+
+        if (!Places.isInitialized()) {
+            Places.initialize(this, GOOGLE_MAPS_API_KEY)
+        }
+        val placesClient: PlacesClient = Places.createClient(this)
+
+        // Specify the types of place data to return.
+        autocompleteFragment?.setPlaceFields(
+            Arrays.asList(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.LAT_LNG
+            )
+        )
+
+        // Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment?.setOnPlaceSelectedListener(object : PlaceSelectionListener{
+           override fun onPlaceSelected(place: Place) {
+                Log.i(
+                    TAG,
+                    "Place: " + place.getName().toString() + ", " + place.getId()
+                        .toString() + ", " + place.getLatLng()
+                )
+                map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 18f))
+            }
+
+            override fun onError(status: Status) {
+                Log.i(TAG, "An error occurred: $status")
+            }
+        })
+    }
+
+
 
     override fun onMapReady(@NotNull googleMap: GoogleMap) {
         Log.d(TAG, "Entered map")
