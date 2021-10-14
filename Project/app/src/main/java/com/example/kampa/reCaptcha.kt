@@ -1,5 +1,9 @@
 package com.example.kampa
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
@@ -12,6 +16,8 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.kampa.BuildConfig.SECRET_KEY
+import com.example.kampa.BuildConfig.SITE_KEY
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.safetynet.SafetyNet
@@ -21,12 +27,7 @@ import java.util.HashMap
 
 
 class reCaptcha : AppCompatActivity(), View.OnClickListener {
-    // Get secret keys
-    //val ai: ApplicationInfo = applicationContext.packageManager
-      //  .getApplicationInfo(applicationContext.packageName, PackageManager.GET_META_DATA)
-    var SITE_KEY:String = "6Ld-_MscAAAAAEJuGEabSegfBvG4dwzcPYZroqqe"
-    var SECRET_KEY:String = "6Ld-_MscAAAAAOiOZ5TYBRaY9u8-K8t4MSCkhjq3"
-
+    val RESULT_OK:Int = -1
     var TAG = "reCaptcha"
     var btnverifyCaptcha: Button? = null
     var queue: RequestQueue? = null
@@ -70,13 +71,17 @@ class reCaptcha : AppCompatActivity(), View.OnClickListener {
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getBoolean("success")) {
                         Toast.makeText(this, "Verificación exitosa",Toast.LENGTH_LONG).show()
+                        val intent = Intent()
+                        intent.putExtra("valido", true)
+                        setResult(RESULT_OK, intent)
                         finish()
                     } else {
                         Toast.makeText(
                             applicationContext,
-                            jsonObject.getString("error-codes").toString(),
+                            "Intenta nuevamente",
                             Toast.LENGTH_LONG
                         ).show()
+                        Log.d(TAG, jsonObject.getString("error-codes").toString())
                     }
                 } catch (ex: Exception) {
                     Log.d(TAG, "JSON exception: " + ex.message)

@@ -32,7 +32,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="Has insertado más de 3 veces una contraseña errónea, verifica que no eres un robot."
+        android:text="Has insertado 3 o más veces credenciales erróneas, verifica que no eres un robot."
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
