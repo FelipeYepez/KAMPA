@@ -88,6 +88,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         super.onViewCreated(view, savedInstanceState)
 
         initMap()
+        roleQuery(currentRole.objectId.toString())
 
 
         var fab: FloatingActionButton = view.findViewById(R.id.NuevoSitio)
@@ -134,7 +135,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
                 for (el in itemList) {
                     add_Marker(el)
                 }
-                roleQuery(currentRole.objectId.toString())
+
             } else {
                 Log.d("item", "Error: " + e.message)
 
