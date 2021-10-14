@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KAMPA">
         <activity
+            android:name=".LoginActivity"
+            android:exported="true" />
+        <activity
             android:name=".fragments.AprobarFragment"
             android:exported="true" />
         <activity
@@ -53,7 +56,7 @@
         <activity
             android:name=".NewLocationActivity"
             android:exported="true" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".reCaptcha">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
