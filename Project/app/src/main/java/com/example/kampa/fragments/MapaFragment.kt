@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull
 
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresPermission
+import androidx.appcompat.app.AppCompatActivity
 import com.example.kampa.models.*
 
 import com.google.android.gms.tasks.OnCompleteListener
@@ -35,7 +36,6 @@ import java.util.jar.Manifest
 import com.parse.ParseObject
 
 import com.parse.ParseQuery
-
 
 
 
@@ -60,7 +60,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     private var gMap: GoogleMap? = null
     private var roleObject: Rol? = null
     var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
-    private lateinit var mainActivity: MainActivity
+    private lateinit var mainActivity: AppCompatActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var  currentLocation: Location
 
@@ -70,7 +70,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        mainActivity = requireActivity() as MainActivity
+
+        mainActivity = requireActivity() as AppCompatActivity
 
     }
 
