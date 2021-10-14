@@ -60,7 +60,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     private var gMap: GoogleMap? = null
     private var roleObject: Rol? = null
     var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
-    private lateinit var mainActivity: AppCompatActivity
+    private lateinit var mainActivity: MainActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var  currentLocation: Location
 
@@ -71,7 +71,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             param2 = it.getString(ARG_PARAM2)
         }
 
-        mainActivity = requireActivity() as AppCompatActivity
+        mainActivity = requireActivity() as MainActivity
 
     }
 
@@ -262,24 +262,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         } catch (e: SecurityException) {
             Log.d(TAG, "getDeviceLocation: SecurityException: " + e.message)
         }
-    }
-
-    fun queryUsuarioSitio(usuario:ParseUser, sitio:Sitio):UsuarioSitio{
-        val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
-        query.whereEqualTo("idUsuario", ParseUser.getCurrentUser())
-        query.whereEqualTo("idSitio", sitio)
-        var usuarioSitio = UsuarioSitio()
-        query.findInBackground { itemList, e ->
-            if (e == null && itemList.size > 0) {
-                usuarioSitio = itemList.get(0)
-                Log.d(TAG, usuarioSitio.objectId)
-            } else if(e != null) {
-                Log.d(TAG, "Error: " + e.message)
-            } else{
-                Log.d(TAG, "Vacio")
-            }
-        }
-        return usuarioSitio
     }
 
 }
