@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull
 
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresPermission
+import androidx.appcompat.app.AppCompatActivity
 import com.example.kampa.models.*
 
 import com.google.android.gms.tasks.OnCompleteListener
@@ -35,7 +36,6 @@ import java.util.jar.Manifest
 import com.parse.ParseObject
 
 import com.parse.ParseQuery
-
 
 
 
@@ -70,6 +70,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
         mainActivity = requireActivity() as MainActivity
 
     }
@@ -87,6 +88,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         super.onViewCreated(view, savedInstanceState)
 
         initMap()
+        roleQuery(currentRole.objectId.toString())
 
 
         var fab: FloatingActionButton = view.findViewById(R.id.NuevoSitio)
@@ -133,7 +135,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
                 for (el in itemList) {
                     add_Marker(el)
                 }
-                roleQuery(currentRole.objectId.toString())
+
             } else {
                 Log.d("item", "Error: " + e.message)
 
@@ -261,24 +263,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         } catch (e: SecurityException) {
             Log.d(TAG, "getDeviceLocation: SecurityException: " + e.message)
         }
-    }
-
-    fun queryUsuarioSitio(usuario:ParseUser, sitio:Sitio):UsuarioSitio{
-        val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
-        query.whereEqualTo("idUsuario", ParseUser.getCurrentUser())
-        query.whereEqualTo("idSitio", sitio)
-        var usuarioSitio = UsuarioSitio()
-        query.findInBackground { itemList, e ->
-            if (e == null && itemList.size > 0) {
-                usuarioSitio = itemList.get(0)
-                Log.d(TAG, usuarioSitio.objectId)
-            } else if(e != null) {
-                Log.d(TAG, "Error: " + e.message)
-            } else{
-                Log.d(TAG, "Vacio")
-            }
-        }
-        return usuarioSitio
     }
 
 }

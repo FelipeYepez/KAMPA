@@ -68,19 +68,11 @@ class LoginActivity : AppCompatActivity() {
                 progressDialog?.dismiss()
                 if (parseException == null){
                     if (parseUser != null) {
-                        var currentRole: Rol = ParseUser.getCurrentUser().get("idRol") as Rol
-                        roleQuery(currentRole.objectId.toString())
-
-                        if(roleObject?.descripcion == "administrador"){
-                            goToAdminActivity()
-                        }
-                        else if (roleObject?.descripcion == "usuario") {
-                            goToMainActivity()
-                        }
                     }
                     else {
                         ParseUser.logOut()
                     }
+                            goToMainActivity()
                 }
                 else{
                     if(parseException.code == 100){
@@ -98,19 +90,5 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
-    }
-
-    private fun goToAdminActivity() {
-        val intent = Intent(this, AdminMenu::class.java)
-        startActivity(intent)
-    }
-
-    private fun roleQuery(id:String){
-        val query = ParseQuery<Rol>("Rol")
-        try {
-            roleObject = query[id]
-        } catch (e: ParseException) {
-            Log.d("role", e.toString())
-        }
     }
 }
