@@ -80,7 +80,10 @@ class DenunciaActivity() : AppCompatActivity() {
 
     fun initializeListeners() {
         btnInvalida.setOnClickListener {
-            Toast.makeText(this, "Inválida", Toast.LENGTH_LONG).show()
+            denuncia.estado = "invalida"
+            denuncia.saveInBackground()
+            Toast.makeText(this, "Denuncia Inválida", Toast.LENGTH_LONG).show()
+            finish()
         }
         btnProcesada.setOnClickListener {
             Toast.makeText(this, "Procesada", Toast.LENGTH_LONG).show()
