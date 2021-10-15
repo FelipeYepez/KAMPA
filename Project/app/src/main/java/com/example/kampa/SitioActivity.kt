@@ -3,6 +3,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.location.Location
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,12 +11,14 @@ import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
 import com.example.kampa.models.*
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.parse.*
 
 
 class SitioActivity : AppCompatActivity() {
 
+    private lateinit var ibEliminarSitio: ImageButton
     private lateinit var ibEditarSitio: ImageButton
     private lateinit var registrarDenuncia: Button
     private lateinit var registrarVisitado: Button
@@ -58,6 +61,12 @@ class SitioActivity : AppCompatActivity() {
         rolQuery(currentRole.objectId.toString())
 
         if(rolObject?.descripcion == Constantes.ADMINISTRADOR){
+            ibEliminarSitio = findViewById(R.id.ibEliminarSitio)
+            ibEliminarSitio.visibility = View.VISIBLE
+            ibEliminarSitio.setOnClickListener {
+                eliminarSitio()
+            }
+
             ibEditarSitio = findViewById(R.id.ibEditarSitio)
             ibEditarSitio.visibility = View.VISIBLE
             ibEditarSitio.setOnClickListener {
@@ -145,6 +154,28 @@ class SitioActivity : AppCompatActivity() {
             Log.d(TAG, "Foto = NULL")
         }
 
+    }
+
+    private fun eliminarSitio() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.confirmar_eliminar))
+            .setMessage(resources.getString(R.string.seguro_eliminar_sitio))
+            .setNegativeButton(resources.getString(R.string.cancelar)) { dialog, which ->
+            }
+            .setPositiveButton(resources.getString(R.string.eliminar)) { dialog, which ->
+                sitio.deleteInBackground { e ->
+                    if (e == null) {
+                        onDestroy()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "No se pudo eliminar este sitio",
+                            Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+            .show()
     }
 
     private fun goToEditarSitio() {
