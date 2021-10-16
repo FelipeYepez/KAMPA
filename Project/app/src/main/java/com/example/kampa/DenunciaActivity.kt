@@ -12,7 +12,6 @@ import android.widget.Toast
 import com.example.kampa.models.Denuncia
 import com.parse.GetDataCallback
 import com.parse.ParseFile
-import kotlinx.android.synthetic.main.activity_login.*
 
 class DenunciaActivity() : AppCompatActivity() {
     private lateinit var denuncia: Denuncia

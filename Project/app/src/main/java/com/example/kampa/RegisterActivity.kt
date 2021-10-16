@@ -8,11 +8,9 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
-import com.example.kampa.R
 import com.google.android.material.textfield.TextInputEditText
 import com.parse.ParseUser
 import com.parse.SignUpCallback
-import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -22,6 +20,7 @@ class RegisterActivity : AppCompatActivity() {
     private var password: TextInputEditText? = null
     private var passwordagain: TextInputEditText? = null
     private var progressDialog: ProgressDialog? = null
+    private var btnLogRegister: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +32,9 @@ class RegisterActivity : AppCompatActivity() {
         username = findViewById(R.id.username)
         password = findViewById(R.id.password)
         passwordagain = findViewById(R.id.passwordagain)
+        btnLogRegister = findViewById(R.id.btnLogRegister)
 
-        btnLogRegister.setOnClickListener {
+        btnLogRegister?.setOnClickListener {
             onBackPressed()
         }
 

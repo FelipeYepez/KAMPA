@@ -3,17 +3,15 @@ package com.example.kampa
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.example.kampa.models.Rol
 import com.google.android.material.textfield.TextInputEditText
 import com.parse.*
-import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
     private val TAG = "LoginActivity"
@@ -22,7 +20,6 @@ class LoginActivity : AppCompatActivity() {
     private var login: Button? = null
     private var btnRegLogin: Button? = null
     private var progressDialog: ProgressDialog? = null
-    private var roleObject: Rol? = null
     private var intentos:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,11 +65,11 @@ class LoginActivity : AppCompatActivity() {
                 progressDialog?.dismiss()
                 if (parseException == null){
                     if (parseUser != null) {
+                        goToMainActivity()
                     }
                     else {
                         ParseUser.logOut()
                     }
-                            goToMainActivity()
                 }
                 else{
                     if(parseException.code == 100){

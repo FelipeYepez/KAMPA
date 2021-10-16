@@ -37,10 +37,6 @@ import com.parse.ParseObject
 
 import com.parse.ParseQuery
 
-
-
-
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -59,7 +55,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     private var map: SupportMapFragment? = null
     private var gMap: GoogleMap? = null
     private var roleObject: Rol? = null
-    var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
+    private var fab: FloatingActionButton? = null
+    private var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
     private lateinit var mainActivity: MainActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var  currentLocation: Location
@@ -87,16 +84,17 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        fab = view.findViewById(R.id.NuevoSitio)
         initMap()
         roleQuery(currentRole.objectId.toString())
+        setBtnVisibility()
 
+    }
 
-        var fab: FloatingActionButton = view.findViewById(R.id.NuevoSitio)
-
-
+    private fun setBtnVisibility(){
         if(roleObject?.descripcion == "administrador"){
-            fab.visibility = View.VISIBLE
-            fab.setOnClickListener {
+            fab?.visibility = View.VISIBLE
+            fab?.setOnClickListener {
 
                 val i = Intent(activity, NuevoSitio::class.java)
 
@@ -108,11 +106,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         }
 
         else{
-            fab.visibility = View.INVISIBLE
+            fab?.visibility = View.INVISIBLE
         }
-
-
-
     }
 
     private fun initMap() {
@@ -157,25 +152,19 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
 
     private fun add_Marker(sitio: Sitio) {
         var color = 0F
-        var usuarioSitio = UsuarioSitio()
+        var usuarioSitio: UsuarioSitio
         val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
         query.whereEqualTo("idUsuario", ParseUser.getCurrentUser())
         query.whereEqualTo("idSitio", sitio)
         query.findInBackground { itemList, e ->
             if (e == null && itemList.size > 0) {
                 usuarioSitio = itemList.get(0)
-
-                if(usuarioSitio.isVisitado == true){
-                    color = 260F
-                }
-                else if(usuarioSitio.isWishlist == true){
-                    color = 47F
-                }
+                color = MapaFragmentUtils.setColor(usuarioSitio.isVisitado!!, usuarioSitio.isWishlist!!)
 
             } else if(e != null) {
                 Log.d(TAG, "Error: " + e.message)
             } else{
-                Log.d(TAG, "Vacio")
+                Log.d(TAG, "Vacío")
             }
 
             val marker = gMap?.addMarker(
@@ -187,6 +176,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
             marker?.tag = sitio
         }
     }
+
 
     /** Called when the user clicks a marker.  */
     override fun onMarkerClick(marker: Marker): Boolean {
@@ -265,4 +255,16 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         }
     }
 
+}
+
+object MapaFragmentUtils{
+    fun setColor(isVisitado:Boolean, isWishlist: Boolean):Float{
+        if(isVisitado == true){
+            return 260F
+        }
+        else if(isWishlist == true){
+            return 47F
+        }
+        return 0F
+    }
 }
