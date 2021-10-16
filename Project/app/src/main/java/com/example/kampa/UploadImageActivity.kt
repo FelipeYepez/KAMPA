@@ -3,24 +3,19 @@ package com.example.kampa
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
-import android.widget.ImageView
+import android.widget.Button
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.util.concurrent.Executors
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import com.parse.GetDataCallback
-import com.parse.ParseFile
-import kotlinx.android.synthetic.main.activity_upload_image.*
+import androidx.camera.view.PreviewView
 import java.io.File
-import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -30,6 +25,8 @@ typealias LumaListener = (luma: Double) -> Unit
 class UploadImageActivity : AppCompatActivity() {
 
     var imageCapture: ImageCapture? = null
+    var viewFinder: PreviewView? = null
+    var cameraCaptureButton: Button? = null
 
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
@@ -37,6 +34,8 @@ class UploadImageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_upload_image)
+        viewFinder = findViewById(R.id.viewFinder)
+        cameraCaptureButton = findViewById(R.id.camera_capture_button)
 
         // Request camera permissions
         if (allPermissionsGranted()) {
@@ -47,7 +46,7 @@ class UploadImageActivity : AppCompatActivity() {
         }
 
         // Set up the listener for take photo button
-        camera_capture_button.setOnClickListener { takePhoto() }
+        cameraCaptureButton?.setOnClickListener { takePhoto() }
 
         outputDirectory = getOutputDirectory()
 
@@ -100,7 +99,7 @@ class UploadImageActivity : AppCompatActivity() {
             val preview = Preview.Builder()
                 .build()
                 .also {
-                    it.setSurfaceProvider(viewFinder.surfaceProvider)
+                    it.setSurfaceProvider(viewFinder?.surfaceProvider)
                 }
 
             imageCapture = ImageCapture.Builder()

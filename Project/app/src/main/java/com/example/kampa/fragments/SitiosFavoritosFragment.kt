@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -28,7 +29,6 @@ import com.example.kampa.models.WishlistSitio
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.parse.ParseException
 import com.parse.ParseQuery
-import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
 
 class SitiosFavoritosFragment : Fragment(), SitioInterface {
 
@@ -123,13 +123,13 @@ class SitiosFavoritosFragment : Fragment(), SitioInterface {
         val myDialogView = LayoutInflater
             .from(this.context)
             .inflate(R.layout.cambiar_nombre_dialogo, null)
-
+        val etNuevoNombre = myDialogView.findViewById(R.id.etNuevoNombre) as EditText
         val builder = AlertDialog.Builder(this.context)
             .setView(myDialogView)
             .setTitle(R.string.cambiar_nombre_lista_deseos)
             .setPositiveButton(R.string.aceptar,
                 DialogInterface.OnClickListener { dialog, id ->
-                    val nuevoNombre = myDialogView.etNuevoNombre.text.toString()
+                    val nuevoNombre = etNuevoNombre.text.toString()
 
                     if (nuevoNombre.isNotEmpty()) {
                         tvTitle.text = nuevoNombre
