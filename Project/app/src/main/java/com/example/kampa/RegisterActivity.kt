@@ -40,13 +40,13 @@ class RegisterActivity : AppCompatActivity() {
 
         signup?.setOnClickListener {
             if (password?.text.toString() == passwordagain?.text.toString() && !TextUtils.isEmpty(username?.text.toString()))
-                signup(username?.text.toString(), password?.text.toString());
+                signup(username?.text.toString(), password?.text.toString())
             else
                 Toast.makeText(
                     this,
                     "Make sure that the values you entered are correct.",
                     Toast.LENGTH_SHORT
-                ).show();
+                ).show()
         }
     }
 
@@ -66,8 +66,8 @@ class RegisterActivity : AppCompatActivity() {
             if (it == null) {
                 goToMainActivity()
             } else {
-                ParseUser.logOut();
-                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show();
+                ParseUser.logOut()
+                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
             }
         });
     }
