@@ -219,7 +219,9 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
             nuevoSitio.idTipoSitio = listTipoSitio[idCheckedButton!!]
         }
 
-        if(nuevoSitio.nombre!!.length > 0 || nuevoSitio.descripcion!!.length > 0 || idCheckedButton != -1){
+        var isInputComplete = NuevoSitioUtils.validateInputs(nuevoSitio.nombre!!, nuevoSitio.descripcion!!, nuevoSitio.ubicacion!!, idCheckedButton!!)
+
+        if(isInputComplete == "complete values") {
             nuevoSitio.saveInBackground { e ->
                 if (e == null) {
                     Log.d(TAG, "saved")
@@ -228,8 +230,8 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
                 }
             }
             finish()
-        } else{
-            Toast.makeText(this, "Llena todos los campos obligatorios", Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(this, isInputComplete, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -254,5 +256,29 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
             e.printStackTrace()
         }
         return image
+    }
+}
+
+object NuevoSitioUtils{
+    /**
+     * Valida que los campos obligatorios para registrar un nuevo sitio hayan sido seleccionados.
+     * @param nombre nombre del sitio
+     * @param descripcion descripción del sitio
+     * @param idCheckedButton tipo de sitio seleccionado
+     */
+    fun validateInputs(nombre:String, descripcion:String, ubicacion:ParseGeoPoint, idCheckedButton:Int):String{
+        if(nombre.length == 0){
+            return "Escribe el nombre del sitio"
+        }
+        else if(descripcion.length == 0){
+            return "Escribe la descripción del sitio"
+        }
+        else if(ubicacion.latitude == 0.0 && ubicacion.longitude == 0.0){
+            return "Elige la ubicación del sitio"
+        }
+        else if(idCheckedButton == -1){
+            return "Selecciona una categoría"
+        }
+        return "complete values"
     }
 }
