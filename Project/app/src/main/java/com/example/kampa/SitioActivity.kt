@@ -1,5 +1,4 @@
 package com.example.kampa
-import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -87,7 +86,7 @@ class SitioActivity : AppCompatActivity() {
         val nuevaPublicacion: FloatingActionButton = findViewById(R.id.floatingActionButton)
         nuevaPublicacion.setOnClickListener{
 
-            val i = Intent(this, NuevaPublicacion::class.java)
+            val i = Intent(this, NuevaPublicacionActivity::class.java)
 
             i.putExtra("sitio", sitio)
 

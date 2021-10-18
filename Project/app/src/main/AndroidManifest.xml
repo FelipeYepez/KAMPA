@@ -32,7 +32,7 @@
             android:name=".EditarSitio"
             android:exported="true" />
         <activity
-            android:name=".NuevaPublicacion"
+            android:name=".NuevaPublicacionActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
@@ -48,7 +48,7 @@
             android:exported="true" />
         <activity android:name=".CrearDenunciaActivity" />
         <activity
-            android:name=".NuevoSitio"
+            android:name=".NuevoSitioActivity"
             android:exported="true" />
         <activity
             android:name=".NewLocationActivity"
