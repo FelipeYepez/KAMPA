@@ -58,6 +58,12 @@ class DenunciasAdapter(private val context: Context,
         holder.bind(item, context)
     }
 
+    /** * @author Andrea Piñeiro Cavazos <a01705681@itesm.mx>
+     *  Inner class de View Holder, donde se van a mostrar los datos
+     *  @param view
+     *  @param onItemClicked función para mostrar la información de la denuncia al hacer click.
+     *  @version 1.0
+     */
     inner class ViewHolder(
         view: View,
         private val onItemClicked: (position: Int) -> Unit
@@ -71,7 +77,12 @@ class DenunciasAdapter(private val context: Context,
             view.setOnClickListener(this)
         }
 
-
+        /**
+         * Función para cargar una imagen dentro de un imageView
+         * @param foto  imagen de tipo parse file que queremos mostrar
+         * @param imgView  imageView en el que queremos que se despliegue la imagen
+         * @return void - el imageView contiene la foto
+         */
         private fun loadImages(foto: ParseFile?, imgView: ImageView) {
             if (foto != null) {
                 foto.getDataInBackground(GetDataCallback { data, e ->
@@ -87,12 +98,24 @@ class DenunciasAdapter(private val context: Context,
             }
         }
 
+        /**
+         * Función para hacer binding de los elementos en la vista.
+         * Hace set del titulo, la descripción y la imagen con los datos correspondientes
+         * @param item  Denuncia con los datos que queremos mostrar
+         * @param context
+         */
         fun bind(item: Denuncia, context: Context) {
             loadImages(item.fotos, fotoDenuncia)
             denunciasTitle.setText(item.idSitio?.nombre)
             denunciaDescripcion.setText(item.descripcion)
         }
 
+        /**
+         * Función que sobrescribe OnClick y manda llamar la función recibida como parámatro
+         * por el adaptador, para que al dar click en un item,
+         * se abra la información de esa denuncia.
+         * @param view
+         */
         override fun onClick(v: View) {
             val position = adapterPosition
             onItemClicked(position)
