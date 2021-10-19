@@ -35,7 +35,12 @@ import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
+/** * @author Andrea Piñeiro Cavazos <a01705681@itesm.mx>
+ *  Actividad para crear denuncias de mal uso desde el rol de usuario,
+ *  añadiendo descripción y una imagen tomada con la cámara o eligiendo
+ *  del carrete.
+ *  @version 1.0
+ */
 
 class CrearDenunciaActivity : AppCompatActivity() {
     private lateinit var imagen: ImageView
@@ -46,7 +51,13 @@ class CrearDenunciaActivity : AppCompatActivity() {
     private lateinit var descripcion: EditText
     private lateinit var tomarImagenButton: Button
     private lateinit var sitio: Sitio
+    private lateinit var title: TextView
 
+    /**
+     * Se llama cuando la actividad se crea; obtiene el sitio de la denuncia
+     * de los extras, inicializa componentes y listeners.
+     * @param savedInstanceState
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrar_denuncia)
@@ -58,21 +69,30 @@ class CrearDenunciaActivity : AppCompatActivity() {
             savedInstanceState.getSerializable("sitio") as Sitio
         }
 
-
-        var title: TextView = findViewById(R.id.title)
+        initializeComponents()
         title.text = sitio.nombre
-
-        // Seleccionar imagen
-        imagen = findViewById(R.id.imagenDenuncia)
-        uploadImageBtn = findViewById(R.id.subirImagenBtn)
-        enviarDenuncia = findViewById(R.id.enviarDenunciaBtn)
-        descripcion = findViewById(R.id.descripcion)
-        tomarImagenButton = findViewById(R.id.tomarFotoBtn)
 
         initializeListeners()
         enviarDenuncia()
     }
 
+    /**
+     * Función que inicializa los componentes, buscándolos en la view
+     * con su respectivo id.
+     */
+    private fun initializeComponents() {
+        title = findViewById(R.id.title)
+        imagen = findViewById(R.id.imagenDenuncia)
+        uploadImageBtn = findViewById(R.id.subirImagenBtn)
+        enviarDenuncia = findViewById(R.id.enviarDenunciaBtn)
+        descripcion = findViewById(R.id.descripcion)
+        tomarImagenButton = findViewById(R.id.tomarFotoBtn)
+    }
+
+    /**
+     * Función que inicializa los listeners del botón de elegir foto desde
+     * la galería y tomar foto.
+     */
     private fun initializeListeners() {
         var startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result ->
@@ -96,26 +116,16 @@ class CrearDenunciaActivity : AppCompatActivity() {
                 Snackbar.make(findViewById(android.R.id.content), "KAMPA no tiene acceso a Galería", Snackbar.LENGTH_SHORT).show()
             }
         }
-
-        uploadImageBtn.setOnClickListener{
-            checkPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE, 1)
-            if(permissionBool){
-                val intent = Intent()
-                intent.type = "image/*"
-                intent.action = Intent.ACTION_GET_CONTENT
-
-                startForResult.launch(Intent.createChooser(intent, "Select Picture"))
-            }
-            else{
-                Snackbar.make(findViewById(android.R.id.content), "KAMPA no tiene acceso a Galería", Snackbar.LENGTH_SHORT).show()
-            }
-        }
         tomarImagenButton.setOnClickListener{
             startForResult.launch(Intent(this, UploadImageActivity::class.java))
 
         }
     }
 
+    /**
+     * Función para enviar denuncia, inicializa el listener del botón de enviar,
+     * crea la denuncia y la guarda en la base de datos.
+     */
     private fun enviarDenuncia() {
         enviarDenuncia.setOnClickListener{
             var denuncia = Denuncia()
@@ -147,6 +157,12 @@ class CrearDenunciaActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Función para revisar si el usuario ya accedió a dar permiso para usar las imagenes de
+     * la galería.
+     * @param permission  permiso que vav a verificar si se tiene el el Manifest
+     * @param requestCode
+     */
     private fun checkPermissions(permission: String, requestCode: Int){
         if(ContextCompat.checkSelfPermission(this@CrearDenunciaActivity, permission) == PackageManager.PERMISSION_DENIED){
             ActivityCompat.requestPermissions(this@CrearDenunciaActivity, arrayOf(permission), requestCode)
@@ -157,6 +173,11 @@ class CrearDenunciaActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Función para convertir una foto en formato Uri a Bitmap
+     * @param photoUri  uri de la foto a convertir
+     * @return image   imagen en formato de Bitmap
+     */
     fun bitmapFromUri(photoUri: Uri?): Bitmap? {
         var image: Bitmap? = null
         try {
