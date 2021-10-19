@@ -1,25 +1,30 @@
 package com.example.kampa
 import android.Manifest
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import com.example.kampa.models.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.parse.*
+import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
 
 
 class SitioActivity : AppCompatActivity() {
 
+
     private lateinit var ibEditarSitio: ImageButton
     private lateinit var registrarDenuncia: Button
+    private lateinit var ListaDeseos: Button
+
 
     private var rolObject: Rol? = null
     private lateinit var sitio: Sitio
@@ -74,6 +79,99 @@ class SitioActivity : AppCompatActivity() {
             intent.putExtra("sitio", sitio)
             startActivity(intent)
         }
+        ListaDeseos = findViewById(R.id.addWishListBtn)
+        ListaDeseos.setOnClickListener{
+            val query1: ParseQuery<Wishlist> = ParseQuery.getQuery(Wishlist::class.java)
+
+            query1.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+            query1.whereEqualTo(Constantes.IS_DELETED, false)
+            query1.orderByDescending(Constantes.CREATED_AT)
+            query1.findInBackground { objects: MutableList<Wishlist>?, e: ParseException? ->
+                if (e == null) {
+                    if (objects != null) {
+                        val listFavs : MutableList<String> = mutableListOf()
+                        for(obj in objects){
+                            listFavs.add(obj.nombre.toString())
+                        }
+                        val arr : Array<String> = listFavs.toTypedArray()
+                        val builder = AlertDialog.Builder(this.context)
+                            .setTitle(R.string.Lista_favoritos)
+                            .setItems(arr){dialog, which ->
+                                val nWishlistSitio : WishlistSitio = WishlistSitio()
+                                nWishlistSitio.idWishlist = objects[which]
+                                nWishlistSitio.idSitio = sitio
+                                nWishlistSitio.saveInBackground { e ->
+                                    // Si se pudo guardar
+                                    if (e == null) {
+                                        Toast.makeText(this.context, R.string.Lista_favoritos_exito, Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        Toast.makeText(this.context, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                        dialog.cancel()
+                                    }
+                                }
+                            }
+                            .setPositiveButton(R.string.crear_lista,
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    val myDialogView = LayoutInflater
+                                        .from(this.context)
+                                        .inflate(R.layout.crear_lista_favoritos_dialogo, null)
+
+                                    val builder2 = AlertDialog.Builder(this.context)
+                                        .setView(myDialogView)
+                                        .setTitle(R.string.nueva_lista_favoritos)
+                                        .setPositiveButton(R.string.crear,
+                                            DialogInterface.OnClickListener { dialog, id ->
+                                                val nuevoNombre = myDialogView.etNuevoNombre.text.toString()
+
+                                                if (nuevoNombre.isNotEmpty()) {
+                                                    val nuevaWishlist: Wishlist = Wishlist()
+                                                    nuevaWishlist.nombre = nuevoNombre
+                                                    nuevaWishlist.idUsuario = ParseUser.getCurrentUser()
+
+                                                    nuevaWishlist.saveInBackground { e ->
+                                                        if (e == null) {
+                                                            val nWishlistSitio : WishlistSitio = WishlistSitio()
+                                                            nWishlistSitio.idWishlist = nuevaWishlist
+                                                            nWishlistSitio.idSitio = sitio
+                                                            nWishlistSitio.saveInBackground { e ->
+                                                                if (e == null) {
+                                                                    Toast.makeText(this.context, R.string.Lista_favoritos_exito, Toast.LENGTH_SHORT).show()
+                                                                } else {
+                                                                    Toast.makeText(this.context, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                                                    dialog.cancel()
+                                                                }
+                                                            }
+                                                        } else {
+                                                            Toast.makeText(this.context, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                                            dialog.cancel()
+                                                        }
+                                                    }
+                                                } else {
+                                                    Toast.makeText(this.context, R.string.nombre_vacio, Toast.LENGTH_SHORT).show()
+                                                }
+                                            })
+                                        .setNegativeButton(R.string.cancelar,
+                                            DialogInterface.OnClickListener { dialog, id ->
+                                                dialog.cancel()
+                                            })
+
+                                    builder2.show()
+                                })
+                            .setNegativeButton(R.string.cancelar,
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    dialog.cancel()
+                                })
+                        builder.show()
+                    }
+                }
+                else{
+                    if(e.code == 100){
+                        Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
 
         val nuevaPublicacion: FloatingActionButton = findViewById(R.id.floatingActionButton)
         nuevaPublicacion.setOnClickListener{
