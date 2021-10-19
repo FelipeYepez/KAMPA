@@ -41,7 +41,7 @@ class NuevaUbicacion : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_location)
+        setContentView(R.layout.activity_nueva_ubicacion)
         Log.d(TAG, "onCreate: entered onCreate")
 
 
