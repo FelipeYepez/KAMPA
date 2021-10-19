@@ -85,7 +85,10 @@ class DenunciaActivity() : AppCompatActivity() {
             finish()
         }
         btnProcesada.setOnClickListener {
-            Toast.makeText(this, "Procesada", Toast.LENGTH_LONG).show()
+            denuncia.estado = "procesada"
+            denuncia.saveInBackground()
+            Toast.makeText(this, "Denuncia Procesada", Toast.LENGTH_LONG).show()
+            finish()
         }
 
     }
