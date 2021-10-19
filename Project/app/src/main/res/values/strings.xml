@@ -42,4 +42,7 @@
     <string name="declinar">Declinar</string>
     <string name="ir_a_google_maps">¿Desea ir a Google Maps?</string>
     <string name="abrir_google_maps">Abrir Google Maps</string>
+    <string name="confirmar_eliminar">Confirmar Eliminación</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="seguro_eliminar_sitio">¿Estás seguro de eliminar este sitio?</string>
 </resources>
