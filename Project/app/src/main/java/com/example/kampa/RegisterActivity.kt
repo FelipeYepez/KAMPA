@@ -58,6 +58,9 @@ class RegisterActivity : AppCompatActivity() {
     fun signup(username: String, password: String) {
         progressDialog?.show()
 
+        val addecuatePassword = Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@\$%^&*-]).{8,}\$")
+
+        if(addecuatePassword.containsMatchIn(password)){
         val user = ParseUser()
         user.setUsername(username)
         user.setPassword(password)
@@ -69,7 +72,12 @@ class RegisterActivity : AppCompatActivity() {
                 ParseUser.logOut()
                 Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
             }
-        });
+        })
+        }
+        else{
+            ParseUser.logOut()
+            Toast.makeText(this, "Tu contraseña debe de contener almenos 8 caracteres 1 digito 1 mayuscula 1 minuscula y 1 caracter especial", Toast.LENGTH_LONG).show()
+        }
     }
     private fun goToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
