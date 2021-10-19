@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.location.Location
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
 import com.example.kampa.models.*
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.parse.*
@@ -23,15 +25,18 @@ import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
 class SitioActivity : AppCompatActivity() {
 
 
+    private lateinit var ibEliminarSitio: ImageButton
     private lateinit var ibEditarSitio: ImageButton
     private lateinit var registrarDenuncia: Button
     private lateinit var ListaDeseos: Button
+    private lateinit var registrarVisitado: Button
 
 
     private var rolObject: Rol? = null
     private lateinit var sitio: Sitio
     private var permission: Boolean? = null
     private var currentLocation: Location? = null
+    private var usuarioSitio: UsuarioSitio? = null
 
     val TAG = "SitioActivity"
 
@@ -65,6 +70,12 @@ class SitioActivity : AppCompatActivity() {
         rolQuery(currentRole.objectId.toString())
 
         if(rolObject?.descripcion == Constantes.ADMINISTRADOR){
+            ibEliminarSitio = findViewById(R.id.ibEliminarSitio)
+            ibEliminarSitio.visibility = View.VISIBLE
+            ibEliminarSitio.setOnClickListener {
+                eliminarSitio()
+            }
+
             ibEditarSitio = findViewById(R.id.ibEditarSitio)
             ibEditarSitio.visibility = View.VISIBLE
             ibEditarSitio.setOnClickListener {
@@ -84,6 +95,15 @@ class SitioActivity : AppCompatActivity() {
         ListaDeseos = findViewById(R.id.addWishListBtn)
         ListaDeseos.setOnClickListener{
             val query1: ParseQuery<Wishlist> = ParseQuery.getQuery(Wishlist::class.java)
+
+        /*
+         * On click Listener para el botón de registrar visitado
+         */
+        registrarVisitado = findViewById(R.id.VisitedBtn)
+        verificarSitioVisitado()
+        registrarVisitado.setOnClickListener{
+            cambiarVisitado()
+        }
 
             query1.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
             query1.whereEqualTo(Constantes.IS_DELETED, false)
@@ -221,7 +241,7 @@ class SitioActivity : AppCompatActivity() {
         val nuevaPublicacion: FloatingActionButton = findViewById(R.id.floatingActionButton)
         nuevaPublicacion.setOnClickListener{
 
-            val i = Intent(this, NuevaPublicacion::class.java)
+            val i = Intent(this, NuevaPublicacionActivity::class.java)
 
             i.putExtra("sitio", sitio)
 
@@ -281,12 +301,108 @@ class SitioActivity : AppCompatActivity() {
 
     }
 
+    private fun eliminarSitio() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.confirmar_eliminar))
+            .setMessage(resources.getString(R.string.seguro_eliminar_sitio))
+            .setNegativeButton(resources.getString(R.string.cancelar)) { dialog, which ->
+            }
+            .setPositiveButton(resources.getString(R.string.eliminar)) { dialog, which ->
+                sitio.deleteInBackground { e ->
+                    if (e == null) {
+                        onDestroy()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "No se pudo eliminar este sitio",
+                            Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+            .show()
+    }
+
     private fun goToEditarSitio() {
         val editarSitio = Intent(this, EditarSitio::class.java)
         editarSitio.putExtra(Constantes.PERMISSION, permission)
         editarSitio.putExtra(Constantes.CURRENT_LOCATION, currentLocation)
         editarSitio.putExtra(Constantes.SITIO, sitio)
         startActivity(editarSitio)
+    }
+
+    private fun cambiarVisitado(){
+        if (usuarioSitio != null) {
+            // Si Sitio ya fue visitado por usuario marcar como no visitado
+            if(usuarioSitio!!.isVisitado == true){
+                usuarioSitio!!.isVisitado = false
+                usuarioSitio!!.saveInBackground()
+                UIVisitado(false)
+            }
+            // Sitio no ha sido marcado como visitado, marcarlo.
+            else if(usuarioSitio!!.isVisitado == false){
+                usuarioSitio!!.isVisitado = true
+                usuarioSitio!!.saveInBackground()
+                UIVisitado(true)
+            }
+        }
+        else {
+            usuarioSitio = UsuarioSitio()
+            usuarioSitio!!.idSitio = sitio
+            usuarioSitio!!.idUsuario = ParseUser.getCurrentUser()
+            usuarioSitio!!.isWishlist = false
+            usuarioSitio!!.isVisitado = true
+            usuarioSitio!!.saveInBackground()
+        }
+    }
+
+    private fun verificarSitioVisitado(){
+        // Parse Query para marcar Sitio como visitado por Usuario
+        val querySitioVisitado: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
+        querySitioVisitado.whereEqualTo(Constantes.ID_SITIO, sitio)
+        querySitioVisitado.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+
+        // Parse Query para obtener primer registro de Parse
+        querySitioVisitado.getFirstInBackground(GetCallback { usuarioSitioRegistro: UsuarioSitio?, e ->
+            // Si registro ya existe
+            if (e == null && usuarioSitioRegistro != null) {
+                // Almacenar usuarioSitio global
+                usuarioSitio = usuarioSitioRegistro
+                // Si Sitio ya fue visitado por usuario
+                if(usuarioSitioRegistro.isVisitado == true){
+                    UIVisitado(true)
+                }
+                // Sitio no ha sido marcado como visitado, marcarlo.
+                else if(usuarioSitioRegistro.isVisitado == false){
+                    UIVisitado(false)
+                }
+            }
+            else{
+                // Si no se encontró resultado de get en parse
+                if(e.code == 101){
+                    usuarioSitio = null
+                }
+                else{
+                    Toast.makeText(this, "Error al cargar datos", Toast.LENGTH_LONG).show()
+                    registrarVisitado.visibility = View.INVISIBLE
+                }
+            }
+        })
+    }
+
+    private fun UIVisitado(visitado: Boolean){
+        if(visitado){
+            registrarVisitado.setTextColor(ContextCompat.getColor(this,
+                R.color.white))
+            registrarVisitado.setBackgroundColor(ContextCompat.getColor(this,
+                R.color.quantum_lightgreen900))
+        }
+        else{
+            registrarVisitado.setTextColor(ContextCompat.getColor(this,
+                R.color.black))
+            registrarVisitado.setBackgroundColor(ContextCompat.getColor(this,
+                R.color.white))
+        }
     }
 
 }

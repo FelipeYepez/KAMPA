@@ -144,7 +144,7 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
 
         btnCamara = findViewById(R.id.btnCamara)
         btnCamara.setOnClickListener {
-            setPhotoForResult.launch(Intent(this, UploadImageActivity::class.java))
+            setPhotoForResult.launch(Intent(this, TakePictureActivity::class.java))
         }
 
         rgCategoria = findViewById(R.id.rgCategoria)
@@ -242,7 +242,7 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         )
 
         locationMap.setOnMapClickListener(GoogleMap.OnMapClickListener {
-            val newLocation = Intent(this, NewLocationActivity::class.java)
+            val newLocation = Intent(this, NuevaUbicacion::class.java)
             newLocation.putExtra(Constantes.CURRENT_LOCATION, sitioUbicacion)
             setLocationForResult.launch(newLocation)
         })
@@ -281,7 +281,7 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
                         "Sitio modificado exitosamente",
                         Toast.LENGTH_SHORT
                     ).show()
-                    goToSitio()
+                    finish()
                 } else {
                     Log.d(TAG, e.toString())
                     finish()
@@ -296,13 +296,4 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun goToSitio() {
-        val toSitio = Intent(this, SitioActivity::class.java)
-
-        toSitio.putExtra(Constantes.PERMISSION, permission)
-        toSitio.putExtra(Constantes.CURRENT_LOCATION, currentLocation)
-        toSitio.putExtra(Constantes.SITIO, sitio)
-
-        startActivity(toSitio)
-    }
 }

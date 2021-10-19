@@ -12,7 +12,6 @@ import android.widget.Toast
 import com.example.kampa.models.Denuncia
 import com.parse.GetDataCallback
 import com.parse.ParseFile
-import kotlinx.android.synthetic.main.activity_login.*
 
 class DenunciaActivity() : AppCompatActivity() {
     private lateinit var denuncia: Denuncia
@@ -80,7 +79,10 @@ class DenunciaActivity() : AppCompatActivity() {
 
     fun initializeListeners() {
         btnInvalida.setOnClickListener {
-            Toast.makeText(this, "Inválida", Toast.LENGTH_LONG).show()
+            denuncia.estado = "invalida"
+            denuncia.saveInBackground()
+            Toast.makeText(this, "Denuncia Inválida", Toast.LENGTH_LONG).show()
+            finish()
         }
         btnProcesada.setOnClickListener {
             Toast.makeText(this, "Procesada", Toast.LENGTH_LONG).show()

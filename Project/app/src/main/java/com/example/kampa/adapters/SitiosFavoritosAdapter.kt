@@ -14,13 +14,14 @@ import com.bumptech.glide.Glide
 import com.example.kampa.MainActivity
 import com.example.kampa.R
 import com.example.kampa.SitioActivity
+import com.example.kampa.interfaces.SitioInterface
+import com.example.kampa.models.Sitio
 import com.example.kampa.models.Wishlist
 import com.example.kampa.models.WishlistSitio
-import com.parse.ParseFile
-import com.parse.ParseObject
 
 class SitiosFavoritosAdapter(private val context: Context?,
-                             private var data: MutableList<WishlistSitio>)
+                             private var data: MutableList<WishlistSitio>,
+                             private val sitioInterfaceListener: SitioInterface)
     : RecyclerView.Adapter<SitiosFavoritosAdapter.ViewHolder>() {
 
     private val TAG = "SitiosFavoritosAdapter"
@@ -29,7 +30,7 @@ class SitiosFavoritosAdapter(private val context: Context?,
         parent: android.view.ViewGroup,
         viewType: Int
     ): ViewHolder {
-        var layoutInflater = LayoutInflater.from(parent.context)
+        val layoutInflater = LayoutInflater.from(parent.context)
         return ViewHolder(layoutInflater.inflate(
                 R.layout.item_sitios_favoritos,
                 parent,
@@ -53,7 +54,7 @@ class SitiosFavoritosAdapter(private val context: Context?,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var item: WishlistSitio = data[position]
+        val item: WishlistSitio = data[position]
         if (context != null) {
             holder.bind(item, context)
         }
@@ -74,7 +75,12 @@ class SitiosFavoritosAdapter(private val context: Context?,
             tvSitioTitle.text = item.idSitio?.nombre
             tvSitioDescription.text = item.idSitio?.descripcion
 
-            // TODO: Click Listener to ibDirections and to the item
+            ibDirections.setOnClickListener {
+                val sitio: Sitio? = item.idSitio
+                if (sitio != null) {
+                    sitioInterfaceListener.passSitio(sitio)
+                }
+            }
 
             val urlFotoSitio = if (item.idSitio?.foto == null) {
                 R.drawable.buildings

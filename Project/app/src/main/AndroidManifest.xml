@@ -20,19 +20,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KAMPA">
         <activity
+            android:name=".reCaptcha"
+            android:exported="true" />
+        <activity
             android:name=".fragments.AprobarFragment"
             android:exported="true" />
         <activity
             android:name=".DenunciaActivity"
             android:exported="true" />
         <activity
-            android:name=".AdminMenu"
-            android:exported="true" />
-        <activity
             android:name=".EditarSitio"
             android:exported="true" />
         <activity
-            android:name=".NuevaPublicacion"
+            android:name=".NuevaPublicacionActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
@@ -41,17 +41,17 @@
             android:name=".RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".UploadImageActivity"
+            android:name=".TakePictureActivity"
             android:exported="true" />
         <activity
             android:name=".SitioActivity"
             android:exported="true" />
         <activity android:name=".CrearDenunciaActivity" />
         <activity
-            android:name=".NuevoSitio"
+            android:name=".NuevoSitioActivity"
             android:exported="true" />
         <activity
-            android:name=".NewLocationActivity"
+            android:name=".NuevaUbicacion"
             android:exported="true" />
         <activity android:name=".LoginActivity">
             <intent-filter>

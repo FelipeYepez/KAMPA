@@ -2,11 +2,15 @@ package com.example.kampa.fragments
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -18,13 +22,15 @@ import com.example.kampa.Constantes
 import com.example.kampa.R
 import com.example.kampa.SwipeGestureDelete
 import com.example.kampa.adapters.SitiosFavoritosAdapter
+import com.example.kampa.interfaces.SitioInterface
+import com.example.kampa.models.Sitio
 import com.example.kampa.models.Wishlist
 import com.example.kampa.models.WishlistSitio
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.parse.ParseException
 import com.parse.ParseQuery
-import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
 
-class SitiosFavoritosFragment : Fragment() {
+class SitiosFavoritosFragment : Fragment(), SitioInterface {
 
     val TAG = "SitiosFavoritosFragment"
 
@@ -71,6 +77,11 @@ class SitiosFavoritosFragment : Fragment() {
         query.findInBackground { objects: MutableList<WishlistSitio>?, e: ParseException? ->
             if (e == null) {
                 if (objects != null) {
+                    for (objeto in objects) {
+                        if (objeto.idSitio?.objectId == null) {
+                            objects.remove(objeto)
+                        }
+                    }
                     initializeList(objects)
                 }
             }
@@ -82,7 +93,10 @@ class SitiosFavoritosFragment : Fragment() {
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         linearLayoutManager.scrollToPosition(0)
 
-        sitiosFavoritosAdapter = SitiosFavoritosAdapter(this.context, sitiosFavoritosList)
+        sitiosFavoritosAdapter = SitiosFavoritosAdapter(
+            this.context,
+            sitiosFavoritosList,
+            this@SitiosFavoritosFragment)
 
         rvSitiosFavoritos.layoutManager = linearLayoutManager
         rvSitiosFavoritos.adapter = sitiosFavoritosAdapter
@@ -114,13 +128,13 @@ class SitiosFavoritosFragment : Fragment() {
         val myDialogView = LayoutInflater
             .from(this.context)
             .inflate(R.layout.cambiar_nombre_dialogo, null)
-
+        val etNuevoNombre = myDialogView.findViewById(R.id.etNuevoNombre) as EditText
         val builder = AlertDialog.Builder(this.context)
             .setView(myDialogView)
             .setTitle(R.string.cambiar_nombre_lista_deseos)
             .setPositiveButton(R.string.aceptar,
                 DialogInterface.OnClickListener { dialog, id ->
-                    val nuevoNombre = myDialogView.etNuevoNombre.text.toString()
+                    val nuevoNombre = etNuevoNombre.text.toString()
 
                     if (nuevoNombre.isNotEmpty()) {
                         tvTitle.text = nuevoNombre
@@ -136,5 +150,24 @@ class SitiosFavoritosFragment : Fragment() {
                 })
 
         builder.show()
+    }
+
+    override fun passSitio(sitio: Sitio) {
+        Log.d(TAG, sitio.nombre.toString())
+
+        MaterialAlertDialogBuilder(this.requireContext())
+            .setTitle(resources.getString(R.string.abrir_google_maps))
+            .setMessage(resources.getString(R.string.ir_a_google_maps))
+            .setNegativeButton(resources.getString(R.string.cancelar)) { dialog, which ->
+            }
+            .setPositiveButton(resources.getString(R.string.aceptar)) { dialog, which ->
+                val latitude: String = (sitio.ubicacion?.latitude!!).toString()
+                val longitude: String = (sitio.ubicacion?.longitude!!).toString()
+                val gmmIntentUri = Uri.parse("google.navigation:q=$latitude,$longitude")
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                startActivity(mapIntent)
+            }
+            .show()
     }
 }

@@ -16,12 +16,7 @@ import com.google.android.gms.tasks.Task
 import com.example.kampa.*
 import com.example.kampa.R
 import android.location.Location
-import android.widget.RadioButton
-import android.widget.RadioGroup
 
-import org.jetbrains.annotations.NotNull
-
-import androidx.annotation.NonNull
 import androidx.annotation.RequiresPermission
 import com.example.kampa.models.*
 
@@ -30,120 +25,92 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
 import com.parse.*
-import com.parse.ParseObject.createWithoutData
-import java.util.jar.Manifest
-import com.parse.ParseObject
 
 import com.parse.ParseQuery
 
-
-
-
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 private const val TAG = "MapaFragment"
 private const val ZOOM : Float = 15F
 
 /**
- * A simple [Fragment] subclass.
- * Use the [MapaFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * @author RECON
+ * Fragmento que contiene el mapa principal de la aplicación
  */
-class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickListener {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private var map: SupportMapFragment? = null
     private var gMap: GoogleMap? = null
     private var roleObject: Rol? = null
-    var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
+    private var fab: FloatingActionButton? = null
+    private var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
     private lateinit var mainActivity: MainActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var  currentLocation: Location
 
+    /**
+     * Inicializa el fragmento
+     * @param savedInstanceState para que la actividad pueda restaurarse a un estado anterior
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
         mainActivity = requireActivity() as MainActivity
-
     }
 
+    /**
+     * Infla la vista con el layout correspondiente
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mapa, container, false)
     }
 
+    /**
+     * Cuando se crea la vista se inicializa el mapa y se añade un float action button si el usuario
+     * en sesión es administrador
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        fab = view.findViewById(R.id.NuevoSitio)
         initMap()
+        roleQuery(currentRole.objectId.toString())
+        setBtnVisibility()
+    }
 
-
-        var fab: FloatingActionButton = view.findViewById(R.id.NuevoSitio)
-
-
+    /**
+     * Se le añade un ClickListener al botón para crear sitio
+     * La visibilidad del botón es hidden si el usuario no es administrador
+     */
+    private fun setBtnVisibility(){
         if(roleObject?.descripcion == "administrador"){
-            fab.visibility = View.VISIBLE
-            fab.setOnClickListener {
-
-                val i = Intent(activity, NuevoSitio::class.java)
-
+            fab?.visibility = View.VISIBLE
+            fab?.setOnClickListener {
+                val i = Intent(activity, NuevoSitioActivity::class.java)
                 i.putExtra("permission", mainActivity.isPermissionGranted)
                 i.putExtra("currentLocation",currentLocation)
-
                 startActivity(i)
             }
         }
-
         else{
-            fab.visibility = View.INVISIBLE
+            fab?.visibility = View.INVISIBLE
         }
-
-
-
     }
 
+    /**
+     * Iniciliza el mapa
+     * Llama a la función que crea los marcadores
+     */
     private fun initMap() {
         map = childFragmentManager.findFragmentById(
             R.id.map_fragment
         ) as? SupportMapFragment
-
         map?.getMapAsync(this)
-
         query()
     }
 
-    private fun query() {
-
-        val query: ParseQuery<Sitio> = ParseQuery.getQuery(Sitio::class.java)
-
-        query.findInBackground { itemList, e ->
-            if (e == null) {
-                // Access the array of results here
-                for (el in itemList) {
-                    add_Marker(el)
-                }
-                roleQuery(currentRole.objectId.toString())
-            } else {
-                Log.d("item", "Error: " + e.message)
-
-                if(e.code == 100){
-                    Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
+    /**
+     * Obtiene el rol del usuario autenticado y lo guarda en roleObject
+     * @param id el objectId del usuario
+     */
     private fun roleQuery(id:String){
         val query = ParseQuery<Rol>("Rol")
         try {
@@ -153,27 +120,46 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         }
     }
 
+    /**
+     * Obtiene una lista de sitios existentes en la base de datos
+     */
+    private fun query() {
+        val query: ParseQuery<Sitio> = ParseQuery.getQuery(Sitio::class.java)
+        query.findInBackground { itemList, e ->
+            if (e == null) {
+                for (el in itemList) {
+                    add_Marker(el)
+                }
+            } else {
+                Log.d("item", "Error: " + e.message)
+                if(e.code == 100){
+                    Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    /**
+     * Añade un marcador en el mapa
+     * Dependiendo de si el lugar es visitado, está en la lista de favoritos o no, se le asigna un
+     * color diferente.
+     * @param sitio lugar que será añadido al mapa
+     */
     private fun add_Marker(sitio: Sitio) {
         var color = 0F
-        var usuarioSitio = UsuarioSitio()
+        var usuarioSitio: UsuarioSitio
         val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
         query.whereEqualTo("idUsuario", ParseUser.getCurrentUser())
         query.whereEqualTo("idSitio", sitio)
         query.findInBackground { itemList, e ->
             if (e == null && itemList.size > 0) {
                 usuarioSitio = itemList.get(0)
-
-                if(usuarioSitio.isVisitado == true){
-                    color = 260F
-                }
-                else if(usuarioSitio.isWishlist == true){
-                    color = 47F
-                }
+                color = MapaFragmentUtils.setColor(usuarioSitio.isVisitado!!, usuarioSitio.isWishlist!!)
 
             } else if(e != null) {
                 Log.d(TAG, "Error: " + e.message)
             } else{
-                Log.d(TAG, "Vacio")
+                Log.d(TAG, "Vacío")
             }
 
             val marker = gMap?.addMarker(
@@ -186,52 +172,37 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         }
     }
 
-    /** Called when the user clicks a marker.  */
+
+    /**
+     * Se inicia un intent con la clase sitioActivity del sitio que se selecciona en el mapa
+     * @param marker marcador que se seleccionó
+     * @return se regresa false ya que se termina de usar el marcador
+     */
     override fun onMarkerClick(marker: Marker): Boolean {
-
-        Log.d(TAG, "entered onclick ")
-
         val sitio: Sitio = marker.tag as Sitio
-
         val i = Intent(activity, SitioActivity::class.java)
         i.putExtra("permission", mainActivity.isPermissionGranted)
         i.putExtra("currentLocation",currentLocation)
         i.putExtra("sitio", sitio)
-
         startActivity(i)
-
         return false
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MapaFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MapaFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-
+    /**
+     * Muestra la ubicación del usuario en pantalla y un botón para ir a su ubicación.
+     * Coloca ClickListeners para los marcadores.
+     */
     @SuppressLint("MissingPermission")
     override fun onMapReady(p0: GoogleMap?) {
         gMap = p0
         gMap?.setMyLocationEnabled(mainActivity.isPermissionGranted!!)
         gMap?.setOnMarkerClickListener(this)
         getDeviceLocation()
-
     }
 
+    /**
+     * Obtiene la ubicación actual del usuario y la guarda en current location
+     */
     @RequiresPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
     fun getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the device's current location")
@@ -243,8 +214,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
                     if (task.isSuccessful && task.result != null) {
                         Log.d(TAG, "onComplete: found location!")
                         currentLocation = task.result as Location
-
-
                         gMap?.moveCamera(
                             CameraUpdateFactory.newLatLngZoom(LatLng(currentLocation.latitude, currentLocation.longitude), ZOOM)
                         )
@@ -263,22 +232,21 @@ class MapaFragment : Fragment(), OnMapReadyCallback ,GoogleMap.OnMarkerClickList
         }
     }
 
-    fun queryUsuarioSitio(usuario:ParseUser, sitio:Sitio):UsuarioSitio{
-        val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
-        query.whereEqualTo("idUsuario", ParseUser.getCurrentUser())
-        query.whereEqualTo("idSitio", sitio)
-        var usuarioSitio = UsuarioSitio()
-        query.findInBackground { itemList, e ->
-            if (e == null && itemList.size > 0) {
-                usuarioSitio = itemList.get(0)
-                Log.d(TAG, usuarioSitio.objectId)
-            } else if(e != null) {
-                Log.d(TAG, "Error: " + e.message)
-            } else{
-                Log.d(TAG, "Vacio")
-            }
-        }
-        return usuarioSitio
-    }
+}
 
+object MapaFragmentUtils{
+    /**
+     * Asigna un color a cada marcador del mapa
+     * @param isVisitado es true si el lugar ha sido visitado
+     * @param isWishlist es true si el lugar está en una lista de favoritos
+     * @return regresa el color en flotante
+     */
+    fun setColor(isVisitado:Boolean, isWishlist: Boolean):Float{
+        if(isVisitado == true){
+            return 260F
+        } else if(isWishlist == true){
+            return 47F
+        }
+        return 0F
+    }
 }

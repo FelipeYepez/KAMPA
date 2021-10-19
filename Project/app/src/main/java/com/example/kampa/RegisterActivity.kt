@@ -8,11 +8,9 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
-import com.example.kampa.R
 import com.google.android.material.textfield.TextInputEditText
 import com.parse.ParseUser
 import com.parse.SignUpCallback
-import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -22,6 +20,7 @@ class RegisterActivity : AppCompatActivity() {
     private var password: TextInputEditText? = null
     private var passwordagain: TextInputEditText? = null
     private var progressDialog: ProgressDialog? = null
+    private var btnLogRegister: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,20 +32,21 @@ class RegisterActivity : AppCompatActivity() {
         username = findViewById(R.id.username)
         password = findViewById(R.id.password)
         passwordagain = findViewById(R.id.passwordagain)
+        btnLogRegister = findViewById(R.id.btnLogRegister)
 
-        btnLogRegister.setOnClickListener {
+        btnLogRegister?.setOnClickListener {
             onBackPressed()
         }
 
         signup?.setOnClickListener {
             if (password?.text.toString() == passwordagain?.text.toString() && !TextUtils.isEmpty(username?.text.toString()))
-                signup(username?.text.toString(), password?.text.toString());
+                signup(username?.text.toString(), password?.text.toString())
             else
                 Toast.makeText(
                     this,
                     "Make sure that the values you entered are correct.",
                     Toast.LENGTH_SHORT
-                ).show();
+                ).show()
         }
     }
 
@@ -58,6 +58,9 @@ class RegisterActivity : AppCompatActivity() {
     fun signup(username: String, password: String) {
         progressDialog?.show()
 
+        val addecuatePassword = Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@\$%^&*-]).{8,}\$")
+
+        if(addecuatePassword.containsMatchIn(password)){
         val user = ParseUser()
         user.setUsername(username)
         user.setPassword(password)
@@ -66,10 +69,15 @@ class RegisterActivity : AppCompatActivity() {
             if (it == null) {
                 goToMainActivity()
             } else {
-                ParseUser.logOut();
-                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show();
+                ParseUser.logOut()
+                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
             }
-        });
+        })
+        }
+        else{
+            ParseUser.logOut()
+            Toast.makeText(this, "Tu contraseña debe de contener almenos 8 caracteres 1 digito 1 mayuscula 1 minuscula y 1 caracter especial", Toast.LENGTH_LONG).show()
+        }
     }
     private fun goToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
