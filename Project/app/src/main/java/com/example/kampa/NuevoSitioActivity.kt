@@ -190,7 +190,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
         )
 
         gMap?.setOnMapClickListener(GoogleMap.OnMapClickListener {
-            val i = Intent(this, NewLocationActivity::class.java)
+            val i = Intent(this, NuevaUbicacion::class.java)
             i.putExtra("currentLocation", currentLocation)
             startForResultLocation.launch(i)
         })

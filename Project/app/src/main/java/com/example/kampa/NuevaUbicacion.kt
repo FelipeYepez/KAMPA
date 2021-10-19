@@ -22,57 +22,67 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import org.jetbrains.annotations.NotNull
 import java.util.*
 
+/**
+ * @author RECON
+ * Nueva Ubicacion
+ *
+ * Esta actividad se encarga de abrir una nueva ventana para que el usuario pueda escoger la ubicación
+ * del sitio que esta editando o creando
+ *
+ * @return  returns an extra which contains  the selected latitude an longitude
+ */
+class NuevaUbicacion : AppCompatActivity(), OnMapReadyCallback {
 
-class NewLocationActivity : AppCompatActivity(), OnMapReadyCallback {
-    // Components
     private var map: GoogleMap? = null
     private var mapView: MapView? = null
     private var currentLocation: Location? = null
     var btnSave: Button? = null
     val TAG:String = "NewLocationActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_location)
         Log.d(TAG, "onCreate: entered onCreate")
 
 
-        // Finding view components
+        //Declarar varables de los componentes de la vista
         btnSave = findViewById(R.id.btnSave)
         mapView = findViewById(R.id.mapNewLocation)
         currentLocation = intent.getParcelableExtra("currentLocation")
         Log.d(TAG, "currentLocation: $currentLocation")
+
+        //Inicializar el fragmento del Mapa
         if (mapView != null) {
             mapView!!.onCreate(null)
             mapView!!.onResume()
             mapView!!.getMapAsync(this)
         }
-
+        //Regresar la latitud y longitud en un extra al hacer click en guardar
         btnSave!!.setOnClickListener {
-                // Prepare data intent
+                // Preparar intent con la información
                 val i = Intent()
-                // Pass relevant data back as a result
+                // Guardar la informacion de la latitud y longitud
                 val latLngLocation = map!!.cameraPosition.target
                 i.putExtra("latitude", latLngLocation.latitude)
                 i.putExtra("longitude", latLngLocation.longitude)
-                // Activity finished ok, return the data
-                setResult(RESULT_OK, i) // set result code and bundle data for response
-                finish() // closes the activity, pass data to parent
+
+                setResult(RESULT_OK, i)
+                finish()//regresa a la actividad anterior editar o crear sitio
         }
 
-        /*********************************
-         * Google Places API configuration
+        /**
+         * Configuración de Places para la barra de busqueda
          */
 
-        // Initialize the AutocompleteSupportFragment.
+        //Inicializar la barra de busqueda
         val autocompleteFragment: AutocompleteSupportFragment? =
             supportFragmentManager.findFragmentById(R.id.autocompleteNewLocation) as AutocompleteSupportFragment?
-
         if (!Places.isInitialized()) {
             Places.initialize(this, GOOGLE_MAPS_API_KEY)
         }
         val placesClient: PlacesClient = Places.createClient(this)
 
-        // Specify the types of place data to return.
+        //Declarar los atributos que tendra cada resultado de la busqueda
         autocompleteFragment?.setPlaceFields(
             Arrays.asList(
                 Place.Field.ID,
@@ -81,8 +91,14 @@ class NewLocationActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         )
 
-        // Set up a PlaceSelectionListener to handle the response.
+        // Crear un listener para cuando el usuario seleccione un lugar de los resultados de busqueda
         autocompleteFragment?.setOnPlaceSelectedListener(object : PlaceSelectionListener{
+            /**
+             * @author RECON
+             * Esta funcion centra la camara en el resultado de busqueda selecionado por el usuario
+             *
+             * @param place resultado de busqueda selecionado por el usuario
+             */
            override fun onPlaceSelected(place: Place) {
                 Log.i(
                     TAG,
@@ -99,7 +115,14 @@ class NewLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-
+    /**
+     * @author RECON
+     * Esta funcion inicializa el mapa
+     * Al crear un sitio pone como vista inicial la ubicacion actual de el usuario
+     * Al modificar un sitio pone como vista inicial la ultima ubicacion guardada de el siotio
+     * 
+     * @param googleMap  Mapa en el cual se observa la ubicacion selecionada indicada por un pin en el centro
+     */
     override fun onMapReady(@NotNull googleMap: GoogleMap) {
         Log.d(TAG, "Entered map")
         map = googleMap

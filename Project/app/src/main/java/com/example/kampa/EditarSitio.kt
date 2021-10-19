@@ -242,7 +242,7 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         )
 
         locationMap.setOnMapClickListener(GoogleMap.OnMapClickListener {
-            val newLocation = Intent(this, NewLocationActivity::class.java)
+            val newLocation = Intent(this, NuevaUbicacion::class.java)
             newLocation.putExtra(Constantes.CURRENT_LOCATION, sitioUbicacion)
             setLocationForResult.launch(newLocation)
         })
