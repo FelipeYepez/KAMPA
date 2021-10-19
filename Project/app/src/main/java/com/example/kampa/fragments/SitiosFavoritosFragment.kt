@@ -77,11 +77,11 @@ class SitiosFavoritosFragment : Fragment(), SitioInterface {
         query.findInBackground { objects: MutableList<WishlistSitio>?, e: ParseException? ->
             if (e == null) {
                 if (objects != null) {
-                    for (objeto in objects) {
-                        if (objeto.idSitio?.objectId == null) {
-                            objects.remove(objeto)
-                        }
-                    }
+//                    for (objeto in objects) {
+//                        if (objeto.idSitio?.objectId == null) {
+//                            objects.remove(objeto)
+//                        }
+//                    }
                     initializeList(objects)
                 }
             }
