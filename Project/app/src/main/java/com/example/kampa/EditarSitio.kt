@@ -144,7 +144,7 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
 
         btnCamara = findViewById(R.id.btnCamara)
         btnCamara.setOnClickListener {
-            setPhotoForResult.launch(Intent(this, UploadImageActivity::class.java))
+            setPhotoForResult.launch(Intent(this, TakePictureActivity::class.java))
         }
 
         rgCategoria = findViewById(R.id.rgCategoria)
