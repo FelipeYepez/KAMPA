@@ -94,7 +94,7 @@ class SitioActivity : AppCompatActivity() {
                             listFavs.add(obj.nombre.toString())
                         }
                         val arr : Array<String> = listFavs.toTypedArray()
-                        val builder = AlertDialog.Builder(this.context)
+                        val builder = AlertDialog.Builder(this)
                             .setTitle(R.string.Lista_favoritos)
                             .setItems(arr){dialog, which ->
                                 val nWishlistSitio : WishlistSitio = WishlistSitio()
@@ -103,9 +103,9 @@ class SitioActivity : AppCompatActivity() {
                                 nWishlistSitio.saveInBackground { e ->
                                     // Si se pudo guardar
                                     if (e == null) {
-                                        Toast.makeText(this.context, R.string.Lista_favoritos_exito, Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this, R.string.Lista_favoritos_exito, Toast.LENGTH_SHORT).show()
                                     } else {
-                                        Toast.makeText(this.context, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this, R.string.error_conexion, Toast.LENGTH_SHORT).show()
                                         dialog.cancel()
                                     }
                                 }
@@ -113,10 +113,10 @@ class SitioActivity : AppCompatActivity() {
                             .setPositiveButton(R.string.crear_lista,
                                 DialogInterface.OnClickListener { dialog, id ->
                                     val myDialogView = LayoutInflater
-                                        .from(this.context)
+                                        .from(this)
                                         .inflate(R.layout.crear_lista_favoritos_dialogo, null)
 
-                                    val builder2 = AlertDialog.Builder(this.context)
+                                    val builder2 = AlertDialog.Builder(this)
                                         .setView(myDialogView)
                                         .setTitle(R.string.nueva_lista_favoritos)
                                         .setPositiveButton(R.string.crear,
@@ -135,19 +135,19 @@ class SitioActivity : AppCompatActivity() {
                                                             nWishlistSitio.idSitio = sitio
                                                             nWishlistSitio.saveInBackground { e ->
                                                                 if (e == null) {
-                                                                    Toast.makeText(this.context, R.string.Lista_favoritos_exito, Toast.LENGTH_SHORT).show()
+                                                                    Toast.makeText(this, R.string.Lista_favoritos_exito, Toast.LENGTH_SHORT).show()
                                                                 } else {
-                                                                    Toast.makeText(this.context, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                                                    Toast.makeText(this, R.string.error_conexion, Toast.LENGTH_SHORT).show()
                                                                     dialog.cancel()
                                                                 }
                                                             }
                                                         } else {
-                                                            Toast.makeText(this.context, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                                            Toast.makeText(this, R.string.error_conexion, Toast.LENGTH_SHORT).show()
                                                             dialog.cancel()
                                                         }
                                                     }
                                                 } else {
-                                                    Toast.makeText(this.context, R.string.nombre_vacio, Toast.LENGTH_SHORT).show()
+                                                    Toast.makeText(this, R.string.nombre_vacio, Toast.LENGTH_SHORT).show()
                                                 }
                                             })
                                         .setNegativeButton(R.string.cancelar,
@@ -166,7 +166,7 @@ class SitioActivity : AppCompatActivity() {
                 }
                 else{
                     if(e.code == 100){
-                        Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

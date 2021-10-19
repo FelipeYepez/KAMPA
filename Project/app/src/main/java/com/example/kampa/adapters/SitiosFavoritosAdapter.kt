@@ -67,6 +67,10 @@ class SitiosFavoritosAdapter(private val context: Context?,
         private var ibDirections: ImageButton = view.findViewById(R.id.ibDirections)
         private lateinit var mainActivity: MainActivity
 
+        init {
+            view.setOnClickListener(this)
+        }
+
         fun bind(item: WishlistSitio, context: Context) {
             tvSitioTitle.text = item.idSitio?.nombre
             tvSitioDescription.text = item.idSitio?.descripcion
