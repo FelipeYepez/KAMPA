@@ -20,12 +20,12 @@ import com.example.kampa.models.*
 import com.example.kampa.models.Wishlist
 import com.parse.*
 import com.yuyakaido.android.cardstackview.*
-import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
 import org.json.JSONObject
 import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 import android.graphics.Color
+import android.widget.EditText
 
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -488,7 +488,8 @@ class DescubreFragment : Fragment(), CardStackListener {
                                             .setTitle(R.string.nueva_lista_favoritos)
                                             .setPositiveButton(R.string.crear,
                                                 DialogInterface.OnClickListener { dialog, id ->
-                                                    val nuevoNombre = myDialogView.etNuevoNombre.text.toString()
+                                                    val etNuevoNombre = myDialogView.findViewById(R.id.etNuevoNombre) as EditText
+                                                    val nuevoNombre = etNuevoNombre.text.toString()
 
                                                     if (nuevoNombre.isNotEmpty()) {
                                                         val nuevaWishlist: Wishlist = Wishlist()

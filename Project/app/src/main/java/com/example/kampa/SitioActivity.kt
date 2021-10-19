@@ -19,7 +19,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.parse.*
-import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
 
 
 class SitioActivity : AppCompatActivity() {
@@ -171,7 +170,8 @@ class SitioActivity : AppCompatActivity() {
                                         .setTitle(R.string.nueva_lista_favoritos)
                                         .setPositiveButton(R.string.crear,
                                             DialogInterface.OnClickListener { dialog, id ->
-                                                val nuevoNombre = myDialogView.etNuevoNombre.text.toString()
+                                                val etNuevoNombre = myDialogView.findViewById(R.id.etNuevoNombre) as EditText
+                                                val nuevoNombre = etNuevoNombre.text.toString()
 
                                                 if (nuevoNombre.isNotEmpty()) {
                                                     val nuevaWishlist: Wishlist = Wishlist()
