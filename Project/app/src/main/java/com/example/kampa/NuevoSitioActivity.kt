@@ -30,6 +30,7 @@ import java.io.File
 import java.io.IOException
 
 /**
+ * @author RECON
  * Actividad que inicia cuando se selecciona el floating action button del mapa.
  * Crea un nuevo sitio en la base de datos.
  */
@@ -69,6 +70,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
         displayTipoSitio()
         imagenSitio = findViewById(R.id.imagenSitio)
 
+        //Obtiene permiso de ubicación de la actividad anterior
         permission = if (savedInstanceState == null) {
             val extras = intent.extras
             extras?.get("permission") as Boolean
@@ -76,6 +78,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
             savedInstanceState.getSerializable("permission") as Boolean
         }
 
+        //Obtiene la ubicación exacta del usuario
         currentLocation = if (savedInstanceState == null) {
             val extras = intent.extras
             extras?.get("currentLocation") as Location
@@ -83,6 +86,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
             savedInstanceState.getSerializable("currentLocation") as Location
         }
 
+        //Coloca la imagen seleccionada de un intent en el preview del nuevo sitio
         startForResultImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -92,14 +96,14 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
                 if (intent?.data != null && "content".equals(intent!!.data?.getScheme())) {
                     selectedBitmapImage = bitmapFromUri(intent?.data)
                     imagenSitio!!.setImageBitmap(selectedBitmapImage)
-                }
-                else{
+                } else{
                     selectedUriImage = intent?.data
                     imagenSitio!!.setImageURI(selectedUriImage)
                 }
             }
         }
 
+        //Guarda la ubicación exacta del usuario en currentLocation
         startForResultLocation = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -112,11 +116,13 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
             }
         }
 
+        //Para que al hacer click en el botón capturarImagen se redirija a la actividad TakePicture
         val capturarImagenButton: Button = findViewById(R.id.capturarImagenButton)
         capturarImagenButton.setOnClickListener{
-            startForResultImage.launch(Intent(this, UploadImageActivity::class.java))
+            startForResultImage.launch(Intent(this, TakePictureActivity::class.java))
         }
 
+        //Al hacer click en galeríaImagen se redirije a la galería del usuario
         val galeriaImagenButton: Button = findViewById(R.id.galeriaImagenButton)
         galeriaImagenButton.setOnClickListener{
             val i = Intent()
@@ -125,6 +131,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
             startForResultImage.launch(Intent.createChooser(i, "Select Picture"))
         }
 
+        //Al hacer click en submit se obtiene el texto de cada campo y se guarda en la base de datos
         val submitButtonSitio:Button = findViewById(R.id.submitButtonSitio)
         submitButtonSitio.setOnClickListener{
             inputNombre = findViewById(R.id.inputNombre)
@@ -181,6 +188,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
         gMap = googleMap
         gMap?.setMyLocationEnabled(permission!!)
 
+        //Mover la camara a la localización seleccionada por el usuario y la ubicación del usuario
        val latLng = LatLng(currentLocation!!.getLatitude(), currentLocation!!.getLongitude())
         gMap?.moveCamera(
             CameraUpdateFactory.newLatLngZoom(
@@ -189,6 +197,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
             )
         )
 
+        //Al seleccionar el mapa comienza el fragmento nueva ubicación
         gMap?.setOnMapClickListener(GoogleMap.OnMapClickListener {
             val i = Intent(this, NuevaUbicacion::class.java)
             i.putExtra("currentLocation", currentLocation)
@@ -200,6 +209,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
      * Guarda el nuevo sitio en la base de datos
      */
     private fun saveNuevoSitio(){
+        //Se guardan los valores de entrada en el objeto del nuevo sitio
         nuevoSitio.nombre = inputNombre?.text.toString()
         nuevoSitio.descripcion = inputDescripcion?.text.toString()
         nuevoSitio.historia = inputHistoria?.text.toString()
@@ -219,7 +229,10 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
             nuevoSitio.idTipoSitio = listTipoSitio[idCheckedButton!!]
         }
 
-        if(nuevoSitio.nombre!!.length > 0 || nuevoSitio.descripcion!!.length > 0 || idCheckedButton != -1){
+        //Se checa si los inputs son válidos
+        var isInputComplete = NuevoSitioUtils.validateInputs(nuevoSitio.nombre!!, nuevoSitio.descripcion!!, nuevoSitio.ubicacion!!, idCheckedButton!!)
+
+        if(isInputComplete == "complete values") {
             nuevoSitio.saveInBackground { e ->
                 if (e == null) {
                     Log.d(TAG, "saved")
@@ -228,8 +241,8 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
                 }
             }
             finish()
-        } else{
-            Toast.makeText(this, "Llena todos los campos obligatorios", Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(this, isInputComplete, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -254,5 +267,29 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
             e.printStackTrace()
         }
         return image
+    }
+}
+
+object NuevoSitioUtils{
+    /**
+     * Valida que los campos obligatorios para registrar un nuevo sitio hayan sido seleccionados.
+     * @param nombre nombre del sitio
+     * @param descripcion descripción del sitio
+     * @param idCheckedButton tipo de sitio seleccionado
+     */
+    fun validateInputs(nombre:String, descripcion:String, ubicacion:ParseGeoPoint, idCheckedButton:Int):String{
+        if(nombre.length == 0){
+            return "Escribe el nombre del sitio"
+        }
+        else if(descripcion.length == 0){
+            return "Escribe la descripción del sitio"
+        }
+        else if(ubicacion.latitude == 0.0 && ubicacion.longitude == 0.0){
+            return "Elige la ubicación del sitio"
+        }
+        else if(idCheckedButton == -1){
+            return "Selecciona una categoría"
+        }
+        return "complete values"
     }
 }

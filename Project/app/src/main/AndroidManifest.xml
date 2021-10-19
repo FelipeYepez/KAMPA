@@ -41,7 +41,7 @@
             android:name=".RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".UploadImageActivity"
+            android:name=".TakePictureActivity"
             android:exported="true" />
         <activity
             android:name=".SitioActivity"

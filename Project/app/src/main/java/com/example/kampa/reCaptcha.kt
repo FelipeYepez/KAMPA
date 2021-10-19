@@ -1,16 +1,12 @@
 package com.example.kampa
 
-import android.app.Activity
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.Response
@@ -22,15 +18,24 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.safetynet.SafetyNet
 import org.json.JSONObject
-import java.lang.Exception
-import java.util.HashMap
+import java.util.*
 
-
+/**
+ * @author RECON
+ * Actividad para validar que la persona intentando iniciar sesión no es un robot
+ * @return Boolean indicando si la verificación ha sido exitosa o no
+ */
 class reCaptcha : AppCompatActivity(), View.OnClickListener {
     val RESULT_OK:Int = -1
     var TAG = "reCaptcha"
     var btnverifyCaptcha: Button? = null
     var queue: RequestQueue? = null
+
+    /**
+     * Inicializa la actividad
+     * Coloca un clickListener en el captcha
+     * @param savedInstanceState para que la actividad pueda restaurarse a un estado anterior
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_re_captcha)
@@ -39,6 +44,11 @@ class reCaptcha : AppCompatActivity(), View.OnClickListener {
         queue = Volley.newRequestQueue(applicationContext)
     }
 
+    /**
+     * ClickListener para el captcha
+     * Se utiliza la API SafetyNet para ejecutar el captcha
+     * @param view vista en la que se coloca el captcha
+     */
     override fun onClick(view: View) {
         SafetyNet.getClient(this).verifyWithRecaptcha(SITE_KEY)
             .addOnSuccessListener(
@@ -60,9 +70,13 @@ class reCaptcha : AppCompatActivity(), View.OnClickListener {
             }
     }
 
+    /**
+     * Manejo del resultado del captcha
+     * Se termina la actividad y se regresa un extra con valor true si el captcha fue exitoso
+     * @param responseToken respuesta del captcha
+     */
     protected fun handleSiteVerify(responseToken: String) {
-        //it is google recaptcha siteverify server
-        //you can place your server url
+        //Sitio de google para verificar recaptcha
         val url = "https://www.google.com/recaptcha/api/siteverify"
         val request: StringRequest = object : StringRequest(
             Method.POST, url,

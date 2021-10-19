@@ -32,6 +32,7 @@ private const val TAG = "MapaFragment"
 private const val ZOOM : Float = 15F
 
 /**
+ * @author RECON
  * Fragmento que contiene el mapa principal de la aplicación
  */
 class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
