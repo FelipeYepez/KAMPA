@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/iconoDescubre"
-        android:icon="@drawable/ic_action_favorite_border"
-        android:title="Descubre" />
+        android:icon="@drawable/icono_descubre"
+        android:title="Descubre"
+        app:iconTint="@color/rosa"/>
 
     <item
         android:id="@+id/iconoMapa"
-        android:icon="@drawable/ic_action_map"
-        android:title="Mapa"/>
+        android:icon="@drawable/icono_mapa"
+        android:title="Mapa"
+        app:iconTint="@color/azul"/>
 
     <item
         android:id="@+id/iconoFavoritos"
-        android:icon="@drawable/ic_action_star_border"
-        android:title="Favoritos"/>
+        android:icon="@drawable/icono_favoritos"
+        android:title="Favoritos"
+        app:iconTint="@color/amarillo"/>
 
 </menu>

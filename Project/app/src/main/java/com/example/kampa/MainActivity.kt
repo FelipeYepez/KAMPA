@@ -1,8 +1,10 @@
 package com.example.kampa
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     val TAG : String = "MainActivity"
 
 
+    @SuppressLint("ResourceType")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +69,6 @@ class MainActivity : AppCompatActivity() {
         }
         else {
             setContentView(R.layout.activity_main)
-
             val navView: BottomNavigationView = findViewById(R.id.menuNav)
             //Pide permiso para el mapa
             checkMyPermission()
