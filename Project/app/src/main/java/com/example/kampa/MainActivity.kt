@@ -22,7 +22,12 @@ import com.parse.ParseQuery
 import com.parse.ParseUser
 
 
-
+/**
+ * @author RECON
+ *
+ * Esta actividad se encarga de controlar la navegacion principal de el usuario dependiendo de su rol
+ * En base a su rol cambia tdoa la barra de navegacion y los fragmentos conectados a esta
+ */
 class MainActivity : AppCompatActivity() {
 
     // Variables para navegación en el Menú
@@ -53,9 +58,9 @@ class MainActivity : AppCompatActivity() {
 
             menuNav.setOnItemSelectedListener {
                 when(it.itemId){
-                    R.id.iconoAprobar -> replaceFragment(aprobarFragment)
-                    R.id.iconoMapa -> replaceFragment(mapaFragment)
-                    R.id.iconoDenuncias -> replaceFragment(denunciasFragment)
+                    R.id.iconoAprobar -> replaceFragment(aprobarFragment)//colocar fragmento Aprobar en la primera posicion
+                    R.id.iconoMapa -> replaceFragment(mapaFragment)//colocar fragmento Mapa en la segunda posicion
+                    R.id.iconoDenuncias -> replaceFragment(denunciasFragment)//colocar fragmento Denuncias en la tercera posicion
                 }
                 true
             }
@@ -91,15 +96,22 @@ class MainActivity : AppCompatActivity() {
 
             menuNav.setOnItemSelectedListener {
                 when (it.itemId) {
-                    R.id.iconoDescubre -> replaceFragment(descubreFragment)
-                    R.id.iconoMapa -> replaceFragment(mapaFragment)
-                    R.id.iconoFavoritos -> replaceFragment(favoritosFragment)
+                    R.id.iconoDescubre -> replaceFragment(descubreFragment)//colocar fragmento Descubre en la primera posicion
+                    R.id.iconoMapa -> replaceFragment(mapaFragment)//colocar fragmento Mapa en la segunda posicion
+                    R.id.iconoFavoritos -> replaceFragment(favoritosFragment)//colocar fragmento Favoritos en la tercera posicion
                 }
                 true
             }
         }
     }
-    //funcion para obtener el rol de el usuario actual
+    /**
+     * @author RECON
+     *
+     * Funcion para obtener el rol de el usuario actual
+     *
+     * @param id identificador unico del usuario actual para poder consultar su rol
+     */
+
     private fun roleQuery(id:String){
         val query = ParseQuery<Rol>("Rol")
         try {
@@ -109,7 +121,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Función para intercambiar entre fragmentos en actividad
+    /**
+     * @author RECON
+     *
+     * Función para intercambiar entre fragmentos en actividad
+     *
+     * @param fragment Fragmeto a colocar en la pantalla
+     */
     private fun replaceFragment(fragment: Fragment){
         if(fragment != null){
             val transaction = supportFragmentManager.beginTransaction()
@@ -119,16 +137,25 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+    /**
+     * @author RECON
+     *
+     * Esta funcion se encarga de pedir el permiso de ubicacion nesesario para poder abrir el mapa
+     *
+     * guarda la seleccion de el usuario en la variable isPermissionGranted
+     * que es accedida en todos los mapas de la aplicacion
+     *
+     *
+     */
     private fun checkMyPermission() {
         Dexter.withContext(this).withPermission(android.Manifest.permission.ACCESS_FINE_LOCATION).withListener(object :
             PermissionListener {
             override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-//                Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
                 isPermissionGranted = true
             }
 
             override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
-//                Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+
                 isPermissionGranted = false
             }
 
