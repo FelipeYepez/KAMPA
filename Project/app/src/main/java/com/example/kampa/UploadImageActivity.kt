@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService
 
 typealias LumaListener = (luma: Double) -> Unit
 
+//hola
 class UploadImageActivity : AppCompatActivity() {
 
     var imageCapture: ImageCapture? = null
