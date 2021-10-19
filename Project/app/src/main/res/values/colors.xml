@@ -12,5 +12,8 @@
     <color name="colorPrimary">#382BEE</color>
     <color name="colorPrimaryDark">#0641B7</color>
     <color name="colorAccent">#80FFC4</color>
+    <color name="amarilloEsenciaPatrimonio">#ECB518</color>
+    <color name="error">#EF1717</color>
+    <color name="exito">#249A08</color>
     <color name="transparent" />
 </resources>

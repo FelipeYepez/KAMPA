@@ -65,7 +65,6 @@ class SitiosFavoritosAdapter(private val context: Context?,
         private var tvSitioTitle: TextView = view.findViewById(R.id.tvSitioTitle)
         private var tvSitioDescription: TextView = view.findViewById(R.id.tvSitioDescription)
         private var ibDirections: ImageButton = view.findViewById(R.id.ibDirections)
-        private lateinit var mainActivity: MainActivity
 
         init {
             view.setOnClickListener(this)
@@ -95,8 +94,6 @@ class SitiosFavoritosAdapter(private val context: Context?,
             val sitio = data[position]
             val context = v?.context
             val i = Intent(context, SitioActivity::class.java)
-            i.putExtra("permission", mainActivity.isPermissionGranted)
-            i.putExtra("currentLocation", sitio.idSitio?.ubicacion)
             i.putExtra("sitio", sitio.idSitio)
             context?.startActivity(i)
         }

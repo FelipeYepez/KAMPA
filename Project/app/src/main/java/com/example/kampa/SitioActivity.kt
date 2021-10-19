@@ -12,8 +12,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.example.kampa.models.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.parse.*
 import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
 
@@ -97,18 +99,46 @@ class SitioActivity : AppCompatActivity() {
                         val builder = AlertDialog.Builder(this)
                             .setTitle(R.string.Lista_favoritos)
                             .setItems(arr){dialog, which ->
-                                val nWishlistSitio : WishlistSitio = WishlistSitio()
-                                nWishlistSitio.idWishlist = objects[which]
-                                nWishlistSitio.idSitio = sitio
-                                nWishlistSitio.saveInBackground { e ->
-                                    // Si se pudo guardar
-                                    if (e == null) {
-                                        Toast.makeText(this, R.string.Lista_favoritos_exito, Toast.LENGTH_SHORT).show()
-                                    } else {
-                                        Toast.makeText(this, R.string.error_conexion, Toast.LENGTH_SHORT).show()
-                                        dialog.cancel()
+
+                                val queryExisteEnWishlist: ParseQuery<WishlistSitio> = ParseQuery.getQuery(WishlistSitio::class.java)
+                                queryExisteEnWishlist.whereEqualTo(Constantes.ID_SITIO, sitio)
+                                queryExisteEnWishlist.whereEqualTo(Constantes.ID_WISHLIST, objects[which])
+                                queryExisteEnWishlist.getFirstInBackground(GetCallback { wishListSitio: WishlistSitio?, e ->
+                                    if(e != null){
+                                        // Si aun no existe Sitio en Wishlist crearlo
+                                        if(e.code == 101){
+                                            val nWishlistSitio : WishlistSitio = WishlistSitio()
+                                            nWishlistSitio.idWishlist = objects[which]
+                                            nWishlistSitio.idSitio = sitio
+                                            nWishlistSitio.saveInBackground { e ->
+                                                // Si se pudo guardar
+                                                if (e == null) {
+                                                    val snack = Snackbar.make(it, R.string.Lista_favoritos_exito, Snackbar.LENGTH_SHORT)
+                                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.white))
+                                                    snack.setTextColor(ContextCompat.getColor(this, R.color.exito))
+                                                    snack.show()
+                                                } else {
+                                                    val snack = Snackbar.make(it, R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                                                    snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                                    snack.show()
+                                                }
+                                            }
+                                        }
+                                        else{
+                                            val snack = Snackbar.make(it, R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                            snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                                            snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                            snack.show()
+                                        }
                                     }
-                                }
+                                    else{
+                                        val snack = Snackbar.make(it, "Ya existe ${sitio.nombre} en ${objects[which].nombre}", Snackbar.LENGTH_LONG)
+                                        snack.setBackgroundTint(ContextCompat.getColor(this, R.color.amarilloEsenciaPatrimonio))
+                                        snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                        snack.show()
+                                    }
+                                })
                             }
                             .setPositiveButton(R.string.crear_lista,
                                 DialogInterface.OnClickListener { dialog, id ->
@@ -135,19 +165,31 @@ class SitioActivity : AppCompatActivity() {
                                                             nWishlistSitio.idSitio = sitio
                                                             nWishlistSitio.saveInBackground { e ->
                                                                 if (e == null) {
-                                                                    Toast.makeText(this, R.string.Lista_favoritos_exito, Toast.LENGTH_SHORT).show()
+                                                                    val snack = Snackbar.make(it, R.string.Lista_favoritos_exito, Snackbar.LENGTH_SHORT)
+                                                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.white))
+                                                                    snack.setTextColor(ContextCompat.getColor(this, R.color.exito))
+                                                                    snack.show()
                                                                 } else {
-                                                                    Toast.makeText(this, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                                                    val snack = Snackbar.make(it, R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                                                                    snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                                                    snack.show()
                                                                     dialog.cancel()
                                                                 }
                                                             }
                                                         } else {
-                                                            Toast.makeText(this, R.string.error_conexion, Toast.LENGTH_SHORT).show()
+                                                            val snack = Snackbar.make(it, R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                                            snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                                                            snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                                            snack.show()
                                                             dialog.cancel()
                                                         }
                                                     }
                                                 } else {
-                                                    Toast.makeText(this, R.string.nombre_vacio, Toast.LENGTH_SHORT).show()
+                                                    val snack = Snackbar.make(it, R.string.nombre_vacio, Snackbar.LENGTH_LONG)
+                                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.amarilloEsenciaPatrimonio))
+                                                    snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                                    snack.show()
                                                 }
                                             })
                                         .setNegativeButton(R.string.cancelar,
@@ -166,7 +208,10 @@ class SitioActivity : AppCompatActivity() {
                 }
                 else{
                     if(e.code == 100){
-                        Toast.makeText(this, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
+                        val snack = Snackbar.make(it, R.string.error_conexion, Snackbar.LENGTH_LONG)
+                        snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                        snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                        snack.show()
                     }
                 }
             }
