@@ -27,8 +27,8 @@ class SitioActivity : AppCompatActivity() {
     private lateinit var ibEliminarSitio: ImageButton
     private lateinit var ibEditarSitio: ImageButton
     private lateinit var registrarDenuncia: Button
-    private lateinit var ListaDeseos: Button
-    private lateinit var registrarVisitado: Button
+    private lateinit var btnListaDeseos: Button
+    private lateinit var btnRegistrarVisitado: Button
 
 
     private var rolObject: Rol? = null
@@ -91,150 +91,19 @@ class SitioActivity : AppCompatActivity() {
             intent.putExtra("sitio", sitio)
             startActivity(intent)
         }
-        ListaDeseos = findViewById(R.id.addWishListBtn)
-        ListaDeseos.setOnClickListener{
-            val query1: ParseQuery<Wishlist> = ParseQuery.getQuery(Wishlist::class.java)
 
         /*
          * On click Listener para el botón de registrar visitado
          */
-        registrarVisitado = findViewById(R.id.VisitedBtn)
+        btnRegistrarVisitado = findViewById(R.id.VisitedBtn)
         verificarSitioVisitado()
-        registrarVisitado.setOnClickListener{
+        btnRegistrarVisitado.setOnClickListener{
             cambiarVisitado()
         }
 
-            query1.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
-            query1.whereEqualTo(Constantes.IS_DELETED, false)
-            query1.orderByDescending(Constantes.CREATED_AT)
-            query1.findInBackground { objects: MutableList<Wishlist>?, e: ParseException? ->
-                if (e == null) {
-                    if (objects != null) {
-                        val listFavs : MutableList<String> = mutableListOf()
-                        for(obj in objects){
-                            listFavs.add(obj.nombre.toString())
-                        }
-                        val arr : Array<String> = listFavs.toTypedArray()
-                        val builder = AlertDialog.Builder(this)
-                            .setTitle(R.string.Lista_favoritos)
-                            .setItems(arr){dialog, which ->
-
-                                val queryExisteEnWishlist: ParseQuery<WishlistSitio> = ParseQuery.getQuery(WishlistSitio::class.java)
-                                queryExisteEnWishlist.whereEqualTo(Constantes.ID_SITIO, sitio)
-                                queryExisteEnWishlist.whereEqualTo(Constantes.ID_WISHLIST, objects[which])
-                                queryExisteEnWishlist.getFirstInBackground(GetCallback { wishListSitio: WishlistSitio?, e ->
-                                    if(e != null){
-                                        // Si aun no existe Sitio en Wishlist crearlo
-                                        if(e.code == 101){
-                                            val nWishlistSitio : WishlistSitio = WishlistSitio()
-                                            nWishlistSitio.idWishlist = objects[which]
-                                            nWishlistSitio.idSitio = sitio
-                                            nWishlistSitio.saveInBackground { e ->
-                                                // Si se pudo guardar
-                                                if (e == null) {
-                                                    val snack = Snackbar.make(it, R.string.Lista_favoritos_exito, Snackbar.LENGTH_SHORT)
-                                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.white))
-                                                    snack.setTextColor(ContextCompat.getColor(this, R.color.exito))
-                                                    snack.show()
-                                                } else {
-                                                    val snack = Snackbar.make(it, R.string.error_conexion, Snackbar.LENGTH_LONG)
-                                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
-                                                    snack.setTextColor(ContextCompat.getColor(this, R.color.white))
-                                                    snack.show()
-                                                }
-                                            }
-                                        }
-                                        else{
-                                            val snack = Snackbar.make(it, R.string.error_conexion, Snackbar.LENGTH_LONG)
-                                            snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
-                                            snack.setTextColor(ContextCompat.getColor(this, R.color.white))
-                                            snack.show()
-                                        }
-                                    }
-                                    else{
-                                        val snack = Snackbar.make(it, "Ya existe ${sitio.nombre} en ${objects[which].nombre}", Snackbar.LENGTH_LONG)
-                                        snack.setBackgroundTint(ContextCompat.getColor(this, R.color.amarilloEsenciaPatrimonio))
-                                        snack.setTextColor(ContextCompat.getColor(this, R.color.white))
-                                        snack.show()
-                                    }
-                                })
-                            }
-                            .setPositiveButton(R.string.crear_lista,
-                                DialogInterface.OnClickListener { dialog, id ->
-                                    val myDialogView = LayoutInflater
-                                        .from(this)
-                                        .inflate(R.layout.crear_lista_favoritos_dialogo, null)
-
-                                    val builder2 = AlertDialog.Builder(this)
-                                        .setView(myDialogView)
-                                        .setTitle(R.string.nueva_lista_favoritos)
-                                        .setPositiveButton(R.string.crear,
-                                            DialogInterface.OnClickListener { dialog, id ->
-                                                val etNuevoNombre = myDialogView.findViewById(R.id.etNuevoNombre) as EditText
-                                                val nuevoNombre = etNuevoNombre.text.toString()
-
-                                                if (nuevoNombre.isNotEmpty()) {
-                                                    val nuevaWishlist: Wishlist = Wishlist()
-                                                    nuevaWishlist.nombre = nuevoNombre
-                                                    nuevaWishlist.idUsuario = ParseUser.getCurrentUser()
-
-                                                    nuevaWishlist.saveInBackground { e ->
-                                                        if (e == null) {
-                                                            val nWishlistSitio : WishlistSitio = WishlistSitio()
-                                                            nWishlistSitio.idWishlist = nuevaWishlist
-                                                            nWishlistSitio.idSitio = sitio
-                                                            nWishlistSitio.saveInBackground { e ->
-                                                                if (e == null) {
-                                                                    val snack = Snackbar.make(it, R.string.Lista_favoritos_exito, Snackbar.LENGTH_SHORT)
-                                                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.white))
-                                                                    snack.setTextColor(ContextCompat.getColor(this, R.color.exito))
-                                                                    snack.show()
-                                                                } else {
-                                                                    val snack = Snackbar.make(it, R.string.error_conexion, Snackbar.LENGTH_LONG)
-                                                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
-                                                                    snack.setTextColor(ContextCompat.getColor(this, R.color.white))
-                                                                    snack.show()
-                                                                    dialog.cancel()
-                                                                }
-                                                            }
-                                                        } else {
-                                                            val snack = Snackbar.make(it, R.string.error_conexion, Snackbar.LENGTH_LONG)
-                                                            snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
-                                                            snack.setTextColor(ContextCompat.getColor(this, R.color.white))
-                                                            snack.show()
-                                                            dialog.cancel()
-                                                        }
-                                                    }
-                                                } else {
-                                                    val snack = Snackbar.make(it, R.string.nombre_vacio, Snackbar.LENGTH_LONG)
-                                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.amarilloEsenciaPatrimonio))
-                                                    snack.setTextColor(ContextCompat.getColor(this, R.color.white))
-                                                    snack.show()
-                                                }
-                                            })
-                                        .setNegativeButton(R.string.cancelar,
-                                            DialogInterface.OnClickListener { dialog, id ->
-                                                dialog.cancel()
-                                            })
-
-                                    builder2.show()
-                                })
-                            .setNegativeButton(R.string.cancelar,
-                                DialogInterface.OnClickListener { dialog, id ->
-                                    dialog.cancel()
-                                })
-                        builder.show()
-                    }
-                }
-                else{
-                    if(e.code == 100){
-                        val snack = Snackbar.make(it, R.string.error_conexion, Snackbar.LENGTH_LONG)
-                        snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
-                        snack.setTextColor(ContextCompat.getColor(this, R.color.white))
-                        snack.show()
-                    }
-                }
-            }
+        btnListaDeseos = findViewById(R.id.addWishListBtn)
+        btnListaDeseos.setOnClickListener{
+            guardarSitioEnWishlist()
         }
 
 
@@ -270,6 +139,191 @@ class SitioActivity : AppCompatActivity() {
 
         val foto : ImageView = findViewById(R.id.foto)
         loadImages(sitio.foto, foto)
+
+    }
+
+
+
+
+
+
+
+    private fun actualizarConWishlist(){
+
+        // Parse Query para guardar Sitio en WishList de Usuario
+        val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
+        query.whereEqualTo(Constantes.ID_SITIO, sitio)
+        query.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+
+        // Parse Query para obtener primer registro de Parse
+        query.getFirstInBackground(GetCallback { usuarioSitio: UsuarioSitio?, e ->
+            // Si registro ya existe
+            if (e == null && usuarioSitio != null) {
+                // Si Sitio de Publicación ya existe en Wishlist
+                if(usuarioSitio.isWishlist == true){
+                    return@GetCallback
+                }
+                // Sitio no existe en Wishlist, se lo asigna a Wishlist
+                else{
+                    usuarioSitio.put(Constantes.IS_WISHLIST, true)
+                    usuarioSitio.saveInBackground()
+                }
+            }
+            else {
+                // No se obtuvo resultado de GetCallBack, crear registro
+                if (e.code == 101) {
+                    val usuarioSitioNuevo = UsuarioSitio()
+                    usuarioSitioNuevo.idSitio = sitio
+                    usuarioSitioNuevo.idUsuario = ParseUser.getCurrentUser()
+                    usuarioSitioNuevo.isWishlist = true
+                    usuarioSitioNuevo.isVisitado = false
+                    usuarioSitioNuevo.saveInBackground()
+                } else {
+                    val snack = Snackbar.make(findViewById(android.R.id.content), R.string.error_conexion, Snackbar.LENGTH_LONG)
+                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                    snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                    snack.show()
+                    return@GetCallback
+                }
+            }
+        })
+    }
+
+    private fun guardarSitioEnWishlist(){
+        val query1: ParseQuery<Wishlist> = ParseQuery.getQuery(Wishlist::class.java)
+        query1.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+        query1.whereEqualTo(Constantes.IS_DELETED, false)
+        query1.orderByDescending(Constantes.CREATED_AT)
+        query1.findInBackground { objects: MutableList<Wishlist>?, e: ParseException? ->
+            if (e == null) {
+                if (objects != null) {
+                    val listFavs : MutableList<String> = mutableListOf()
+                    for(obj in objects){
+                        listFavs.add(obj.nombre.toString())
+                    }
+                    val arr : Array<String> = listFavs.toTypedArray()
+                    val builder = AlertDialog.Builder(this)
+                        .setTitle(R.string.Lista_favoritos)
+                        .setItems(arr){dialog, which ->
+
+                            val queryExisteEnWishlist: ParseQuery<WishlistSitio> = ParseQuery.getQuery(WishlistSitio::class.java)
+                            queryExisteEnWishlist.whereEqualTo(Constantes.ID_SITIO, sitio)
+                            queryExisteEnWishlist.whereEqualTo(Constantes.ID_WISHLIST, objects[which])
+                            queryExisteEnWishlist.getFirstInBackground(GetCallback { wishListSitio: WishlistSitio?, e ->
+                                if(e != null){
+                                    // Si aun no existe Sitio en Wishlist crearlo
+                                    if(e.code == 101){
+                                        val nWishlistSitio : WishlistSitio = WishlistSitio()
+                                        nWishlistSitio.idWishlist = objects[which]
+                                        nWishlistSitio.idSitio = sitio
+                                        nWishlistSitio.saveInBackground { e ->
+                                            // Si se pudo guardar
+                                            if (e == null) {
+                                                actualizarConWishlist()
+                                                val snack = Snackbar.make(findViewById(android.R.id.content), R.string.Lista_favoritos_exito, Snackbar.LENGTH_SHORT)
+                                                snack.setBackgroundTint(ContextCompat.getColor(this, R.color.white))
+                                                snack.setTextColor(ContextCompat.getColor(this, R.color.exito))
+                                                snack.show()
+                                            } else {
+                                                val snack = Snackbar.make(findViewById(android.R.id.content), R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                                snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                                                snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                                snack.show()
+                                            }
+                                        }
+                                    }
+                                    else{
+                                        val snack = Snackbar.make(findViewById(android.R.id.content), R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                        snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                                        snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                        snack.show()
+                                    }
+                                }
+                                else{
+                                    val snack = Snackbar.make(findViewById(android.R.id.content), "Ya existe ${sitio.nombre} en ${objects[which].nombre}", Snackbar.LENGTH_LONG)
+                                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.amarilloEsenciaPatrimonio))
+                                    snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                    snack.show()
+                                }
+                            })
+                        }
+                        .setPositiveButton(R.string.crear_lista,
+                            DialogInterface.OnClickListener { dialog, id ->
+                                val myDialogView = LayoutInflater
+                                    .from(this)
+                                    .inflate(R.layout.crear_lista_favoritos_dialogo, null)
+
+                                val builder2 = AlertDialog.Builder(this)
+                                    .setView(myDialogView)
+                                    .setTitle(R.string.nueva_lista_favoritos)
+                                    .setPositiveButton(R.string.crear,
+                                        DialogInterface.OnClickListener { dialog, id ->
+                                            val etNuevoNombre = myDialogView.findViewById(R.id.etNuevoNombre) as EditText
+                                            val nuevoNombre = etNuevoNombre.text.toString()
+
+                                            if (nuevoNombre.isNotEmpty()) {
+                                                val nuevaWishlist: Wishlist = Wishlist()
+                                                nuevaWishlist.nombre = nuevoNombre
+                                                nuevaWishlist.idUsuario = ParseUser.getCurrentUser()
+
+                                                nuevaWishlist.saveInBackground { e ->
+                                                    if (e == null) {
+                                                        val nWishlistSitio : WishlistSitio = WishlistSitio()
+                                                        nWishlistSitio.idWishlist = nuevaWishlist
+                                                        nWishlistSitio.idSitio = sitio
+                                                        nWishlistSitio.saveInBackground { e ->
+                                                            if (e == null) {
+                                                                actualizarConWishlist()
+                                                                val snack = Snackbar.make(findViewById(android.R.id.content), R.string.Lista_favoritos_exito, Snackbar.LENGTH_SHORT)
+                                                                snack.setBackgroundTint(ContextCompat.getColor(this, R.color.white))
+                                                                snack.setTextColor(ContextCompat.getColor(this, R.color.exito))
+                                                                snack.show()
+                                                            } else {
+                                                                val snack = Snackbar.make(findViewById(android.R.id.content), R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                                                snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                                                                snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                                                snack.show()
+                                                                dialog.cancel()
+                                                            }
+                                                        }
+                                                    } else {
+                                                        val snack = Snackbar.make(findViewById(android.R.id.content), R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                                        snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                                                        snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                                        snack.show()
+                                                        dialog.cancel()
+                                                    }
+                                                }
+                                            } else {
+                                                val snack = Snackbar.make(findViewById(android.R.id.content), R.string.nombre_vacio, Snackbar.LENGTH_LONG)
+                                                snack.setBackgroundTint(ContextCompat.getColor(this, R.color.amarilloEsenciaPatrimonio))
+                                                snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                                                snack.show()
+                                            }
+                                        })
+                                    .setNegativeButton(R.string.cancelar,
+                                        DialogInterface.OnClickListener { dialog, id ->
+                                            dialog.cancel()
+                                        })
+
+                                builder2.show()
+                            })
+                        .setNegativeButton(R.string.cancelar,
+                            DialogInterface.OnClickListener { dialog, id ->
+                                dialog.cancel()
+                            })
+                    builder.show()
+                }
+            }
+            else{
+                if(e.code == 100){
+                    val snack = Snackbar.make(findViewById(android.R.id.content), R.string.error_conexion, Snackbar.LENGTH_LONG)
+                    snack.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
+                    snack.setTextColor(ContextCompat.getColor(this, R.color.white))
+                    snack.show()
+                }
+            }
+        }
     }
 
     private fun rolQuery(id: String){
@@ -384,7 +438,7 @@ class SitioActivity : AppCompatActivity() {
                 }
                 else{
                     Toast.makeText(this, "Error al cargar datos", Toast.LENGTH_LONG).show()
-                    registrarVisitado.visibility = View.INVISIBLE
+                    btnRegistrarVisitado.visibility = View.INVISIBLE
                 }
             }
         })
@@ -392,15 +446,15 @@ class SitioActivity : AppCompatActivity() {
 
     private fun UIVisitado(visitado: Boolean){
         if(visitado){
-            registrarVisitado.setTextColor(ContextCompat.getColor(this,
+            btnRegistrarVisitado.setTextColor(ContextCompat.getColor(this,
                 R.color.white))
-            registrarVisitado.setBackgroundColor(ContextCompat.getColor(this,
+            btnRegistrarVisitado.setBackgroundColor(ContextCompat.getColor(this,
                 R.color.quantum_lightgreen900))
         }
         else{
-            registrarVisitado.setTextColor(ContextCompat.getColor(this,
+            btnRegistrarVisitado.setTextColor(ContextCompat.getColor(this,
                 R.color.black))
-            registrarVisitado.setBackgroundColor(ContextCompat.getColor(this,
+            btnRegistrarVisitado.setBackgroundColor(ContextCompat.getColor(this,
                 R.color.white))
         }
     }
