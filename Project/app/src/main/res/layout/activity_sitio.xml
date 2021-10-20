@@ -87,9 +87,9 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
                 android:weightSum="3">
 
                 <Button
@@ -99,14 +99,14 @@
                     android:layout_gravity="left"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="30dp"
+                    android:layout_weight="1"
                     android:drawableLeft="@drawable/icono_favoritos"
                     android:drawableTint="#ECB518"
                     android:gravity="center"
                     android:text="Deseos"
                     android:textColor="@color/black"
                     android:textSize="12dp"
-                    app:backgroundTint="@color/white"
-                    android:layout_weight="1"/>
+                    app:backgroundTint="@color/white" />
 
                 <Button
                     android:id="@+id/VisitedBtn"
@@ -115,13 +115,13 @@
                     android:layout_gravity="left"
                     android:layout_marginLeft="3dp"
                     android:layout_marginTop="30dp"
+                    android:layout_weight="1"
                     android:drawableLeft="@drawable/marker"
                     android:gravity="center"
                     android:text="Visitado"
                     android:textColor="@color/black"
                     android:textSize="12dp"
-                    app:backgroundTint="@color/white"
-                    android:layout_weight="1"/>
+                    app:backgroundTint="@color/white" />
 
                 <Button
                     android:id="@+id/DenunciarBtn"
@@ -130,13 +130,13 @@
                     android:layout_gravity="left"
                     android:layout_marginLeft="3dp"
                     android:layout_marginTop="30dp"
+                    android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_baseline_warning_24"
                     android:gravity="center"
                     android:text="Denunciar"
                     android:textColor="@color/black"
                     android:textSize="12dp"
-                    app:backgroundTint="@color/white"
-                    android:layout_weight="1"/>
+                    app:backgroundTint="@color/white" />
 
             </LinearLayout>
 
@@ -150,9 +150,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="45dp"
-                android:layout_marginTop="50dp"
                 android:layout_marginEnd="45dp"
-                android:layout_marginBottom="0dp"
                 android:textStyle="bold"
                 android:text="Descripción"
                 android:textSize="24dp"/>
@@ -164,10 +162,9 @@
                 android:layout_above="@+id/titleDescripcion"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="45dp"
-                android:layout_marginTop="25dp"
                 android:layout_marginEnd="45dp"
-                android:layout_marginBottom="0dp"
                 android:text="TextView"
                 android:textSize="16dp"/>
 
@@ -180,7 +177,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
                 android:textStyle="bold"
-                android:layout_marginTop="75dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
                 android:text="Historia"
@@ -194,7 +191,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="0dp"
                 android:text="TextView"
@@ -209,7 +206,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="45dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="50dp"
                 android:autoLink="web"
@@ -234,10 +231,8 @@
         android:layout_marginBottom="20dp"
         android:clickable="true"
         app:backgroundTint="#D93671"
-        app:borderWidth="0dp"
         app:srcCompat="@drawable/ic_baseline_add_24"
-        app:tint="#FFFFFF"
-        />
+        app:tint="#FFFFFF" />
 
 
 </RelativeLayout>

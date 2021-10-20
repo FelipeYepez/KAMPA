@@ -61,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
         progressDialog?.show()
         if(intentos >= 2){
             startForResult.launch(Intent(this, reCaptcha::class.java))
+            progressDialog?.dismiss()
         }
         if(intentos < 2){
             val isInputComplete = LoginUtils.validateInputs(username, password)
