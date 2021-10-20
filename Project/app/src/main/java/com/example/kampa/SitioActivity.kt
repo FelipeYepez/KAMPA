@@ -20,6 +20,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.parse.*
+import android.text.method.LinkMovementMethod
+
+import android.text.Html
+
+import android.widget.TextView
+import android.text.util.Linkify
+import android.util.Patterns
+
 
 /**
  * @author RECON
@@ -132,6 +140,7 @@ class SitioActivity : AppCompatActivity() {
 
         val paginaOficial :TextView = findViewById(R.id.paginaOficial)
         paginaOficial.text= sitio.paginaOficial
+        Linkify.addLinks(paginaOficial, Linkify.WEB_URLS)
 
         val foto : ImageView = findViewById(R.id.foto)
         loadImages(sitio.foto, foto)

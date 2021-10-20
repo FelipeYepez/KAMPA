@@ -200,7 +200,7 @@
 
             <TextView
                 android:id="@+id/paginaOficial"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/titleHistoria"
                 android:layout_alignParentStart="true"
@@ -209,10 +209,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="50dp"
-                android:autoLink="web"
-                android:text=""
-                android:textSize="16dp"
-                android:linksClickable="true"/>
+                android:text="Ir a la página oficial"
+                android:textSize="16dp"/>
 
 
         </LinearLayout>
@@ -232,7 +230,7 @@
         android:clickable="true"
         app:backgroundTint="#D93671"
         app:srcCompat="@drawable/ic_baseline_add_24"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"/>
 
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.util.Patterns
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -216,6 +217,8 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
         nuevoSitio.paginaOficial = inputPagina?.text.toString()
         nuevoSitio.ubicacion = ubicacion
 
+        var isUrlValid = Patterns.WEB_URL.matcher(nuevoSitio.paginaOficial).matches()
+
         if(selectedBitmapImage != null){
             val stream = ByteArrayOutputStream()
             selectedBitmapImage!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
@@ -232,7 +235,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
         //Se checa si los inputs son válidos
         var isInputComplete = NuevoSitioUtils.validateInputs(nuevoSitio.nombre!!, nuevoSitio.descripcion!!, nuevoSitio.ubicacion!!, idCheckedButton!!)
 
-        if(isInputComplete == "complete values") {
+        if(isInputComplete == "complete values" && isUrlValid) {
             nuevoSitio.saveInBackground { e ->
                 if (e == null) {
                     Log.d(TAG, "saved")
@@ -241,7 +244,9 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
                 }
             }
             finish()
-        }else{
+        }else if(isUrlValid == false){
+            Toast.makeText(this, "La página web ingresada no existe", Toast.LENGTH_SHORT).show()
+        } else{
             Toast.makeText(this, isInputComplete, Toast.LENGTH_SHORT).show()
         }
     }
