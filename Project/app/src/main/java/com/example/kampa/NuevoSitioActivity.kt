@@ -238,7 +238,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
         if(isInputComplete == "complete values" && isUrlValid) {
             nuevoSitio.saveInBackground { e ->
                 if (e == null) {
-                    Log.d(TAG, "saved")
+                    Toast.makeText(this, "Sitio creado exitosamente", Toast.LENGTH_SHORT).show()
                 } else {
                     Log.d(TAG, e.toString())
                 }

@@ -158,7 +158,7 @@ class NuevaPublicacionActivity : AppCompatActivity() {
                     for (el in addedChips){
                         saveTag(el)
                     }
-                    Toast.makeText(this, "Publicación guardada exitosamente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Publicación creada exitosamente", Toast.LENGTH_SHORT).show()
                     finish()
                 } else if(e != null) {
                     Log.d(TAG, e.toString())
