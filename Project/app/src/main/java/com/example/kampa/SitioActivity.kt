@@ -70,20 +70,31 @@ class SitioActivity : AppCompatActivity() {
 
         rolQuery(currentRole.objectId.toString())
 
-        //Si el rol del usuario es administrador, se muestra un botón para añadir sitios
-        if(rolObject?.descripcion == Constantes.ADMINISTRADOR){
-            ibEliminarSitio = findViewById(R.id.ibEliminarSitio)
-            ibEliminarSitio.visibility = View.VISIBLE
-            ibEliminarSitio.setOnClickListener {
-                eliminarSitio()
-            }
-
-            ibEditarSitio = findViewById(R.id.ibEditarSitio)
-            ibEditarSitio.visibility = View.VISIBLE
-            ibEditarSitio.setOnClickListener {
-                goToEditarSitio()
-            }
+        //On click Listener para el botón de registrar visitado
+        btnRegistrarVisitado = findViewById(R.id.VisitedBtn)
+        btnRegistrarVisitado.visibility = View.VISIBLE
+        verificarSitioVisitado()
+        btnRegistrarVisitado.setOnClickListener{
+            cambiarVisitado()
         }
+
+        //On click Listener para agregar una nueva publicación
+        btnListaDeseos = findViewById(R.id.addWishListBtn)
+        btnListaDeseos.visibility = View.VISIBLE
+        btnListaDeseos.setOnClickListener{
+            guardarSitioEnWishlist()
+        }
+
+
+        val nuevaPublicacion: FloatingActionButton = findViewById(R.id.floatingActionButton)
+        nuevaPublicacion.visibility = View.VISIBLE
+        nuevaPublicacion.setOnClickListener{
+            val i = Intent(this, NuevaPublicacionActivity::class.java)
+            i.putExtra("sitio", sitio)
+            startActivity(i)
+        }
+
+
 
         //On click Listener para el botón de registrar denuncia
         registrarDenuncia = findViewById(R.id.DenunciarBtn)
@@ -93,26 +104,9 @@ class SitioActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        //On click Listener para el botón de registrar visitado
-        btnRegistrarVisitado = findViewById(R.id.VisitedBtn)
-        verificarSitioVisitado()
-        btnRegistrarVisitado.setOnClickListener{
-            cambiarVisitado()
-        }
-
-        //On click Listener para agregar una nueva publicación
-        btnListaDeseos = findViewById(R.id.addWishListBtn)
-        btnListaDeseos.setOnClickListener{
-            guardarSitioEnWishlist()
-        }
 
 
-        val nuevaPublicacion: FloatingActionButton = findViewById(R.id.floatingActionButton)
-        nuevaPublicacion.setOnClickListener{
-            val i = Intent(this, NuevaPublicacionActivity::class.java)
-            i.putExtra("sitio", sitio)
-            startActivity(i)
-        }
+
 
         val title:TextView = findViewById(R.id.title)
         title.text = sitio.nombre
@@ -135,6 +129,27 @@ class SitioActivity : AppCompatActivity() {
 
         val foto : ImageView = findViewById(R.id.foto)
         loadImages(sitio.foto, foto)
+
+        //Si el rol del usuario es administrador, se muestra un botón para añadir sitios
+        if(rolObject?.descripcion == Constantes.ADMINISTRADOR){
+            ibEliminarSitio = findViewById(R.id.ibEliminarSitio)
+            ibEliminarSitio.visibility = View.VISIBLE
+            ibEliminarSitio.setOnClickListener {
+                eliminarSitio()
+            }
+
+            ibEditarSitio = findViewById(R.id.ibEditarSitio)
+            ibEditarSitio.visibility = View.VISIBLE
+            ibEditarSitio.setOnClickListener {
+                goToEditarSitio()
+            }
+            btnRegistrarVisitado.visibility = View.INVISIBLE
+            btnListaDeseos.visibility = View.INVISIBLE
+            nuevaPublicacion.visibility = View.INVISIBLE
+            registrarDenuncia.visibility =View.INVISIBLE
+
+        }
+
 
     }
 
