@@ -101,5 +101,4 @@ dependencies {
 
     //Tests
     testImplementation 'com.google.truth:truth:1.0.1'
-
 }
