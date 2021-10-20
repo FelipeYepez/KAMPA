@@ -186,7 +186,7 @@ class TakePictureActivity : AppCompatActivity() {
                 startCamera()
             } else {
                 Toast.makeText(this,
-                    "Los permisos fueron denegados",
+                    "No se aceptó el permiso de usar la cámara",
                     Toast.LENGTH_SHORT).show()
                 finish()
             }

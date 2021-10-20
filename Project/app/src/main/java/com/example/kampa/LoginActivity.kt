@@ -56,10 +56,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun login(username: String, password: String) {
-        if(intentos >= 2){
+        if(intentos >= 3){
             startForResult.launch(Intent(this, reCaptcha::class.java))
         }
-        if(intentos < 2){
+        if(intentos < 3){
             progressDialog?.show()
             ParseUser.logInInBackground(username,password) { parseUser: ParseUser?, parseException: ParseException? ->
                 progressDialog?.dismiss()
