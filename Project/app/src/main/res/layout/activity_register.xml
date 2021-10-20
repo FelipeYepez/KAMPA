@@ -121,24 +121,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:layout_marginBottom="24dp"
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp"
                 app:passwordToggleEnabled="true">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/passwordagain"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_lock"
-                    android:drawablePadding="6dp"
-                    android:backgroundTint="@color/white"
-                    android:hint="Confirmar contraseña"
-                    android:inputType="textPassword" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordagain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_lock"
+                android:drawablePadding="6dp"
+                android:backgroundTint="@color/white"
+                android:hint="Confirmar contraseña"
+                android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/terminos"
+                android:text="@string/text_link_terminos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="20dp"
+                android:paddingEnd="6dp"
+                android:layout_gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/passwordagain">
+            </com.google.android.material.checkbox.MaterialCheckBox>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
     <Button
         android:id="@+id/signup"
         android:layout_width="180dp"

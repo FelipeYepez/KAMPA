@@ -5,9 +5,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
+import android.text.method.LinkMovementMethod
+import android.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import com.parse.ParseUser
 import com.parse.SignUpCallback
@@ -21,6 +20,8 @@ class RegisterActivity : AppCompatActivity() {
     private var passwordagain: TextInputEditText? = null
     private var progressDialog: ProgressDialog? = null
     private var btnLogRegister: Button? = null
+    private var terminos: CheckBox? = null
+    private var terminosText: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,18 +34,28 @@ class RegisterActivity : AppCompatActivity() {
         password = findViewById(R.id.password)
         passwordagain = findViewById(R.id.passwordagain)
         btnLogRegister = findViewById(R.id.btnLogRegister)
+        terminos = findViewById(R.id.terminos)
+
+        terminos?.movementMethod = LinkMovementMethod.getInstance()
 
         btnLogRegister?.setOnClickListener {
             onBackPressed()
         }
 
         signup?.setOnClickListener {
-            if (password?.text.toString() == passwordagain?.text.toString() && !TextUtils.isEmpty(username?.text.toString()))
+            if(terminos!!.isChecked == false){
+                Toast.makeText(
+                    this,
+                    "Acepta los términos y condiciones para continuar.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            else if(password?.text.toString() == passwordagain?.text.toString() && !TextUtils.isEmpty(username?.text.toString()))
                 signup(username?.text.toString(), password?.text.toString())
             else
                 Toast.makeText(
                     this,
-                    "Make sure that the values you entered are correct.",
+                    "Asegura que los valores introducidos son correctos.",
                     Toast.LENGTH_SHORT
                 ).show()
         }
@@ -77,6 +88,7 @@ class RegisterActivity : AppCompatActivity() {
         else{
             ParseUser.logOut()
             Toast.makeText(this, "Tu contraseña debe de contener almenos 8 caracteres 1 digito 1 mayuscula 1 minuscula y 1 caracter especial", Toast.LENGTH_LONG).show()
+            progressDialog?.hide()
         }
     }
     private fun goToMainActivity() {
