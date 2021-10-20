@@ -217,7 +217,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 location.addOnCompleteListener(OnCompleteListener<Location> { task ->
                     if (task.isSuccessful && task.result != null) {
                         Log.d(TAG, "onComplete: found location!")
-                        currentLocation = task.result as LatLng
+                        currentLocation = LatLng(task.result.latitude, task.result.longitude)
                         gMap?.moveCamera(
                             CameraUpdateFactory.newLatLngZoom(currentLocation, ZOOM)
                         )

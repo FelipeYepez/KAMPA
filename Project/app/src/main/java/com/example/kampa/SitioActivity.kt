@@ -100,10 +100,6 @@ class SitioActivity : AppCompatActivity() {
         }
 
         //On click Listener para el botón de registrar visitado
-        registrarVisitado = findViewById(R.id.VisitedBtn)
-        /*
-         * On click Listener para el botón de registrar visitado
-         */
         btnRegistrarVisitado = findViewById(R.id.VisitedBtn)
         verificarSitioVisitado()
         btnRegistrarVisitado.setOnClickListener{
