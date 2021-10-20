@@ -15,10 +15,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.parse.GetDataCallback
 import com.parse.ParseFile
 
-/** * @author Andrea Piñeiro Cavazos <a01705681@itesm.mx>
+/** * @author RECON
+ *
  *  Actividad para visualizar la información completa de una
  *  denuncia desde el rol del administrador; esta actividad comienza
  *  al dar click en el item del recycler view.
+ *
  *  @version 1.0
  */
 
@@ -37,6 +39,7 @@ class DenunciaActivity() : AppCompatActivity() {
      * de los extras, inicializa componentes y listeners.
      * También se carga en el xml el nombre del sitio de la denuncia,
      * la descripción y la imagen.
+     *
      * @param savedInstanceState
      */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +66,10 @@ class DenunciaActivity() : AppCompatActivity() {
 
     /**
      * Función para cargar una imagen dentro de un imageView
+     *
      * @param foto  imagen de tipo parse file que queremos mostrar
      * @param imgView  imageView en el que queremos que se despliegue la imagen
+     *
      * @return void - el imageView contiene la foto
      */
     private fun loadImages(foto: ParseFile?, imgView: ImageView) {

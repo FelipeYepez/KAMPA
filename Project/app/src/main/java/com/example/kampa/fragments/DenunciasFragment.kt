@@ -21,7 +21,7 @@ import com.example.kampa.models.Denuncia
 import com.google.android.material.snackbar.Snackbar
 import com.parse.ParseQuery
 
-/** * @author Andrea Piñeiro Cavazos <a01705681@itesm.mx>
+/** * @author RECON
  *  Fragmento para visualizar las denuncias de mal uso desde el rol de administrador,
  *  las denuncias se agrupan de acuerdo a su estado: Sin Resolver, Inválidas, Procesadas.
  *  @version 1.0
