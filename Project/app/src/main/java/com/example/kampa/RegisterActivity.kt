@@ -21,7 +21,6 @@ class RegisterActivity : AppCompatActivity() {
     private var progressDialog: ProgressDialog? = null
     private var btnLogRegister: Button? = null
     private var terminos: CheckBox? = null
-    private var terminosText: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
