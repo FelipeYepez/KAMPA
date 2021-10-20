@@ -44,7 +44,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private var currentRole: Rol = ParseUser.getCurrentUser().get("idRol") as Rol
     private lateinit var mainActivity: MainActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
-    private var  currentLocation: Location? = null
+    private var  currentLocation = LatLng(20.596478229745216, -100.38763531866927)
 
     /**
      * Inicializa el fragmento
@@ -53,6 +53,9 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainActivity = requireActivity() as MainActivity
+//        currentLocation.latitude = 20.596478229745216
+//        currentLocation.longitude = -100.38763531866927
+        //Log.d(TAG, currentLocation.latitude.toString())
     }
 
     /**
@@ -87,7 +90,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             fab?.setOnClickListener {
                 val i = Intent(activity, NuevoSitioActivity::class.java)
                 i.putExtra("permission", mainActivity.isPermissionGranted)
-                i.putExtra("currentLocation",currentLocation)
+                i.putExtra("currentLocation", currentLocation)
                 startActivity(i)
             }
         }
@@ -180,20 +183,12 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
      * @return se regresa false ya que se termina de usar el marcador
      */
     override fun onMarkerClick(marker: Marker): Boolean {
-        if(currentLocation != null){
-            val sitio: Sitio = marker.tag as Sitio
-            val i = Intent(activity, SitioActivity::class.java)
-            i.putExtra("permission", mainActivity.isPermissionGranted)
-            i.putExtra("currentLocation",currentLocation)
-            i.putExtra("sitio", sitio)
-            startActivity(i)
-        }else{
-            Toast.makeText(
-                context,
-                "Enciende tu GPS",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        val sitio: Sitio = marker.tag as Sitio
+        val i = Intent(activity, SitioActivity::class.java)
+        i.putExtra("permission", mainActivity.isPermissionGranted)
+        i.putExtra("currentLocation",currentLocation)
+        i.putExtra("sitio", sitio)
+        startActivity(i)
         return false
     }
 
@@ -222,9 +217,9 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 location.addOnCompleteListener(OnCompleteListener<Location> { task ->
                     if (task.isSuccessful && task.result != null) {
                         Log.d(TAG, "onComplete: found location!")
-                        currentLocation = task.result as Location
+                        currentLocation = task.result as LatLng
                         gMap?.moveCamera(
-                            CameraUpdateFactory.newLatLngZoom(LatLng(currentLocation!!.latitude, currentLocation!!.longitude), ZOOM)
+                            CameraUpdateFactory.newLatLngZoom(currentLocation, ZOOM)
                         )
                     } else {
                         Toast.makeText(
@@ -239,7 +234,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             Log.d(TAG, "getDeviceLocation: SecurityException: " + e.message)
         }
     }
-
 }
 
 object MapaFragmentUtils{

@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
 import com.example.kampa.models.*
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.parse.*
 
@@ -27,7 +28,7 @@ class SitioActivity : AppCompatActivity() {
     private var rolObject: Rol? = null
     private lateinit var sitio: Sitio
     private var permission: Boolean? = null
-    private var currentLocation: Location? = null
+    private var  currentLocation = LatLng(20.596478229745216, -100.38763531866927)
     private var usuarioSitio: UsuarioSitio? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,9 +54,9 @@ class SitioActivity : AppCompatActivity() {
         //Obtiene la localización actual del usuario
         currentLocation = if (savedInstanceState == null) {
             val extras = intent.extras
-            extras?.get("currentLocation") as? Location
+            extras?.get("currentLocation") as LatLng
         } else {
-            savedInstanceState.getSerializable("currentLocation") as? Location
+            savedInstanceState.getSerializable("currentLocation") as LatLng
         }
 
         //Rol del usuario autenticado

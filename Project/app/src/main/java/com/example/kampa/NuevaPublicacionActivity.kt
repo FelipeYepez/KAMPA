@@ -137,7 +137,7 @@ class NuevaPublicacionActivity : AppCompatActivity() {
      */
     private fun savePublicacion(){
         val progressDialog = ProgressDialog(this)
-
+        progressDialog.show()
         publicacion.descripcion = inputDescripcion?.text.toString()
         publicacion.idSitio = sitio
         publicacion.idUsuario = ParseUser.getCurrentUser()
@@ -158,6 +158,7 @@ class NuevaPublicacionActivity : AppCompatActivity() {
                     for (el in addedChips){
                         saveTag(el)
                     }
+                    Toast.makeText(this, "Publicación guardada exitosamente", Toast.LENGTH_SHORT).show()
                     finish()
                 } else if(e != null) {
                     Log.d(TAG, e.toString())
@@ -167,7 +168,7 @@ class NuevaPublicacionActivity : AppCompatActivity() {
         else{
             Toast.makeText(this, "Selecciona una imagen", Toast.LENGTH_SHORT).show()
         }
-        progressDialog.show()
+        progressDialog.hide()
     }
 
     /**
