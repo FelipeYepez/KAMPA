@@ -6,6 +6,9 @@ import com.parse.ParseFile
 import com.parse.ParseObject
 import com.parse.ParseUser
 
+/** * @author RECON
+ *  Clase para obtener y settear los valores de la tabla Denuncia en la base de datos.
+ */
 @ParseClassName("Denuncia")
 class Denuncia : ParseObject() {
 

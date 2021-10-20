@@ -5,6 +5,9 @@ import com.parse.ParseFile
 import com.parse.ParseObject
 import com.parse.ParseUser
 
+/** * @author RECON
+ *  Clase para obtener y settear los valores de un usuario de Parse en la base de datos.
+ */
 class CustomUser : ParseObject() {
 
     private var mUser = ParseUser()

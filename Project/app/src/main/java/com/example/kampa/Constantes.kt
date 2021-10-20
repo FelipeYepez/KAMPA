@@ -2,6 +2,12 @@ package com.example.kampa
 
 import com.parse.ParseQuery
 
+/**
+ * @author RECON
+ * Objeto que guarda constantes ordenadas alfabéticamente que representan nombres
+ * de tablas y campos en la base de datos.
+ * @version 1.0
+ */
 object Constantes {
     val ADMINISTRADOR = "administrador"
     val APROBADA = "aprobada"

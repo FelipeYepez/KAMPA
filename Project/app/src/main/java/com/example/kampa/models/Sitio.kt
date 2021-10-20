@@ -3,6 +3,9 @@ package com.example.kampa.models
 import com.example.kampa.Constantes
 import com.parse.*
 
+/** * @author RECON
+ *  Clase para obtener y settear los valores de la tabla Sitio en la base de datos.
+ */
 @ParseClassName("Sitio")
 class Sitio : ParseObject(){
 

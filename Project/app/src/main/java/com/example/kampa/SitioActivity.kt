@@ -25,6 +25,7 @@ import com.parse.*
  * @author RECON
  * Actividad que inicia cuando se selecciona el marcador de un sitio en MapaFragment
  * Obtiene desde la base de datos los atributos del sitio seleccionado y los despliega en una vista
+ * @version 1.0
  */
 class SitioActivity : AppCompatActivity() {
     val TAG = "SitioActivity"
@@ -148,12 +149,6 @@ class SitioActivity : AppCompatActivity() {
      * Busca un objeto de tipo Rol con su ObjectId
      * @param id objectId del rol que tiene el usuario autenticado
      */
-
-
-
-
-
-
     private fun actualizarConWishlist(){
 
         // Parse Query para guardar Sitio en WishList de Usuario

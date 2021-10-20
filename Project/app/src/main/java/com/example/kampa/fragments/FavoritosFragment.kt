@@ -23,6 +23,10 @@ import com.example.kampa.models.Wishlist
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.parse.*
 
+/** * @author RECON
+ *  Fragmento para visualizar las listas de favoritos de un usuario.
+ *  @version 1.0
+ */
 class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
 
     val TAG = "FavoritosFragment"
@@ -34,6 +38,13 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var favoritosAdapter: FavoritosAdapter
 
+    /**
+     * Se llama cuando el fragmento se crea, en esta función se
+     * crea el layout y se infla la vista
+     * @param inflater inflador de la vista
+     * @param container es el que contiene las vistas para inflar el layout
+     * @param savedInstanceState representa una instancia creada previamente
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,6 +52,12 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         return inflater.inflate(R.layout.fragment_favoritos, container, false)
     }
 
+    /**
+     * Se llama después de que se crea la vista, se incializan los componentes
+     * y manda llamar la función getFavoritosList
+     * @param view la vista inflada
+     * @param savedInstanceState representa una instancia creada previamente
+     */
     override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -55,6 +72,10 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         getFavoritosList()
     }
 
+    /**
+     * Método que muestra un diálogo en el que el usuario puede crear una nueva lista de deseos
+     * con solo ingresar el nombre de esta nueva lista.
+     */
     private fun addWishlist() {
         val myDialogView = LayoutInflater
             .from(this.context)
@@ -101,6 +122,10 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         builder.show()
     }
 
+    /**
+     * Se llma a la base de datos y se obtienen todas las listas de sitios favoritos para
+     * posteriormente desplegarlas en el layout.
+     */
     private fun getFavoritosList() {
         val query: ParseQuery<Wishlist> = ParseQuery.getQuery(Wishlist::class.java)
 
@@ -118,6 +143,11 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         }
     }
 
+    /**
+     * Función que recibe una lista de listas de desos, crea el adaptador con ellos y
+     * los despliega en la recycler view del layout.
+     * @param favoritosList es la lista de listas de favoritos obtenidas en la base de datos
+     */
     private fun initializeList(favoritosList: MutableList<Wishlist>) {
         linearLayoutManager = LinearLayoutManager(this.context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -135,6 +165,10 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         initializeGesture()
     }
 
+    /**
+     * Función que inicializa la gesture para deslizar una lista de favoritos
+     * y al hacerlo, eliminarla.
+     */
     private fun initializeGesture() {
         val swipeGesture = object : SwipeGestureDelete(this.context) {
 
@@ -155,6 +189,10 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         touchHelper.attachToRecyclerView(rvFavoritos)
     }
 
+    /**
+     * Función que despliega un diálogo donde se podrá cambiar el nombre de la lista de favoritos
+     * en la que nos encontramos
+     */
     override fun passData(wishlist: Wishlist) {
         val bundle = Bundle()
 

@@ -9,7 +9,14 @@ import com.parse.ParseObject
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
-
+/**
+ * @author RECON
+ * Clase que se comunica con la base de datos que tenemos en Back4app.
+ * Definimos las subclases que ya están registradas como modelos en el directorio
+ * models.
+ * Inicializamos una instancia de la base de datos en nuestra aplicaición.
+ * @version 1.0
+ */
 class ParseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
