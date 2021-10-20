@@ -52,4 +52,6 @@
     <string name="escriba_password">Escriba su contraseña</string>
     <string name="valores_correctos">Valores correctos</string>
     <string name="valores_completos">Valores Completos</string>
+
+    <string name="text_link_terminos"> <a href="https://recon.software/">Acepto los términos y condiciones</a></string>
 </resources>
