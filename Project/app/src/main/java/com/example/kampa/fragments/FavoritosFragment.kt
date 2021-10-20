@@ -3,33 +3,25 @@ package com.example.kampa.fragments
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kampa.R
-import com.example.kampa.adapters.FavoritosAdapter
-import com.example.kampa.models.Wishlist
 import com.example.kampa.Constantes
+import com.example.kampa.R
 import com.example.kampa.SwipeGestureDelete
+import com.example.kampa.adapters.FavoritosAdapter
 import com.example.kampa.interfaces.SitiosFavoritosInterface
-import com.example.kampa.models.WishlistSitio
+import com.example.kampa.models.Wishlist
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.parse.*
-import kotlinx.android.synthetic.main.cambiar_nombre_dialogo.view.*
-import kotlinx.android.synthetic.main.fragment_favoritos.*
-import com.parse.Parse
-
-
-
-
 
 class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
 
@@ -67,13 +59,13 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         val myDialogView = LayoutInflater
             .from(this.context)
             .inflate(R.layout.crear_lista_favoritos_dialogo, null)
-
+        val etNuevoNombre = myDialogView.findViewById(R.id.etNuevoNombre) as EditText
         val builder = AlertDialog.Builder(this.context)
             .setView(myDialogView)
             .setTitle(R.string.nueva_lista_favoritos)
             .setPositiveButton(R.string.crear,
                 DialogInterface.OnClickListener { dialog, id ->
-                    val nuevoNombre = myDialogView.etNuevoNombre.text.toString()
+                    val nuevoNombre = etNuevoNombre.text.toString()
 
                     if (nuevoNombre.isNotEmpty()) {
                         val nuevaWishlist: Wishlist = Wishlist()
@@ -98,8 +90,6 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
                             }
                         }
                     } else {
-                        // Se queda el dialogo? o se va?
-                            // si se queda mejor para que el usuario siga intentando
                         Toast.makeText(this.context, R.string.nombre_vacio, Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -122,11 +112,8 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
                 if (objects != null) {
                     initializeList(objects)
                 }
-            }
-            else{
-                if(e.code == 100){
-                    Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
-                }
+            } else if(e.code == 100){
+                Toast.makeText(context, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -136,7 +123,10 @@ class FavoritosFragment : Fragment(), SitiosFavoritosInterface {
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         linearLayoutManager.scrollToPosition(0)
 
-        favoritosAdapter = FavoritosAdapter(this.context, favoritosList, this@FavoritosFragment)
+        favoritosAdapter = FavoritosAdapter(
+            this.context,
+            favoritosList,
+            this@FavoritosFragment)
 
         rvFavoritos.layoutManager = linearLayoutManager
         rvFavoritos.adapter = favoritosAdapter

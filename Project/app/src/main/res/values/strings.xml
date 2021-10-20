@@ -39,4 +39,13 @@
     <string name="inv_lida">Inválida</string>
     <string name="procesada">Procesada</string>
     <string name="invalida">Inválida</string>
+    <string name="Lista_favoritos">Seleccionar lista de favoritos</string>
+    <string name="Lista_favoritos_exito">Sitio insertado a lista de favoritos con exito</string>
+    <string name="crear_lista">Crear nueva lista</string>
+    <string name="declinar">Declinar</string>
+    <string name="ir_a_google_maps">¿Desea ir a Google Maps?</string>
+    <string name="abrir_google_maps">Abrir Google Maps</string>
+    <string name="confirmar_eliminar">Confirmar Eliminación</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="seguro_eliminar_sitio">¿Estás seguro de eliminar este sitio?</string>
 </resources>

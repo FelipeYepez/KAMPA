@@ -90,6 +90,10 @@ class DenunciasFragment : Fragment() {
         query.include(Constantes.ID_SITIO)
         query.findInBackground { itemList, e ->
             if (e == null) {
+                /*if (itemList.isEmpty()) {
+                    //Toast.makeText(requireContext(), "No hay denuncias con estado" + state, Toast.LENGTH_LONG).show()
+                    view?.let { Snackbar.make(it.findViewById(android.R.id.content), "No hay denuncias con estado" + state, Snackbar.LENGTH_SHORT).show() }
+                }*/
                 for (element in itemList) {
                     data.add(element)
                 }

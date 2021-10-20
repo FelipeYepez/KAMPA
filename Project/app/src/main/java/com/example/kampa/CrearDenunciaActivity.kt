@@ -1,13 +1,10 @@
 package com.example.kampa
 
-import android.R.id
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.widget.*
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -17,13 +14,8 @@ import com.example.kampa.models.Sitio
 import com.google.android.material.snackbar.Snackbar
 import com.parse.ParseFile
 import com.parse.ParseUser
-import java.io.File
-import android.widget.Toast
-import com.parse.SaveCallback
-import android.R.id.message
 import android.app.Activity
 import android.content.Intent
-import com.parse.ParseObject
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Build
@@ -31,10 +23,6 @@ import android.provider.MediaStore
 
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
 
 
 class CrearDenunciaActivity : AppCompatActivity() {
@@ -92,7 +80,7 @@ class CrearDenunciaActivity : AppCompatActivity() {
 
         val tomarImagenButton: Button = findViewById(R.id.tomarFotoBtn)
         tomarImagenButton.setOnClickListener{
-            startForResult.launch(Intent(this, UploadImageActivity::class.java))
+            startForResult.launch(Intent(this, TakePictureActivity::class.java))
 
         }
 

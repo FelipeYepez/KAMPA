@@ -1,5 +1,7 @@
 package com.example.kampa.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,19 +12,28 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.kampa.Constantes
 import com.example.kampa.DescubreAdapter
 import com.example.kampa.R
 import com.example.kampa.models.*
+import com.example.kampa.models.Wishlist
 import com.parse.*
 import com.yuyakaido.android.cardstackview.*
 import org.json.JSONObject
 import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
-import java.util.PriorityQueue
+import android.graphics.Color
+import android.widget.EditText
+
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+
+import com.google.android.material.snackbar.Snackbar
+
+
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -45,6 +56,7 @@ class DescubreFragment : Fragment(), CardStackListener {
     private lateinit var swipeCard: CardStackView
     private lateinit var data: ArrayList<Publicacion>
     private lateinit var lastPublicacionCardDisappeared: Publicacion
+    private lateinit var v: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +81,7 @@ class DescubreFragment : Fragment(), CardStackListener {
             setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
             setOverlayInterpolator(LinearInterpolator())
         }
+        v = view
         setupButton(view)
         initializeData()
 
@@ -126,7 +139,10 @@ class DescubreFragment : Fragment(), CardStackListener {
             if (e != null) {
                 Log.e("item", "Error code: ${e.code}", e)
                 if(e.code == 100){
-                    Toast.makeText(requireContext(), "No hay conexión a Internet", Toast.LENGTH_LONG).show()
+                    val snack = Snackbar.make(v, R.string.error_conexion, Snackbar.LENGTH_LONG)
+                    snack.setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.error))
+                    snack.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                    snack.show()
                 }
                 return@findInBackground
             }
@@ -329,6 +345,52 @@ class DescubreFragment : Fragment(), CardStackListener {
         })
     }
 
+    private fun actualizarConWishlist(publicacion: Publicacion, direction: String){
+
+        // Parse Query para guardar Sitio en WishList de Usuario
+        val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
+        query.whereEqualTo(Constantes.ID_SITIO, publicacion.idSitio)
+        query.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+
+        // Parse Query para obtener primer registro de Parse
+        query.getFirstInBackground(GetCallback { usuarioSitio: UsuarioSitio?, e ->
+            // Si registro ya existe
+            if (e == null && usuarioSitio != null) {
+                // Si Sitio de Publicación ya existe en Wishlist
+                if(usuarioSitio.isWishlist == true){
+                    return@GetCallback
+                }
+                // Sitio no existe en Wishlist, se lo asigna a Wishlist
+                else{
+                    usuarioSitio.put(Constantes.IS_WISHLIST, true)
+                    usuarioSitio.saveInBackground()
+                }
+            }
+            else {
+                // No se obtuvo resultado de GetCallBack, crear registro
+                if (e.code == 101) {
+                    val usuarioSitioNuevo = UsuarioSitio()
+                    usuarioSitioNuevo.idSitio = publicacion.idSitio
+                    usuarioSitioNuevo.idUsuario = ParseUser.getCurrentUser()
+                    usuarioSitioNuevo.isWishlist = true
+                    usuarioSitioNuevo.isVisitado = false
+                    usuarioSitioNuevo.saveInBackground()
+                } else {
+                    Log.e("Error", "No se guarda con wishlist", e)
+                    rewindCard()
+                    return@GetCallback
+                }
+            }
+        })
+
+        // Modificar Likes o Dislikes totales de Publicación
+        publicacion.increment(Constantes.NUM_LIKES, 2)
+        // Guardar en Parse Publicacion actualizada con Likes o Dislikes
+        publicacion.saveInBackground()
+        actualizarTags(publicacion, direction)
+
+    }
+
     private fun swipeParse(publicacion: Publicacion, direction: String) {
         // Se dio like, dislike o guardar en WishList a una publicación
         if(direction == "Right" || direction == "Left" || direction == "Top"){
@@ -349,53 +411,154 @@ class DescubreFragment : Fragment(), CardStackListener {
             }
             // si fue se guardó sitio en Wishlist
             else if (direction == "Top") {
-                // Parse Query para guardar Sitio en WishList de Usuario
-                val query: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
-                query.whereEqualTo(Constantes.ID_SITIO, publicacion.idSitio)
-                query.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
 
-                // Parse Query para obtener primer registro de Parse
-                query.getFirstInBackground(GetCallback { usuarioSitio: UsuarioSitio?, e ->
-                    // Si registro ya existe
-                    if (e == null && usuarioSitio != null) {
-                        // Si Sitio de Publicación ya existe en Wishlist
-                        if(usuarioSitio.isWishlist == true){
-                            Toast.makeText(requireContext(), "Ya existe en tu Wishlist", Toast.LENGTH_LONG).show()
-                            rewindCard()
-                            return@GetCallback
-                        }
-                        // Sitio no existe en Wishlist, se lo asigna a Wishlist
-                        else{
-                            // Modificar Likes o Dislikes totales de Publicación
-                            publicacion.increment(Constantes.NUM_LIKES, 2)
-                            // Guardar en Parse Publicacion actualizada con Likes o Dislikes
-                            publicacion.saveInBackground()
-                            usuarioSitio.put(Constantes.IS_WISHLIST, true)
-                            usuarioSitio.saveInBackground()
-                            actualizarTags(publicacion, direction)
+                val query1: ParseQuery<Wishlist> = ParseQuery.getQuery(Wishlist::class.java)
+
+                query1.whereEqualTo(Constantes.ID_USUARIO, ParseUser.getCurrentUser())
+                query1.whereEqualTo(Constantes.IS_DELETED, false)
+                query1.orderByDescending(Constantes.CREATED_AT)
+                query1.findInBackground { objects: MutableList<Wishlist>?, e: ParseException? ->
+                    if (e == null) {
+                        if (objects != null) {
+                            val listFavs : MutableList<String> = mutableListOf()
+                            for(obj in objects){
+                                listFavs.add(obj.nombre.toString())
+                            }
+                            val arr : Array<String> = listFavs.toTypedArray()
+                            val builder = AlertDialog.Builder(this.context)
+                                .setTitle(R.string.Lista_favoritos)
+                                .setItems(arr){dialog, which ->
+
+                                    val queryExisteEnWishlist: ParseQuery<WishlistSitio> = ParseQuery.getQuery(WishlistSitio::class.java)
+                                    queryExisteEnWishlist.whereEqualTo(Constantes.ID_SITIO, publicacion.idSitio)
+                                    queryExisteEnWishlist.whereEqualTo(Constantes.ID_WISHLIST, objects[which])
+                                    queryExisteEnWishlist.getFirstInBackground(GetCallback { wishListSitio: WishlistSitio?, e ->
+                                        if(e != null){
+                                            // Si aun no existe Sitio en Wishlist crearlo
+                                            if(e.code == 101){
+                                                val nWishlistSitio : WishlistSitio = WishlistSitio()
+                                                nWishlistSitio.idWishlist = objects[which]
+                                                nWishlistSitio.idSitio = publicacion.idSitio
+                                                nWishlistSitio.saveInBackground { e ->
+                                                    // Si se pudo guardar
+                                                    if (e == null) {
+                                                        // Se marca que ya existe en wishlist y se actualizan tags de publicacion
+                                                        actualizarConWishlist(publicacion, direction)
+                                                        val snack = Snackbar.make(v, R.string.Lista_favoritos_exito, Snackbar.LENGTH_SHORT)
+                                                        snack.setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.white))
+                                                        snack.setTextColor(ContextCompat.getColor(requireContext(), R.color.exito))
+                                                        snack.show()
+                                                    } else {
+                                                        rewindCard()
+                                                        dialog.cancel()
+                                                        val snack = Snackbar.make(v, R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                                        snack.setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.error))
+                                                        snack.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                                                        snack.show()
+                                                    }
+                                                }
+                                            }
+                                            else{
+                                                rewindCard()
+                                                dialog.cancel()
+                                                val snack = Snackbar.make(v, R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                                snack.setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.error))
+                                                snack.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                                                snack.show()
+                                            }
+                                        }
+                                        else{
+                                            rewindCard()
+                                            dialog.cancel()
+                                            val snack = Snackbar.make(v, "Ya existe ${publicacion.idSitio!!.nombre} en ${objects[which].nombre}", Snackbar.LENGTH_LONG)
+                                            snack.setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.amarilloEsenciaPatrimonio))
+                                            snack.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                                            snack.show()
+                                        }
+                                    })
+                                }
+                                .setPositiveButton(R.string.crear_lista,
+                                    DialogInterface.OnClickListener { dialog, id ->
+                                        val myDialogView = LayoutInflater
+                                            .from(this.context)
+                                            .inflate(R.layout.crear_lista_favoritos_dialogo, null)
+
+                                        val builder2 = AlertDialog.Builder(this.context)
+                                            .setView(myDialogView)
+                                            .setTitle(R.string.nueva_lista_favoritos)
+                                            .setPositiveButton(R.string.crear,
+                                                DialogInterface.OnClickListener { dialog, id ->
+                                                    val etNuevoNombre = myDialogView.findViewById(R.id.etNuevoNombre) as EditText
+                                                    val nuevoNombre = etNuevoNombre.text.toString()
+
+                                                    if (nuevoNombre.isNotEmpty()) {
+                                                        val nuevaWishlist: Wishlist = Wishlist()
+                                                        nuevaWishlist.nombre = nuevoNombre
+                                                        nuevaWishlist.idUsuario = ParseUser.getCurrentUser()
+
+                                                        nuevaWishlist.saveInBackground { e ->
+                                                            if (e == null) {
+                                                                val nWishlistSitio : WishlistSitio = WishlistSitio()
+                                                                nWishlistSitio.idWishlist = nuevaWishlist
+                                                                nWishlistSitio.idSitio = publicacion.idSitio
+                                                                nWishlistSitio.saveInBackground { e ->
+                                                                    if (e == null) {
+                                                                        val snack = Snackbar.make(v, R.string.Lista_favoritos_exito, Snackbar.LENGTH_SHORT)
+                                                                        snack.setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.white))
+                                                                        snack.setTextColor(ContextCompat.getColor(requireContext(), R.color.exito))
+                                                                        snack.show()
+                                                                        actualizarConWishlist(publicacion, direction)
+                                                                    } else {
+                                                                        rewindCard()
+                                                                        dialog.cancel()
+
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                rewindCard()
+                                                                dialog.cancel()
+                                                                val snack = Snackbar.make(v, R.string.error_conexion, Snackbar.LENGTH_LONG)
+                                                                snack.setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.error))
+                                                                snack.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                                                                snack.show()
+                                                            }
+                                                        }
+                                                    } else {
+                                                        rewindCard()
+                                                        val snack = Snackbar.make(v, R.string.nombre_vacio, Snackbar.LENGTH_LONG)
+                                                        snack.setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.amarilloEsenciaPatrimonio))
+                                                        snack.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                                                        snack.show()
+                                                    }
+                                                })
+                                            .setNegativeButton(R.string.cancelar,
+                                                DialogInterface.OnClickListener { dialog, id ->
+                                                    rewindCard()
+                                                    dialog.cancel()
+                                                })
+
+                                        builder2.show()
+                                    })
+                                .setNegativeButton(R.string.cancelar,
+                                    DialogInterface.OnClickListener { dialog, id ->
+                                        rewindCard()
+                                        dialog.cancel()
+                                    })
+                            builder.show()
                         }
                     }
-                    else {
-                        // No se obtuvo resultado de GetCallBack, crear registro
-                        if (e.code == 101) {
-                            // Modificar Likes o Dislikes totales de Publicación
-                            publicacion.increment(Constantes.NUM_LIKES, 2)
-                            // Guardar en Parse Publicacion actualizada con Likes o Dislikes
-                            publicacion.saveInBackground()
-                            val usuarioSitioNuevo = UsuarioSitio()
-                            usuarioSitioNuevo.idSitio = publicacion.idSitio
-                            usuarioSitioNuevo.idUsuario = ParseUser.getCurrentUser()
-                            usuarioSitioNuevo.isWishlist = true
-                            usuarioSitioNuevo.isVisitado = false
-                            usuarioSitioNuevo.saveInBackground()
-                            actualizarTags(publicacion, direction)
-                        } else {
-                            Log.e("Error", "No se guarda con wishlist", e)
-                            rewindCard()
-                            return@GetCallback
+                    else{
+                        if(e.code == 100){
+                            val snack = Snackbar.make(v, R.string.error_conexion, Snackbar.LENGTH_LONG)
+                            snack.setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.error))
+                            snack.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                            snack.show()
                         }
+                        rewindCard()
                     }
-                })
+                }
+
+
             }
 
         }
