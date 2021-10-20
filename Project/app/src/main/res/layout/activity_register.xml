@@ -21,11 +21,11 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="210dp"
+        android:layout_width="175dp"
         android:layout_height="450dp"
-        android:background="@drawable/ic_register_bg"
+        android:background="@drawable/ic_login_bg"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
@@ -48,6 +48,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:text="Iniciar sesion"
+            app:backgroundTint="@color/purple_500"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 
@@ -58,8 +59,8 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:text="REGISTRARSE"
-            android:textColor="#382BEE"
-            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -93,6 +94,7 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_person"
                     android:drawablePadding="6dp"
+                    android:backgroundTint="@color/white"
                     android:hint="Usuario"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -110,6 +112,7 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_lock"
                     android:drawablePadding="6dp"
+                    android:backgroundTint="@color/white"
                     android:hint="Contraseña"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -129,6 +132,7 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_lock"
                     android:drawablePadding="6dp"
+                    android:backgroundTint="@color/white"
                     android:hint="Confirmar contraseña"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -147,6 +151,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="@+id/cardView2"
         app:layout_constraintStart_toStartOf="@+id/cardView2"
+        app:backgroundTint="@color/purple_500"
         app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

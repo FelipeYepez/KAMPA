@@ -21,11 +21,11 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="210dp"
+        android:layout_width="190dp"
         android:layout_height="450dp"
-        android:background="@drawable/ic_login_bg"
+        android:background="@drawable/ic_register_bg"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
@@ -50,7 +50,8 @@
             android:text="Registrarse"
             android:textColor="@android:color/white"
             android:textSize="16sp"
-            android:visibility="visible" />
+            android:visibility="visible"
+            app:backgroundTint="@color/purple_500" />
 
         <TextView
             android:id="@+id/textView3"
@@ -58,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="Iniciar sesion"
-            android:textColor="#382BEE"
+            android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -71,7 +72,7 @@
         android:layout_marginEnd="24dp"
         app:cardCornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -96,9 +97,9 @@
                     android:hint="Usuario"
                     android:inputType="text"
                     android:visibility="visible"
-                    android:maxLength="32"
                     tools:ignore="TouchTargetSizeCheck"
-                    tools:visibility="visible" />
+                    tools:visibility="visible"
+                    android:background="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -117,8 +118,8 @@
                     android:drawableStart="@drawable/ic_lock"
                     android:drawablePadding="6dp"
                     android:hint="Contraseña"
-                    android:maxLength="32"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:background="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -135,5 +136,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="@+id/cardView2"
         app:layout_constraintStart_toStartOf="@+id/cardView2"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView2"
+        app:backgroundTint="@color/purple_500"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
