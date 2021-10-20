@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.*
 import com.parse.*
 
 import com.parse.ParseQuery
+import java.security.Permission
 
 private const val TAG = "MapaFragment"
 private const val ZOOM : Float = 15F
@@ -40,10 +41,10 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private var gMap: GoogleMap? = null
     private var roleObject: Rol? = null
     private var fab: FloatingActionButton? = null
-    private var currentRole:Rol = ParseUser.getCurrentUser().get("idRol") as Rol
+    private var currentRole: Rol = ParseUser.getCurrentUser().get("idRol") as Rol
     private lateinit var mainActivity: MainActivity
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var  currentLocation: Location
+    private var  currentLocation: Location? = null
 
     /**
      * Inicializa el fragmento
@@ -179,12 +180,20 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
      * @return se regresa false ya que se termina de usar el marcador
      */
     override fun onMarkerClick(marker: Marker): Boolean {
-        val sitio: Sitio = marker.tag as Sitio
-        val i = Intent(activity, SitioActivity::class.java)
-        i.putExtra("permission", mainActivity.isPermissionGranted)
-        i.putExtra("currentLocation",currentLocation)
-        i.putExtra("sitio", sitio)
-        startActivity(i)
+        if(currentLocation != null){
+            val sitio: Sitio = marker.tag as Sitio
+            val i = Intent(activity, SitioActivity::class.java)
+            i.putExtra("permission", mainActivity.isPermissionGranted)
+            i.putExtra("currentLocation",currentLocation)
+            i.putExtra("sitio", sitio)
+            startActivity(i)
+        }else{
+            Toast.makeText(
+                context,
+                "Enciende tu GPS",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
         return false
     }
 
@@ -215,13 +224,12 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                         Log.d(TAG, "onComplete: found location!")
                         currentLocation = task.result as Location
                         gMap?.moveCamera(
-                            CameraUpdateFactory.newLatLngZoom(LatLng(currentLocation.latitude, currentLocation.longitude), ZOOM)
+                            CameraUpdateFactory.newLatLngZoom(LatLng(currentLocation!!.latitude, currentLocation!!.longitude), ZOOM)
                         )
                     } else {
-                        Log.d(TAG, "onComplete: current location is null")
                         Toast.makeText(
                             context,
-                            "Unable to get current location",
+                            "Enciende tu GPS",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
