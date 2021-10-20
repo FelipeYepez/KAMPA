@@ -21,8 +21,10 @@ import com.example.kampa.models.WishlistSitio
 
 class SitiosFavoritosAdapter(private val context: Context?,
                              private var data: MutableList<WishlistSitio>,
-                             private val sitioInterfaceListener: SitioInterface)
+                             private val sitioInterfaceListener: SitioInterface,
+                             private val mainActivity: MainActivity)
     : RecyclerView.Adapter<SitiosFavoritosAdapter.ViewHolder>() {
+
 
     private val TAG = "SitiosFavoritosAdapter"
 
@@ -99,8 +101,10 @@ class SitiosFavoritosAdapter(private val context: Context?,
             val position = adapterPosition
             val sitio = data[position]
             val context = v?.context
+
             val i = Intent(context, SitioActivity::class.java)
             i.putExtra("sitio", sitio.idSitio)
+            i.putExtra("permission",mainActivity.isPermissionGranted)
             context?.startActivity(i)
         }
     }

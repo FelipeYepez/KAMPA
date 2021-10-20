@@ -83,18 +83,13 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
             savedInstanceState.getSerializable("permission") as? Boolean
         }
 
-        currentLocation = if (savedInstanceState == null) {
-            val extras = intent.extras
-            extras?.get("currentLocation") as LatLng
-        } else {
-            savedInstanceState.getSerializable("currentLocation") as LatLng
-        }
-
         sitioUbicacion = currentLocation
         if (sitio.ubicacion != null) {
-            sitioUbicacion = sitio.ubicacion as LatLng
+            sitioUbicacion= LatLng(sitio.ubicacion!!.latitude,sitio.ubicacion!!.longitude)
+
         }
     }
+
 
     private fun initializeVariables() {
         setLocationForResult = registerForActivityResult(ActivityResultContracts

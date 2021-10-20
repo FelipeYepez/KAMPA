@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kampa.Constantes
+import com.example.kampa.MainActivity
 import com.example.kampa.R
 import com.example.kampa.SwipeGestureDelete
 import com.example.kampa.adapters.SitiosFavoritosAdapter
@@ -96,7 +97,8 @@ class SitiosFavoritosFragment : Fragment(), SitioInterface {
         sitiosFavoritosAdapter = SitiosFavoritosAdapter(
             this.context,
             sitiosFavoritosList,
-            this@SitiosFavoritosFragment)
+            this@SitiosFavoritosFragment,
+        requireActivity() as MainActivity)
 
         rvSitiosFavoritos.layoutManager = linearLayoutManager
         rvSitiosFavoritos.adapter = sitiosFavoritosAdapter

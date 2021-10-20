@@ -53,9 +53,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainActivity = requireActivity() as MainActivity
-//        currentLocation.latitude = 20.596478229745216
-//        currentLocation.longitude = -100.38763531866927
-        //Log.d(TAG, currentLocation.latitude.toString())
     }
 
     /**
