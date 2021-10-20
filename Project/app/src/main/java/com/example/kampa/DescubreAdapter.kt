@@ -30,7 +30,7 @@ import java.util.*
  * @param context recibe contexto de vista de fragmento dentro de actividad
  * @param data arreglo de Publicaciones priorizadas para Usuario
  */
-class DescubreAdapter(private val context: Context, private val data: ArrayList<Publicacion>):
+class DescubreAdapter( private val data: ArrayList<Publicacion>):
     RecyclerView.Adapter<DescubreAdapter.CardViewHolder>() {
 
     /**
@@ -66,7 +66,7 @@ class DescubreAdapter(private val context: Context, private val data: ArrayList<
      */
     override fun onBindViewHolder(holder: DescubreAdapter.CardViewHolder, position: Int) {
         var item: Publicacion = data[position]
-        holder.bind(item, context)
+        holder.bind(item)
     }
 
     /**
@@ -102,7 +102,7 @@ class DescubreAdapter(private val context: Context, private val data: ArrayList<
          * @param item Publicación a desplegar obtenida en arreglo de Publicaciones priorizadas
          * @param context vista de fragmento dentro de actividad
          */
-        fun bind(item: Publicacion, context: Context) {
+        fun bind(item: Publicacion) {
             loadImages(item.foto, swipeCardImage)
 
             swipeCardName.setText(item.idSitio?.nombre)

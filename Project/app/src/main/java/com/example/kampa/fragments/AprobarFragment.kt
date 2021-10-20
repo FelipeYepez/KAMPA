@@ -127,7 +127,7 @@ class AprobarFragment : Fragment(), CardStackListener {
         cardStackLayoutManager.setCanScrollHorizontal(true)
         cardStackLayoutManager.setCanScrollVertical(true)
         swipeCard.layoutManager = cardStackLayoutManager
-        adapter = DescubreAdapter(requireContext(), data)
+        adapter = DescubreAdapter( data)
         swipeCard.adapter = adapter
 
         swipeCard.itemAnimator.apply {
