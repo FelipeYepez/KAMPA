@@ -27,10 +27,12 @@ import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-/** * @author Andrea Piñeiro Cavazos <a01705681@itesm.mx>
+/** * @author RECON
+ *
  *  Actividad para crear denuncias de mal uso desde el rol de usuario,
  *  añadiendo descripción y una imagen tomada con la cámara o eligiendo
  *  del carrete.
+ *
  *  @version 1.0
  */
 
@@ -48,6 +50,7 @@ class CrearDenunciaActivity : AppCompatActivity() {
     /**
      * Se llama cuando la actividad se crea; obtiene el sitio de la denuncia
      * de los extras, inicializa componentes y listeners.
+     *
      * @param savedInstanceState
      */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,6 +155,7 @@ class CrearDenunciaActivity : AppCompatActivity() {
     /**
      * Función para revisar si el usuario ya accedió a dar permiso para usar las imagenes de
      * la galería.
+     *
      * @param permission  permiso que vav a verificar si se tiene el el Manifest
      * @param requestCode
      */
@@ -167,6 +171,7 @@ class CrearDenunciaActivity : AppCompatActivity() {
 
     /**
      * Función para convertir una foto en formato Uri a Bitmap
+     *
      * @param photoUri  uri de la foto a convertir
      * @return image   imagen en formato de Bitmap
      */

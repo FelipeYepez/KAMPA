@@ -13,12 +13,14 @@ import com.example.kampa.models.Denuncia
 import com.parse.GetDataCallback
 import com.parse.ParseFile
 
-/** * @author Andrea Piñeiro Cavazos <a01705681@itesm.mx>
+/** * @author RECON
  *  Adapter para hacer binding entre el arreglo de data a las views
  *  que tienen que mostrarse dentro del recycler view de denundias.
+ *
  *  @param context
  *  @param data  ArrayList que contiene las denuncias a mostrar
  *  @param onItemClicked función para mostrar la información de la denuncia al hacer click.
+ *
  *  @version 1.0
  */
 
@@ -30,6 +32,7 @@ class DenunciasAdapter(private val context: Context,
     /**
      * Se llama para crear un ViewHolder para representar un item.
      * Se infla el xml layout para representar los items del tipo dado.
+     *
      * @param parent  ViewGroup en el que la nueva vista se va a añadir en una posiicón
      * @param viewType  el tipo de view de la nueva vista
      */
@@ -40,6 +43,7 @@ class DenunciasAdapter(private val context: Context,
 
     /**
      * Función que retorna el número total de items en el arraylist de datos.
+     *
      * @return data.size
      */
     override fun getItemCount(): Int {
@@ -50,6 +54,7 @@ class DenunciasAdapter(private val context: Context,
      * Función llamada por el RecyclerView para mostrar el dato en una
      * posición específica. Actualiza los contenidos del itemView para mostrar
      * el item en una posición dada.
+     *
      * @param holder  El ViewHolder que debe actualizarse
      * @param position  La posición del item dentro del data set del adaptador.
      */
@@ -60,6 +65,7 @@ class DenunciasAdapter(private val context: Context,
 
     /** * @author Andrea Piñeiro Cavazos <a01705681@itesm.mx>
      *  Inner class de View Holder, donde se van a mostrar los datos
+     *
      *  @param view
      *  @param onItemClicked función para mostrar la información de la denuncia al hacer click.
      *  @version 1.0
@@ -79,8 +85,10 @@ class DenunciasAdapter(private val context: Context,
 
         /**
          * Función para cargar una imagen dentro de un imageView
+         *
          * @param foto  imagen de tipo parse file que queremos mostrar
          * @param imgView  imageView en el que queremos que se despliegue la imagen
+         *
          * @return void - el imageView contiene la foto
          */
         private fun loadImages(foto: ParseFile?, imgView: ImageView) {
@@ -100,6 +108,7 @@ class DenunciasAdapter(private val context: Context,
 
         /**
          * Función para hacer binding de los elementos en la vista.
+         *
          * Hace set del titulo, la descripción y la imagen con los datos correspondientes
          * @param item  Denuncia con los datos que queremos mostrar
          * @param context
@@ -113,6 +122,7 @@ class DenunciasAdapter(private val context: Context,
          * Función que sobrescribe OnClick y manda llamar la función recibida como parámatro
          * por el adaptador, para que al dar click en un item,
          * se abra la información de esa denuncia.
+         *
          * @param view
          */
 
