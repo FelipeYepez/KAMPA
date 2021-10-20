@@ -193,9 +193,10 @@ class NuevaPublicacionActivity : AppCompatActivity() {
         var chipTag:Chip = layoutInflater.inflate(R.layout.chip_item,null,false) as Chip
         chipTag.setOnCloseIconClickListener { view ->
             chips.removeView(view)
+            addedChips.remove(tags.selectedItemId.toInt())
         }
-        chipTag.text = tags.selectedItem.toString()
 
+        chipTag.text = tags.selectedItem.toString()
         val found = addedChips.contains(tags.selectedItemId.toInt())
 
         // validar que el tag no haya sido seleccionado antes y que ya haya seleccionado algun tag
