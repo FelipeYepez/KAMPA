@@ -52,7 +52,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
     var selectedBitmapImage: Bitmap? = null
     var selectedUriImage: Uri? = null
     var permission: Boolean? = null
-    var currentLocation: Location? = null
+    private var  currentLocation = LatLng(20.596478229745216, -100.38763531866927)
     var nuevoSitio = Sitio()
 
     /**
@@ -81,9 +81,9 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
         //Obtiene la ubicación exacta del usuario
         currentLocation = if (savedInstanceState == null) {
             val extras = intent.extras
-            extras?.get("currentLocation") as Location
+            extras!!.get("currentLocation") as LatLng
         } else {
-            savedInstanceState.getSerializable("currentLocation") as Location
+            savedInstanceState.getSerializable("currentLocation") as LatLng
         }
 
         //Coloca la imagen seleccionada de un intent en el preview del nuevo sitio
@@ -110,8 +110,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
                 val intent = result.data
                 val latLngLocation = LatLng(intent!!.getDoubleExtra("latitude",0.0),intent!!.getDoubleExtra("longitude",0.0))
                 Log.d(TAG,latLngLocation.toString())
-                currentLocation!!.latitude =latLngLocation.latitude
-                currentLocation!!.longitude =latLngLocation.longitude
+                currentLocation = latLngLocation
                 gMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngLocation, 18f))
             }
         }
@@ -186,16 +185,16 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         gMap = googleMap
-        gMap?.setMyLocationEnabled(permission!!)
+        //gMap?.setMyLocationEnabled(permission!!)
 
         //Mover la camara a la localización seleccionada por el usuario y la ubicación del usuario
-       val latLng = LatLng(currentLocation!!.getLatitude(), currentLocation!!.getLongitude())
-        gMap?.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                latLng,
-                18f
-            )
-        )
+//       val latLng = LatLng(currentLocation!!.getLatitude(), currentLocation!!.getLongitude())
+//        gMap?.moveCamera(
+//            CameraUpdateFactory.newLatLngZoom(
+//                latLng,
+//                18f
+//            )
+//        )
 
         //Al seleccionar el mapa comienza el fragmento nueva ubicación
         gMap?.setOnMapClickListener(GoogleMap.OnMapClickListener {

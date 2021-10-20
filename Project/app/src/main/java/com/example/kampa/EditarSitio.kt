@@ -52,8 +52,8 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
     private var selectedBitmapImage: Bitmap? = null
     private var selectedUriImage: Uri? = null
     private var permission: Boolean? = null
-    private var currentLocation: Location? = null
-    private var sitioUbicacion: Location? = null
+    private var  currentLocation = LatLng(20.596478229745216, -100.38763531866927)
+    private var  sitioUbicacion = LatLng(20.596478229745216, -100.38763531866927)
     private lateinit var setPhotoForResult: ActivityResultLauncher<Intent>
     private lateinit var setLocationForResult: ActivityResultLauncher<Intent>
 
@@ -85,15 +85,14 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
 
         currentLocation = if (savedInstanceState == null) {
             val extras = intent.extras
-            extras?.get("currentLocation") as? Location
+            extras?.get("currentLocation") as LatLng
         } else {
-            savedInstanceState.getSerializable("currentLocation") as? Location
+            savedInstanceState.getSerializable("currentLocation") as LatLng
         }
 
         sitioUbicacion = currentLocation
         if (sitio.ubicacion != null) {
-            sitioUbicacion?.longitude = sitio.ubicacion!!.longitude
-            sitioUbicacion?.latitude = sitio.ubicacion!!.latitude
+            sitioUbicacion = sitio.ubicacion as LatLng
         }
     }
 
@@ -107,8 +106,7 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
                     resultData!!.getDoubleExtra("longitude",0.0)
                 )
 
-                sitioUbicacion!!.latitude = latLngLocation.latitude
-                sitioUbicacion!!.longitude = latLngLocation.longitude
+                sitioUbicacion = latLngLocation
 
                 locationMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngLocation, 18f))
             }
@@ -233,10 +231,9 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         locationMap = _locationMap
         locationMap.setMyLocationEnabled(permission!!)
 
-        val latLng = LatLng(sitioUbicacion!!.getLatitude(), sitioUbicacion!!.getLongitude())
         locationMap.moveCamera(
             CameraUpdateFactory.newLatLngZoom(
-                latLng,
+                sitioUbicacion,
                 18f
             )
         )

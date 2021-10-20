@@ -21,6 +21,11 @@ import com.example.kampa.models.Denuncia
 import com.google.android.material.snackbar.Snackbar
 import com.parse.ParseQuery
 
+/** * @author Andrea Piñeiro Cavazos <a01705681@itesm.mx>
+ *  Fragmento para visualizar las denuncias de mal uso desde el rol de administrador,
+ *  las denuncias se agrupan de acuerdo a su estado: Sin Resolver, Inválidas, Procesadas.
+ *  @version 1.0
+ */
 
 class DenunciasFragment : Fragment() {
 
@@ -35,7 +40,12 @@ class DenunciasFragment : Fragment() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var denunciasAdapter: DenunciasAdapter
 
-
+    /**
+     * Se llama cuando el fragmento se crea, en esta función se
+     * crea el layour y se infla la vista
+     * @param inflater
+     * @param savedInstanceState
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,6 +54,13 @@ class DenunciasFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_denuncias, container, false)
     }
 
+    /**
+     * Se llama después de que se crea la vista, se incializan los componentes
+     * y los listeners; manda llamar la función initialize data con la query para
+     * obtener las denuncias sin resolver.
+     * @param view
+     * @param savedInstanceState
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -56,9 +73,19 @@ class DenunciasFragment : Fragment() {
         btnSinResolver.setTextColor(Color.WHITE)
 
         initializeListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
         initializeData("sinResolver")
     }
 
+    /**
+     * Función que inicializa los listeners de los botones para visualizar las
+     * denuncias dependiendo de su estado: Sin resolver, Procesadas, Inválidas.
+     * En el listener de cada botón se manda llamar la función de initializeData
+     * que realiza la query para obtener las denuncias dependiendo del estaod seleccionado.
+     */
     fun initializeListeners() {
         btnSinResolver.setOnClickListener {
             originalBackroundTint()
@@ -83,6 +110,15 @@ class DenunciasFragment : Fragment() {
 
     }
 
+    /**
+     * Función que crea la query para obtener todas las denuncias que se encuentren
+     * en el estado recibido. Se obtienen las denuncias de la base de datos de
+     * Parse y se agrega cada una a la lista "data" que se usa para desplegar los
+     * datos con el adaptador.
+     * Al finalizar, se manda llamar la función initializeList que crea un
+     * LinearLayoutManager y un adaptador para la recycler view.
+     * @param state  string con el estado de las denuncias que se quieren obtener
+     */
     private fun initializeData(state: String) {
         val query: ParseQuery<Denuncia> = ParseQuery.getQuery(Denuncia::class.java)
         data = ArrayList()
@@ -102,10 +138,13 @@ class DenunciasFragment : Fragment() {
             else {
                 view?.let { Snackbar.make(it.findViewById(R.id.content), "Error al obtener las denuncias", Snackbar.LENGTH_SHORT).show() }
             }
-
         }
     }
 
+    /**
+     * Función que crea un LinearLayoutManager y un adaptador (de tipo denunciasAdapter)
+     * y lo asigna a la recyclerView.
+     */
     fun initializeList() {
         linearLayoutManager = LinearLayoutManager(requireContext())
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -122,6 +161,10 @@ class DenunciasFragment : Fragment() {
         recyclerView.itemAnimator = DefaultItemAnimator()
     }
 
+    /**
+     * Función auxiliar que sirve para regresar los botones a su color original
+     * después de que se selecciona otro.
+     */
     private fun originalBackroundTint() {
         btnSinResolver.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#E3E3E3"))
         btnSinResolver.setTextColor(Color.BLACK)
@@ -133,6 +176,12 @@ class DenunciasFragment : Fragment() {
         btnInvalidas.setTextColor(Color.BLACK)
     }
 
+    /**
+     * Función que devuleve la información de una denuncia en una posición específica
+     * de la lista. Se usa para que al hacer click en un elemento de la lista, se
+     * cree la actividad Denuncia que mostrará la información completa de la denuncia seleccionada
+     * @param position  Posición de la denuncia dentro de la lista "data"
+     */
     private fun onListItemClick(position: Int) {
         val denuncia: Denuncia = data[position] as Denuncia
         val i = Intent(activity, DenunciaActivity::class.java)

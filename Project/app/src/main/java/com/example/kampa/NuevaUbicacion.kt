@@ -35,7 +35,7 @@ class NuevaUbicacion : AppCompatActivity(), OnMapReadyCallback {
 
     private var map: GoogleMap? = null
     private var mapView: MapView? = null
-    private var currentLocation: Location? = null
+    private var  currentLocation = LatLng(20.596478229745216, -100.38763531866927)
     var btnSave: Button? = null
     val TAG:String = "NewLocationActivity"
 
@@ -48,7 +48,7 @@ class NuevaUbicacion : AppCompatActivity(), OnMapReadyCallback {
         //Declarar varables de los componentes de la vista
         btnSave = findViewById(R.id.btnSave)
         mapView = findViewById(R.id.mapNewLocation)
-        currentLocation = intent.getParcelableExtra("currentLocation")
+        currentLocation = intent.getParcelableExtra("currentLocation")!!
         Log.d(TAG, "currentLocation: $currentLocation")
 
         //Inicializar el fragmento del Mapa
@@ -126,9 +126,7 @@ class NuevaUbicacion : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(@NotNull googleMap: GoogleMap) {
         Log.d(TAG, "Entered map")
         map = googleMap
-        val currentLocationLatLng =
-            LatLng(currentLocation!!.getLatitude(), currentLocation!!.getLongitude())
-        map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocationLatLng, 18f))
+        map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18f))
     }
 
 

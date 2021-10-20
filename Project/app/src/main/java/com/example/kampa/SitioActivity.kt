@@ -15,13 +15,19 @@ import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
 import com.example.kampa.models.*
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.parse.*
 
-
+/**
+ * @author RECON
+ * Actividad que inicia cuando se selecciona el marcador de un sitio en MapaFragment
+ * Obtiene desde la base de datos los atributos del sitio seleccionado y los despliega en una vista
+ */
 class SitioActivity : AppCompatActivity() {
+    val TAG = "SitioActivity"
 
 
     private lateinit var ibEliminarSitio: ImageButton
@@ -34,15 +40,14 @@ class SitioActivity : AppCompatActivity() {
     private var rolObject: Rol? = null
     private lateinit var sitio: Sitio
     private var permission: Boolean? = null
-    private var currentLocation: Location? = null
+    private var  currentLocation = LatLng(20.596478229745216, -100.38763531866927)
     private var usuarioSitio: UsuarioSitio? = null
-
-    val TAG = "SitioActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sitio)
 
+        //Obtiene el sitio seleccionado a través de un extra que se guardó en MapaFragment
         sitio = if (savedInstanceState == null) {
             val extras = intent.extras
             extras?.get("sitio") as Sitio
@@ -50,6 +55,7 @@ class SitioActivity : AppCompatActivity() {
             savedInstanceState.getSerializable("sitio") as Sitio
         }
 
+        //Obtiene los permisos aceptados igualmente de un extra
         permission = if (savedInstanceState == null) {
             val extras = intent.extras
             extras?.get("permission") as? Boolean
@@ -57,17 +63,20 @@ class SitioActivity : AppCompatActivity() {
             savedInstanceState.getSerializable("permission") as? Boolean
         }
 
+        //Obtiene la localización actual del usuario
         currentLocation = if (savedInstanceState == null) {
             val extras = intent.extras
-            extras?.get("currentLocation") as? Location
+            extras?.get("currentLocation") as LatLng
         } else {
-            savedInstanceState.getSerializable("currentLocation") as? Location
+            savedInstanceState.getSerializable("currentLocation") as LatLng
         }
 
+        //Rol del usuario autenticado
         var currentRole: Rol = ParseUser.getCurrentUser().get(Constantes.ID_ROL) as Rol
 
         rolQuery(currentRole.objectId.toString())
 
+        //Si el rol del usuario es administrador, se muestra un botón para añadir sitios
         if(rolObject?.descripcion == Constantes.ADMINISTRADOR){
             ibEliminarSitio = findViewById(R.id.ibEliminarSitio)
             ibEliminarSitio.visibility = View.VISIBLE
@@ -82,9 +91,7 @@ class SitioActivity : AppCompatActivity() {
             }
         }
 
-        /*
-         * On click Listener para el botón de registrar denuncia
-         */
+        //On click Listener para el botón de registrar denuncia
         registrarDenuncia = findViewById(R.id.DenunciarBtn)
         registrarDenuncia.setOnClickListener{
             val intent = Intent(this, CrearDenunciaActivity::class.java)
@@ -92,15 +99,14 @@ class SitioActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        /*
-         * On click Listener para el botón de registrar visitado
-         */
+        //On click Listener para el botón de registrar visitado
         btnRegistrarVisitado = findViewById(R.id.VisitedBtn)
         verificarSitioVisitado()
         btnRegistrarVisitado.setOnClickListener{
             cambiarVisitado()
         }
 
+        //On click Listener para agregar una nueva publicación
         btnListaDeseos = findViewById(R.id.addWishListBtn)
         btnListaDeseos.setOnClickListener{
             guardarSitioEnWishlist()
@@ -109,11 +115,8 @@ class SitioActivity : AppCompatActivity() {
 
         val nuevaPublicacion: FloatingActionButton = findViewById(R.id.floatingActionButton)
         nuevaPublicacion.setOnClickListener{
-
             val i = Intent(this, NuevaPublicacionActivity::class.java)
-
             i.putExtra("sitio", sitio)
-
             startActivity(i)
         }
 
@@ -129,8 +132,7 @@ class SitioActivity : AppCompatActivity() {
         val titleHistoria : TextView = findViewById(R.id.titleHistoria)
         if(historia.text.length > 0){
             titleHistoria.visibility = View.VISIBLE
-        }
-        else{
+        } else{
             titleHistoria.visibility = View.INVISIBLE
         }
 
@@ -142,6 +144,10 @@ class SitioActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Busca un objeto de tipo Rol con su ObjectId
+     * @param id objectId del rol que tiene el usuario autenticado
+     */
 
 
 
@@ -335,26 +341,29 @@ class SitioActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Coloca una imagen tipo ParseFile en el ImageView del sitio
+     * @param foto imagen que se obtuvo de la base de datos
+     * @param imgView vista en la que se coloca la imagen
+     */
     private fun loadImages(foto: ParseFile?, imgView: ImageView){
         if (foto != null) {
             foto.getDataInBackground(GetDataCallback { data, e ->
                 if (e == null) {
                     val bmp = BitmapFactory.decodeByteArray(data, 0, data.size)
                     imgView.setImageBitmap(bmp)
-                }
-                else{
+                } else{
                     Log.d(TAG, e.toString())
-
                 }
             })
+        } else{
+            Log.d(TAG, "No hay imagen")
         }
-        else{
-            Log.d(TAG, "Foto = NULL")
-        }
-
     }
 
+    /**
+     * Intent para editar el sitio correspondiente
+     */
     private fun eliminarSitio() {
         MaterialAlertDialogBuilder(this)
             .setTitle(resources.getString(R.string.confirmar_eliminar))
@@ -385,6 +394,9 @@ class SitioActivity : AppCompatActivity() {
         startActivity(editarSitio)
     }
 
+    /**
+     * Marcar un sitio como visitado
+     */
     private fun cambiarVisitado(){
         if (usuarioSitio != null) {
             // Si Sitio ya fue visitado por usuario marcar como no visitado
@@ -410,6 +422,9 @@ class SitioActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Verificar si un sitio ya está visitado
+     */
     private fun verificarSitioVisitado(){
         // Parse Query para marcar Sitio como visitado por Usuario
         val querySitioVisitado: ParseQuery<UsuarioSitio> = ParseQuery.getQuery(UsuarioSitio::class.java)
@@ -444,6 +459,9 @@ class SitioActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Cambiar el color del botón "Visitado" dependiendo de si está visitado o no
+     */
     private fun UIVisitado(visitado: Boolean){
         if(visitado){
             btnRegistrarVisitado.setTextColor(ContextCompat.getColor(this,

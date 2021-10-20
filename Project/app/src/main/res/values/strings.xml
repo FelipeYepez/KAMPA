@@ -48,4 +48,8 @@
     <string name="confirmar_eliminar">Confirmar Eliminación</string>
     <string name="eliminar">Eliminar</string>
     <string name="seguro_eliminar_sitio">¿Estás seguro de eliminar este sitio?</string>
+    <string name="escriba_username">Escriba su nombre de usuario</string>
+    <string name="escriba_password">Escriba su contraseña</string>
+    <string name="valores_correctos">Valores correctos</string>
+    <string name="valores_completos">Valores Completos</string>
 </resources>

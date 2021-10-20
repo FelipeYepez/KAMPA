@@ -27,6 +27,7 @@ import java.io.File
 import java.io.IOException
 
 /**
+ * @author RECON
  * Actividad para añadir una nueva publicación relacionada a un sitio en la base de datos
  */
 class NuevaPublicacionActivity : AppCompatActivity() {
@@ -55,6 +56,7 @@ class NuevaPublicacionActivity : AppCompatActivity() {
         chips = findViewById(R.id.chipGroupTag)
         tags =findViewById(R.id.tags)
 
+        //Obtiene el sitio de la publicación que se va a registrar
         sitio = if (savedInstanceState == null) {
             val extras = intent.extras
             extras?.get("sitio") as Sitio
@@ -62,13 +64,16 @@ class NuevaPublicacionActivity : AppCompatActivity() {
             savedInstanceState.getSerializable("sitio") as Sitio
         }
 
+        //Despliega los tags existentes en la base de datos
         displayTags()
 
+        //ClickListener para añadir tags a la publicación
         var botonTag:Button = findViewById(R.id.botonTag)
         botonTag.setOnClickListener{
             creaChipTag()
         }
 
+        //Manejo del resultado de un intent, se recibe la imagen y se guarda en un ImageView para visualizarla
         var startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -83,11 +88,13 @@ class NuevaPublicacionActivity : AppCompatActivity() {
             }
         }
 
+        //ClickListener para ir al intent TakePicture si el usuario quiere capturar la imagen él mismo
         val capturarImagenButton: Button = findViewById(R.id.capturarImagenButton)
         capturarImagenButton.setOnClickListener{
             startForResult.launch(Intent(this, TakePictureActivity::class.java))
         }
 
+        //ClickListener para seleccionar una imagen de la galería
         val galeriaImagenButton: Button = findViewById(R.id.galeriaImagenButton)
         galeriaImagenButton.setOnClickListener{
             val i = Intent()
@@ -96,6 +103,7 @@ class NuevaPublicacionActivity : AppCompatActivity() {
             startForResult.launch(Intent.createChooser(i, "Select Picture"))
         }
 
+        //ClickListener para guardar los cambios y registrar la publicación en la base de datos
         val submitButtonPublicacion: Button = findViewById(R.id.submitButtonSitio)
         submitButtonPublicacion.setOnClickListener{
             inputDescripcion = findViewById(R.id.inputDescripcion)
@@ -129,7 +137,7 @@ class NuevaPublicacionActivity : AppCompatActivity() {
      */
     private fun savePublicacion(){
         val progressDialog = ProgressDialog(this)
-
+        progressDialog.show()
         publicacion.descripcion = inputDescripcion?.text.toString()
         publicacion.idSitio = sitio
         publicacion.idUsuario = ParseUser.getCurrentUser()
@@ -150,6 +158,7 @@ class NuevaPublicacionActivity : AppCompatActivity() {
                     for (el in addedChips){
                         saveTag(el)
                     }
+                    Toast.makeText(this, "Publicación guardada exitosamente", Toast.LENGTH_SHORT).show()
                     finish()
                 } else if(e != null) {
                     Log.d(TAG, e.toString())
@@ -159,7 +168,7 @@ class NuevaPublicacionActivity : AppCompatActivity() {
         else{
             Toast.makeText(this, "Selecciona una imagen", Toast.LENGTH_SHORT).show()
         }
-        progressDialog.show()
+        progressDialog.hide()
     }
 
     /**

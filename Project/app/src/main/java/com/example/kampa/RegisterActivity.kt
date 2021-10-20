@@ -85,3 +85,33 @@ class RegisterActivity : AppCompatActivity() {
     }
 
 }
+
+object RegisterUtils{
+    /**
+     * Valida que los campos para registrar un nuevo usuario sean validos
+     *
+     *
+     */
+    fun validateInputs(usuario: String, password: String, passwordAgain: String):String{
+        val addecuatePassword = Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@\$%^&*-]).{8,}\$")
+        if(usuario.length == 0){
+            return "Escribe el nombre de usuario"
+        }
+        else if(password.length == 0){
+            return "Escribe la contrasena"
+        }
+        else if(password.length < 8){
+            return "Contra demasiado corta"
+        }
+        else if(passwordAgain.length == 0){
+            return "Valida la contrasena"
+        }
+        else if(!addecuatePassword.containsMatchIn(password)){
+            return "Contrasena invalida"
+        }
+        else if(password != passwordAgain){
+            return "Validacion nula"
+        }
+        return "todo correcto"
+    }
+}
