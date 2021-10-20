@@ -73,6 +73,10 @@ class DenunciasFragment : Fragment() {
         btnSinResolver.setTextColor(Color.WHITE)
 
         initializeListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
         initializeData("sinResolver")
     }
 

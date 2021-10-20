@@ -4,12 +4,14 @@ import android.graphics.BitmapFactory
 import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.example.kampa.models.Denuncia
+import com.google.android.material.snackbar.Snackbar
 import com.parse.GetDataCallback
 import com.parse.ParseFile
 
@@ -110,15 +112,27 @@ class DenunciaActivity() : AppCompatActivity() {
     fun initializeListeners() {
         btnInvalida.setOnClickListener {
             denuncia.estado = "invalida"
-            denuncia.saveInBackground()
-            Toast.makeText(this, "Denuncia Inválida", Toast.LENGTH_LONG).show()
-            finish()
+            denuncia.saveInBackground { e ->
+                if(e == null){
+                    Toast.makeText(this, "Denuncia Inválida", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+                else {
+                    Snackbar.make(findViewById(android.R.id.content), "No se pudo registrar como inválida, intenta más tarde.", Snackbar.LENGTH_SHORT).show()
+                }
+            }
         }
         btnProcesada.setOnClickListener {
             denuncia.estado = "procesada"
-            denuncia.saveInBackground()
-            Toast.makeText(this, "Denuncia Procesada", Toast.LENGTH_LONG).show()
-            finish()
+            denuncia.saveInBackground { e ->
+                if(e == null){
+                    Toast.makeText(this, "Denuncia Procesada", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+                else {
+                    Snackbar.make(findViewById(android.R.id.content), "No se pudo registrar como procesada, intenta más tarde.", Snackbar.LENGTH_SHORT).show()
+                }
+            }
         }
 
     }
