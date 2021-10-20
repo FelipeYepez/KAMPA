@@ -58,19 +58,17 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun login(username: String, password: String) {
+        progressDialog?.show()
         if(intentos >= 2){
             startForResult.launch(Intent(this, reCaptcha::class.java))
         }
         if(intentos < 2){
             val isInputComplete = LoginUtils.validateInputs(username, password)
             if(isInputComplete == getString(R.string.valores_completos)) {
-                progressDialog?.show()
-
                 ParseUser.logInInBackground(
                     username,
                     password
                 ) { parseUser: ParseUser?, parseException: ParseException? ->
-                    progressDialog?.dismiss()
                     if (parseException == null) {
                         if (parseUser != null) {
                             goToMainActivity()
@@ -81,16 +79,19 @@ class LoginActivity : AppCompatActivity() {
                         if (parseException.code == 100) {
                             Toast.makeText(this, "No hay conexión a internet", Toast.LENGTH_SHORT)
                                 .show()
+                            progressDialog?.dismiss()
                         }
                         if (parseException.code == 101) {
                             Toast.makeText(this, "Credenciales inválidas", Toast.LENGTH_SHORT)
                                 .show()
                             intentos += 1
+                            progressDialog?.dismiss()
                         }
                     }
                 }
             } else {
                 Toast.makeText(this, isInputComplete, Toast.LENGTH_SHORT).show()
+                progressDialog?.dismiss()
             }
         }
     }
