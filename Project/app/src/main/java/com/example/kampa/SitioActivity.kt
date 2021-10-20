@@ -63,13 +63,6 @@ class SitioActivity : AppCompatActivity() {
             savedInstanceState.getSerializable("permission") as? Boolean
         }
 
-        //Obtiene la localización actual del usuario
-        currentLocation = if (savedInstanceState == null) {
-            val extras = intent.extras
-            extras?.get("currentLocation") as LatLng
-        } else {
-            savedInstanceState.getSerializable("currentLocation") as LatLng
-        }
 
         //Rol del usuario autenticado
         var currentRole: Rol = ParseUser.getCurrentUser().get(Constantes.ID_ROL) as Rol
@@ -389,7 +382,6 @@ class SitioActivity : AppCompatActivity() {
     private fun goToEditarSitio() {
         val editarSitio = Intent(this, EditarSitio::class.java)
         editarSitio.putExtra(Constantes.PERMISSION, permission)
-        editarSitio.putExtra(Constantes.CURRENT_LOCATION, currentLocation)
         editarSitio.putExtra(Constantes.SITIO, sitio)
         startActivity(editarSitio)
     }

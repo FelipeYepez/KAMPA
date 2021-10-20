@@ -23,9 +23,6 @@
             android:name=".reCaptcha"
             android:exported="true" />
         <activity
-            android:name=".fragments.AprobarFragment"
-            android:exported="true" />
-        <activity
             android:name=".DenunciaActivity"
             android:exported="true" />
         <activity
