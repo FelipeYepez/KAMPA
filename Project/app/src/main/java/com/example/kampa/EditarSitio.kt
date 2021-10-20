@@ -31,6 +31,12 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 
+/**
+ * @author RECON
+ * Actividad que inicia cuando se selecciona el floating action button del mapa.
+ * Crea un nuevo sitio en la base de datos.
+ * @version 1.0
+ */
 class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
 
     private val TAG = "EditarSitio"
@@ -59,6 +65,10 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var sitio: Sitio
 
+    /**
+     * Crea la actividad y llama a funciones
+     * @param savedInstanceState para que la actividad pueda restaurarse a un estado anterior
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editar_sitio)
@@ -68,6 +78,10 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         initializeVariables()
     }
 
+    /**
+     * Obtiene los valores del sitio, el permiso para la ubicación, la ubicación actual
+     * @param savedInstanceState que guarda los valores que se le pasaron a esta actividad
+     */
     private fun getExtras(savedInstanceState: Bundle?) {
         sitio = if (savedInstanceState == null) {
             val extras = intent.extras
@@ -86,11 +100,14 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         sitioUbicacion = currentLocation
         if (sitio.ubicacion != null) {
             sitioUbicacion= LatLng(sitio.ubicacion!!.latitude,sitio.ubicacion!!.longitude)
-
         }
     }
 
-
+    /**
+     * Función para inicializar variables del layout como el nombre del sitio, la foto,
+     * botones para tomar fotos y acceder a la galería, la descripción y el botón para confirmar
+     * cambios.
+     */
     private fun initializeVariables() {
         setLocationForResult = registerForActivityResult(ActivityResultContracts
             .StartActivityForResult()) { result ->
@@ -158,12 +175,20 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Función para inicializar el mapa con el contexto actual y poner la ubicación
+     * actual del usuario en el mapa.
+     */
     private fun initMap() {
         mvLocalizacion = findViewById(R.id.mvLocalizacion) as MapView
         mvLocalizacion?.onCreate(null)
         mvLocalizacion?.getMapAsync(this)
     }
 
+    /**
+     * Función que obtiene de la base de datos los tipos de sitio que hay registrados y el
+     * tipo de sitio del actual sitio.
+     */
     private fun desplegarTipoSitio() {
         val query: ParseQuery<TipoSitio> = ParseQuery.getQuery(TipoSitio::class.java)
         query.findInBackground { itemList, e ->
@@ -187,6 +212,10 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Función que carga la foto del sitio en su layout correspondiente
+     * @param fotoSitio es la foto del Sitio
+     */
     private fun loadFoto(fotoSitio: ParseFile?){
         if (fotoSitio != null) {
             fotoSitio.getDataInBackground(GetDataCallback { data, e ->
@@ -202,6 +231,11 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Función que transforma un Uri a Bitmap para desplegar la imagen del sitio
+     * @param photoUri es el Uri de la imagen del sitio
+     * @return image retorna el Bitmap de la imagen
+     */
     private fun bitmapFromUri(photoUri: Uri?): Bitmap? {
         var image: Bitmap? = null
         try {
@@ -221,6 +255,12 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         return image
     }
 
+    /**
+     * Cuando el mapa ha sido creado se coloca un marcador en la ubicación del usuario o en la
+     * ubicación que seleccionó el usuario.
+     * @param googleMap mapa que ya ha sido inicializado
+     * @suppress si falta el permiso
+     */
     @SuppressLint("MissingPermission")
     override fun onMapReady(_locationMap: GoogleMap) {
         locationMap = _locationMap
@@ -240,6 +280,10 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
+    /**
+     * Toda la información escrita por el usuario se registra en la base de datos para guardar
+     * los cambios al sitio.
+     */
     private fun confirmarCambios() {
         sitio.nombre = etNombre.text.toString()
         sitio.descripcion = etDescripcion.text.toString()

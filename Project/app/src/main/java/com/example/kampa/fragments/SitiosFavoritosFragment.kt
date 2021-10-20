@@ -31,6 +31,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.parse.ParseException
 import com.parse.ParseQuery
 
+/** * @author RECON
+ *  Fragmento para visualizar los sitios de una lista de favoritos seleccionada
+ *  previamente por el usuario.
+ *  @version 1.0
+ */
 class SitiosFavoritosFragment : Fragment(), SitioInterface {
 
     val TAG = "SitiosFavoritosFragment"
@@ -43,6 +48,13 @@ class SitiosFavoritosFragment : Fragment(), SitioInterface {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var sitiosFavoritosAdapter: SitiosFavoritosAdapter
 
+    /**
+     * Se llama cuando el fragmento se crea, en esta función se
+     * crea el layout y se infla la vista
+     * @param inflater inflador de la vista
+     * @param container es el que contiene las vistas para inflar el layout
+     * @param savedInstanceState representa una instancia creada previamente
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,6 +62,12 @@ class SitiosFavoritosFragment : Fragment(), SitioInterface {
         return inflater.inflate(R.layout.fragment_sitios_favoritos, container, false)
     }
 
+    /**
+     * Se llama después de que se crea la vista, se incializan los componentes
+     * y manda llamar la funciones initializeArguments y getSitiosFavoritosList
+     * @param view la vista inflada
+     * @param savedInstanceState representa una instancia creada previamente
+     */
     override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -61,15 +79,28 @@ class SitiosFavoritosFragment : Fragment(), SitioInterface {
         getSitiosFavoritosList()
     }
 
+    /**
+     * Obtenemos la wishlist (lista de favoritos) seleccionada por el usuario
+     * y le damos título a la vista. La lista de favoritos viene en los argumentos
+     * del fragmento
+     */
     private fun initializeArguments() {
         wishlist = arguments?.getParcelable<Wishlist>(Constantes.WISHLIST)!!
         tvTitle.text = wishlist.nombre.toString()
 
+        /**
+         * OnClickListener para cambiar el nombre de la actual lista de favoritos
+         */
         ibChangeName.setOnClickListener {
             changeName()
         }
     }
 
+    /**
+     * Función que llama a la base de datos y obtiene todos los sitios relacionados
+     * con la lista de deseos seleccionada previamente. Después de esto, se llama al adaptador
+     * para desplegar los sitios en el layout
+     */
     private fun getSitiosFavoritosList() {
         val query: ParseQuery<WishlistSitio> = ParseQuery.getQuery(WishlistSitio::class.java)
 
@@ -89,6 +120,12 @@ class SitiosFavoritosFragment : Fragment(), SitioInterface {
         }
     }
 
+    /**
+     * Función que recibe una lista de sitios, crea el adaptador con ellos y
+     * los despliega en la recycler view del layout.
+     * @param sitiosFavoritosList es la lista con los sitios relacionados a la lista
+     * de favoritos que el usuario dio click
+     */
     private fun initializeList(sitiosFavoritosList: MutableList<WishlistSitio>) {
         linearLayoutManager = LinearLayoutManager(this.context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -107,6 +144,10 @@ class SitiosFavoritosFragment : Fragment(), SitioInterface {
         initializeGesture()
     }
 
+    /**
+     * Función que inicializa la gesture para deslizar un sitio de la lista
+     * y al hacerlo, eliminarlo.
+     */
     private fun initializeGesture() {
         val swipeGesture = object : SwipeGestureDelete(this.context) {
 
@@ -126,6 +167,10 @@ class SitiosFavoritosFragment : Fragment(), SitioInterface {
         touchHelper.attachToRecyclerView(rvSitiosFavoritos)
     }
 
+    /**
+     * Función que despliega un diálogo donde se podrá cambiar el nombre de la lista de favoritos
+     * en la que nos encontramos
+     */
     private fun changeName() {
         val myDialogView = LayoutInflater
             .from(this.context)
@@ -154,6 +199,12 @@ class SitiosFavoritosFragment : Fragment(), SitioInterface {
         builder.show()
     }
 
+    /**
+     * Método abstracto de la interfaz SitioInterface. Mostrará un diálogo y el usuario
+     * podrá seleccionar si ir o no a la aplicación de Google Maps para saber cómo
+     * llegar a un sitio seleccionado.
+     * @param sitio es el sitio seleccionado por el usuario
+     */
     override fun passSitio(sitio: Sitio) {
         Log.d(TAG, sitio.nombre.toString())
 

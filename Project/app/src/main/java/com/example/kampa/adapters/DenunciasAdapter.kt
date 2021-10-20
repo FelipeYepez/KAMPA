@@ -109,13 +109,13 @@ class DenunciasAdapter(private val context: Context,
             denunciasTitle.setText(item.idSitio?.nombre)
             denunciaDescripcion.setText(item.descripcion)
         }
-
         /**
          * Función que sobrescribe OnClick y manda llamar la función recibida como parámatro
          * por el adaptador, para que al dar click en un item,
          * se abra la información de esa denuncia.
          * @param view
          */
+
         override fun onClick(v: View) {
             val position = adapterPosition
             onItemClicked(position)

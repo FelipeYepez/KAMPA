@@ -5,6 +5,9 @@ import com.parse.ParseClassName
 import com.parse.ParseFile
 import com.parse.ParseObject
 
+/** * @author RECON
+ *  Clase para obtener y settear los valores de la tabla PublicacionTags en la base de datos.
+ */
 @ParseClassName("PublicacionTags")
 class PublicacionTags : ParseObject() {
 

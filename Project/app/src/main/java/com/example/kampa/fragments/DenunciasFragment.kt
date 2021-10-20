@@ -42,8 +42,9 @@ class DenunciasFragment : Fragment() {
 
     /**
      * Se llama cuando el fragmento se crea, en esta función se
-     * crea el layour y se infla la vista
+     * crea el layout y se infla la vista
      * @param inflater
+     * @param container
      * @param savedInstanceState
      */
     override fun onCreateView(
@@ -75,6 +76,10 @@ class DenunciasFragment : Fragment() {
         initializeListeners()
     }
 
+    /**
+     * Sobreescritura de onResume: función del ciclo de vida de un fragmento
+     * que resume el fragmento en la última instancia donde estaba.
+     */
     override fun onResume() {
         super.onResume()
         initializeData("sinResolver")

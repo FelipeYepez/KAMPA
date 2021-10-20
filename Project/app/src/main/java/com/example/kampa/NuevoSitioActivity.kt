@@ -33,6 +33,7 @@ import java.io.IOException
  * @author RECON
  * Actividad que inicia cuando se selecciona el floating action button del mapa.
  * Crea un nuevo sitio en la base de datos.
+ * @version 1.0
  */
 class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
     val TAG = "NuevoSitio"

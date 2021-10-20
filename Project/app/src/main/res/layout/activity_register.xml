@@ -96,6 +96,7 @@
                     android:drawablePadding="6dp"
                     android:backgroundTint="@color/white"
                     android:hint="Usuario"
+                    android:maxLength="32"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,6 +115,7 @@
                     android:drawablePadding="6dp"
                     android:backgroundTint="@color/white"
                     android:hint="Contraseña"
+                    android:maxLength="32"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -134,6 +136,7 @@
                     android:drawablePadding="6dp"
                     android:backgroundTint="@color/white"
                     android:hint="Confirmar contraseña"
+                    android:maxLength="32"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
