@@ -3,7 +3,9 @@ package com.example.kampa
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.provider.Settings.Global.getString
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -56,36 +58,64 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun login(username: String, password: String) {
-        if(intentos >= 3){
+        if(intentos >= 2){
             startForResult.launch(Intent(this, reCaptcha::class.java))
         }
-        if(intentos < 3){
-            progressDialog?.show()
-            ParseUser.logInInBackground(username,password) { parseUser: ParseUser?, parseException: ParseException? ->
-                progressDialog?.dismiss()
-                if (parseException == null){
-                    if (parseUser != null) {
-                        goToMainActivity()
-                    }
-                    else {
-                        ParseUser.logOut()
+        if(intentos < 2){
+            val isInputComplete = LoginUtils.validateInputs(username, password)
+            if(isInputComplete == getString(R.string.valores_completos)) {
+                progressDialog?.show()
+
+                ParseUser.logInInBackground(
+                    username,
+                    password
+                ) { parseUser: ParseUser?, parseException: ParseException? ->
+                    progressDialog?.dismiss()
+                    if (parseException == null) {
+                        if (parseUser != null) {
+                            goToMainActivity()
+                        } else {
+                            ParseUser.logOut()
+                        }
+                    } else {
+                        if (parseException.code == 100) {
+                            Toast.makeText(this, "No hay conexión a internet", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        if (parseException.code == 101) {
+                            Toast.makeText(this, "Credenciales inválidas", Toast.LENGTH_SHORT)
+                                .show()
+                            intentos += 1
+                        }
                     }
                 }
-                else{
-                    if(parseException.code == 100){
-                        Toast.makeText(this, "No hay conexión a internet", Toast.LENGTH_SHORT).show()
-                    }
-                    if(parseException.code == 101){
-                        Toast.makeText(this, "Credenciales inválidas", Toast.LENGTH_SHORT).show()
-                        intentos += 1
-                    }
-                }
+            } else {
+                Toast.makeText(this, isInputComplete, Toast.LENGTH_SHORT).show()
             }
         }
     }
+
     private fun goToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+}
+
+object LoginUtils {
+
+    /**
+     * Valida que los campos obligatorios para ingresar al sistema hayan sido llenados.
+     * @param username nombre de usuario
+     * @param password contraseña del usuario
+     */
+    fun validateInputs(username:String, password:String):String {
+        if(username.isEmpty()){
+            return "Escriba su nombre de usuario"
+        } else if(password.isEmpty()){
+            return "Escriba su contraseña"
+        }
+
+        return "Valores Completos"
     }
 }
