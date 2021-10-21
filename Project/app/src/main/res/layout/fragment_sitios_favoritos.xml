@@ -33,7 +33,7 @@
             android:layout_toEndOf="@+id/tvTitle"
             android:background="@android:color/transparent"
             android:src="@android:drawable/ic_menu_edit"
-            app:tint="@color/blue_color" />
+            app:tint="@color/amarilloEsenciaPatrimonio" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvSitiosFavoritos"
