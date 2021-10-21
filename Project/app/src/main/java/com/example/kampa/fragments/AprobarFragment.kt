@@ -13,7 +13,7 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.kampa.Constantes
-import com.example.kampa.DescubreAdapter
+import com.example.kampa.adapters.DescubreAdapter
 import com.example.kampa.R
 import com.example.kampa.models.*
 import com.parse.*
@@ -36,7 +36,7 @@ class AprobarFragment : Fragment(), CardStackListener {
     private var param2: String? = null
 
     private lateinit var cardStackLayoutManager: CardStackLayoutManager
-    private lateinit var adapter:DescubreAdapter
+    private lateinit var adapter: DescubreAdapter
     private lateinit var swipeCard: CardStackView
     private lateinit var data: ArrayList<Publicacion>
     private lateinit var lastPublicacionCardDisappeared: Publicacion

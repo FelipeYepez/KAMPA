@@ -14,7 +14,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.kampa.Constantes
-import com.example.kampa.DescubreAdapter
+import com.example.kampa.adapters.DescubreAdapter
 import com.example.kampa.R
 import com.example.kampa.models.*
 import com.example.kampa.models.Wishlist
@@ -46,7 +46,7 @@ class DescubreFragment : Fragment(), CardStackListener {
 
     // Variables que serán inicializadas y usadas en Fragmento
     private lateinit var cardStackLayoutManager: CardStackLayoutManager
-    private lateinit var adapter:DescubreAdapter
+    private lateinit var adapter: DescubreAdapter
     private lateinit var swipeCard: CardStackView
     private lateinit var data: ArrayList<Publicacion>
     private lateinit var lastPublicacionCardDisappeared: Publicacion
