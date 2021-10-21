@@ -10,7 +10,8 @@
     <color name="accent_color">#D83670</color>
     <color name="blue_color">#15CDCD</color>
     <color name="colorPrimary">#AFAFAF</color>
-    <color name="amarillo">#ECB618</color>
+    <color name="amarillo">#ECB518</color>
+    <color name="verde">#B8C442</color>
     <color name="azul">#14B2B2</color>
     <color name="rosa">#D93671</color>
     <color name="colorPrimaryDark">#0641B7</color>
