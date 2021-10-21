@@ -244,7 +244,7 @@ class NuevoSitioActivity : AppCompatActivity(), OnMapReadyCallback{
                 }
             }
             finish()
-        }else if(isUrlValid == false){
+        } else if(isUrlValid == false){
             Toast.makeText(this, "La página web ingresada no existe", Toast.LENGTH_SHORT).show()
         } else{
             Toast.makeText(this, isInputComplete, Toast.LENGTH_SHORT).show()
