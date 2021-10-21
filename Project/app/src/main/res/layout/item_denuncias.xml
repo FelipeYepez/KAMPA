@@ -43,7 +43,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
                 android:maxLines="4"
-                android:text="Descripción de la Denuncia"
+                android:text="Descripción de la Sugerencia"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 />

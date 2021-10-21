@@ -133,7 +133,7 @@
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_baseline_warning_24"
                     android:gravity="center"
-                    android:text="Denunciar"
+                    android:text="Sugerir"
                     android:textColor="@color/black"
                     android:textSize="12dp"
                     app:backgroundTint="@color/white" />

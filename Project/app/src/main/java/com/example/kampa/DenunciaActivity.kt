@@ -119,7 +119,7 @@ class DenunciaActivity() : AppCompatActivity() {
             denuncia.estado = "invalida"
             denuncia.saveInBackground { e ->
                 if(e == null){
-                    Toast.makeText(this, "Denuncia Inválida", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Sugerencia Inválida Inválida", Toast.LENGTH_LONG).show()
                     finish()
                 }
                 else {
@@ -131,7 +131,7 @@ class DenunciaActivity() : AppCompatActivity() {
             denuncia.estado = "procesada"
             denuncia.saveInBackground { e ->
                 if(e == null){
-                    Toast.makeText(this, "Denuncia Procesada", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Sugerencia Procesada", Toast.LENGTH_LONG).show()
                     finish()
                 }
                 else {

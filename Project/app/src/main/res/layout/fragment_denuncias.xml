@@ -16,18 +16,19 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:gravity="center"
-            android:text="Denuncias"
+            android:text="Sugerencias"
             android:textColor="@color/black"
             android:textSize="16dp" />
 
         <LinearLayout
             android:id="@+id/layoutButons"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/denunciasTitle"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:weightSum="4">
 
             <Button
                 android:id="@+id/btnSinResolver"
@@ -36,7 +37,10 @@
                 android:text="Sin resolver"
                 android:padding="8dp"
                 android:backgroundTint="#E3E3E3"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:layout_weight="1"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"/>
 
             <Button
                 android:id="@+id/btnProcesadas"
@@ -45,7 +49,10 @@
                 android:text="Procesadas"
                 android:padding="8dp"
                 android:backgroundTint="#E3E3E3"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:layout_weight="1"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"/>
 
             <Button
                 android:id="@+id/btnInvalidas"
@@ -54,7 +61,10 @@
                 android:padding="8dp"
                 android:text="Inválidas"
                 android:backgroundTint="#E3E3E3"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:layout_weight="1"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"/>
 
 
         </LinearLayout>
