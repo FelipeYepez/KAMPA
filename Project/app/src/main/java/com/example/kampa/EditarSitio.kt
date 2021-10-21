@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.util.Patterns
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -290,6 +291,8 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
         sitio.historia = etHistoria.text.toString()
         sitio.paginaOficial = etPaginaOficial.text.toString()
 
+        val isUrlValid = Patterns.WEB_URL.matcher(sitio.paginaOficial).matches()
+
         if (selectedBitmapImage != null){
             val stream = ByteArrayOutputStream()
             selectedBitmapImage!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
@@ -309,7 +312,10 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
             sitio.idTipoSitio = listTipoSitio[idCheckedButton]
         }
 
-        if (sitio.nombre!!.length > 0 || sitio.descripcion!!.length > 0 || idCheckedButton != -1) {
+        val isInputComplete = EditarSitioUtils.validateInputs(sitio.nombre!!,
+            sitio.descripcion!!, sitio.ubicacion!!, idCheckedButton!!)
+
+        if (isInputComplete == "Valores completos" && isUrlValid) {
             sitio.saveInBackground { e ->
                 if (e == null) {
                     Toast.makeText(
@@ -320,16 +326,48 @@ class EditarSitio : AppCompatActivity(), OnMapReadyCallback {
                     finish()
                 } else {
                     Log.d(TAG, e.toString())
-                    finish()
                 }
             }
-        } else{
+        } else if (!isUrlValid) {
             Toast.makeText(
                 this,
-                "Llena todos los campos obligatorios",
+                "La página web ingresada no existe",
+                Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(
+                this,
+                isInputComplete,
                 Toast.LENGTH_SHORT
             ).show()
         }
     }
+}
 
+
+object EditarSitioUtils {
+    /**
+     * Valida que los campos obligatorios para editar un sitio no estén vacíos o hayan sido
+     * seleccionados.
+     * @param nombre nuevo nombre del sitio
+     * @param descripcion nueva descripción del sitio
+     * @param idCheckedButton tipo de sitio seleccionado
+     */
+    fun validateInputs(nombre:String,
+                       descripcion:String,
+                       ubicacion:ParseGeoPoint,
+                       idCheckedButton:Int)
+        :String {
+
+        if(nombre.isEmpty()){
+            return "Escribe el nombre del sitio"
+        } else if(descripcion.isEmpty()){
+            return "Escribe la descripción del sitio"
+        } else if(ubicacion.latitude == 0.0 && ubicacion.longitude == 0.0){
+            return "Elige la ubicación del sitio"
+        } else if(idCheckedButton == -1){
+            return "Selecciona una categoría"
+        }
+
+        return "Valores completos"
+    }
 }
