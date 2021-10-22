@@ -37,7 +37,6 @@ class ParseApplication : Application() {
         ParseObject.registerSubclass(Publicacion::class.java)
         ParseObject.registerSubclass(Rol::class.java)
         ParseObject.registerSubclass(Sitio::class.java)
-        ParseObject.registerSubclass(SitioTag::class.java)
         ParseObject.registerSubclass(Tag::class.java)
         ParseObject.registerSubclass(TipoSitio::class.java)
         ParseObject.registerSubclass(UsuarioSitio::class.java)

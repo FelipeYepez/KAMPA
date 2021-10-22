@@ -430,6 +430,7 @@ class SitioActivity : AppCompatActivity() {
             usuarioSitio!!.isWishlist = false
             usuarioSitio!!.isVisitado = true
             usuarioSitio!!.saveInBackground()
+            UIVisitado(true)
         }
     }
 
