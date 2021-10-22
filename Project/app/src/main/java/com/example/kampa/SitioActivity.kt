@@ -142,7 +142,12 @@ class SitioActivity : AppCompatActivity() {
         //Si el rol del usuario es administrador, se muestra un botón para añadir sitios
         if(rolObject?.descripcion == Constantes.ADMINISTRADOR){
             ibEliminarSitio = findViewById(R.id.ibEliminarSitio)
-            ibEliminarSitio.visibility = View.VISIBLE
+
+            /**Este buton truena la aplicacion por lo cual decidimos quitarlo para esta version
+                si en el futuro quiere implementarse hay que eliminar  registros
+                en todas las tablas relacionadas al sitio
+             */
+            // ibEliminarSitio.visibility = View.VISIBLE
             ibEliminarSitio.setOnClickListener {
                 eliminarSitio()
             }
