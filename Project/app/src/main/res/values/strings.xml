@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">KAMPA</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mis_listas_de_deseos">Mis Listas de Deseos</string>
+    <string name="titulo_de_la_lista">Titulo de la Lista</string>
+    <string name="nombre_del_sitio">Nombre del Sitio</string>
+    <string name="descripcion_sitio">Descripcion del Sitio</string>
+    <string name="nombre_de_la_lista">Nombre de la Lista</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="cambiar_nombre_lista_deseos">Cambiar Nombre a la Lista de Deseos</string>
+    <string name="nuevo_nombre">Nuevo nombre</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="nombre_vacio">Error: Nombre Vacío</string>
+    <string name="nueva_lista_favoritos">Nueva Lista de Favoritos</string>
+    <string name="crear">Crear</string>
+    <string name="error_conexion">No se pudo guardar. Error de conexión</string>
+    <string name="lista_favoritos_creada">"Se creó la lista: "</string>
+    <string name="editar_sitio">Editar Sitio</string>
+    <string name="confirmar_cambios">Confirmar Cambios</string>
+    <string name="title_activity_admin_menu">AdminMenu</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="inv_lida">Inválida</string>
+    <string name="procesada">Procesada</string>
+    <string name="invalida">Inválida</string>
+    <string name="Lista_favoritos">Seleccionar lista de favoritos</string>
+    <string name="Lista_favoritos_exito">Sitio insertado a lista de favoritos con exito</string>
+    <string name="crear_lista">Crear nueva lista</string>
+    <string name="declinar">Declinar</string>
+    <string name="ir_a_google_maps">¿Desea ir a Google Maps?</string>
+    <string name="abrir_google_maps">Abrir Google Maps</string>
+    <string name="confirmar_eliminar">Confirmar Eliminación</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="seguro_eliminar_sitio">¿Estás seguro de eliminar este sitio?</string>
+    <string name="escriba_username">Escriba su nombre de usuario</string>
+    <string name="escriba_password">Escriba su contraseña</string>
+    <string name="valores_correctos">Valores correctos</string>
+    <string name="valores_completos">Valores Completos</string>
+
+    <string name="text_link_terminos"> <a href="https://recon.software/">Acepto los términos y condiciones</a></string>
+</resources>

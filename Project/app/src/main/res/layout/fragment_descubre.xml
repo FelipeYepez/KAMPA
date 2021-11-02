@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.DescubreFragment"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:weightSum="6">
+
+    <com.yuyakaido.android.cardstackview.CardStackView
+        android:id="@+id/swipeCard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_weight="5"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="20sp"
+        android:layout_weight="1">
+
+        <ImageButton
+            android:id="@+id/btnDescubreDislike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_dislike"
+            android:background="@null"
+            style="?android:attr/borderlessButtonStyle" />
+
+        <ImageButton
+            android:id="@+id/btnDescubreWishlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_wishlist"
+            android:background="@null"
+            android:stateListAnimator="@null"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <ImageButton
+            android:id="@+id/btnDescubreLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_like"
+            android:background="@null"
+            android:stateListAnimator="@null"
+            style="?android:attr/borderlessButtonStyle"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
